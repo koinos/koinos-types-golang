@@ -6207,3 +6207,5 @@ func TestVectorOperation(t *testing.T) {
 		t.Errorf("Bytes were consumed on error")
 	}
 }
+
+

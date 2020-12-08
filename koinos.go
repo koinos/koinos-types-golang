@@ -38,7 +38,7 @@ func (n UnusedExtensionsType) Serialize(vb *VariableBlob) *VariableBlob {
 func DeserializeUnusedExtensionsType(vb *VariableBlob) (uint64,*UnusedExtensionsType,error) {
 	var i uint64 = 0
 	s := UnusedExtensionsType{}
-
+	
 	return i, &s, nil
 }
 
@@ -162,7 +162,7 @@ func (n ReservedOperation) Serialize(vb *VariableBlob) *VariableBlob {
 func DeserializeReservedOperation(vb *VariableBlob) (uint64,*ReservedOperation,error) {
 	var i uint64 = 0
 	s := ReservedOperation{}
-
+	
 	return i, &s, nil
 }
 
@@ -192,7 +192,7 @@ func (n NopOperation) Serialize(vb *VariableBlob) *VariableBlob {
 func DeserializeNopOperation(vb *VariableBlob) (uint64,*NopOperation,error) {
 	var i uint64 = 0
 	s := NopOperation{}
-
+	
 	return i, &s, nil
 }
 
@@ -267,7 +267,7 @@ func (n SystemCallTargetReserved) Serialize(vb *VariableBlob) *VariableBlob {
 func DeserializeSystemCallTargetReserved(vb *VariableBlob) (uint64,*SystemCallTargetReserved,error) {
 	var i uint64 = 0
 	s := SystemCallTargetReserved{}
-
+	
 	return i, &s, nil
 }
 
@@ -875,7 +875,7 @@ func (n ActiveTransactionData) Serialize(vb *VariableBlob) *VariableBlob {
 func DeserializeActiveTransactionData(vb *VariableBlob) (uint64,*ActiveTransactionData,error) {
 	var i uint64 = 0
 	s := ActiveTransactionData{}
-
+	
 	return i, &s, nil
 }
 
@@ -902,7 +902,7 @@ func (n PassiveTransactionData) Serialize(vb *VariableBlob) *VariableBlob {
 func DeserializePassiveTransactionData(vb *VariableBlob) (uint64,*PassiveTransactionData,error) {
 	var i uint64 = 0
 	s := PassiveTransactionData{}
-
+	
 	return i, &s, nil
 }
 
@@ -1136,7 +1136,7 @@ func (n PassiveBlockData) Serialize(vb *VariableBlob) *VariableBlob {
 func DeserializePassiveBlockData(vb *VariableBlob) (uint64,*PassiveBlockData,error) {
 	var i uint64 = 0
 	s := PassiveBlockData{}
-
+	
 	return i, &s, nil
 }
 
@@ -1229,7 +1229,7 @@ func (n ReservedQueryParams) Serialize(vb *VariableBlob) *VariableBlob {
 func DeserializeReservedQueryParams(vb *VariableBlob) (uint64,*ReservedQueryParams,error) {
 	var i uint64 = 0
 	s := ReservedQueryParams{}
-
+	
 	return i, &s, nil
 }
 
@@ -1256,7 +1256,7 @@ func (n GetHeadInfoParams) Serialize(vb *VariableBlob) *VariableBlob {
 func DeserializeGetHeadInfoParams(vb *VariableBlob) (uint64,*GetHeadInfoParams,error) {
 	var i uint64 = 0
 	s := GetHeadInfoParams{}
-
+	
 	return i, &s, nil
 }
 
@@ -1440,7 +1440,7 @@ func (n ReservedQueryResult) Serialize(vb *VariableBlob) *VariableBlob {
 func DeserializeReservedQueryResult(vb *VariableBlob) (uint64,*ReservedQueryResult,error) {
 	var i uint64 = 0
 	s := ReservedQueryResult{}
-
+	
 	return i, &s, nil
 }
 
@@ -1828,7 +1828,7 @@ func (n ReservedSubmission) Serialize(vb *VariableBlob) *VariableBlob {
 func DeserializeReservedSubmission(vb *VariableBlob) (uint64,*ReservedSubmission,error) {
 	var i uint64 = 0
 	s := ReservedSubmission{}
-
+	
 	return i, &s, nil
 }
 
@@ -2120,7 +2120,7 @@ func (n ReservedSubmissionResult) Serialize(vb *VariableBlob) *VariableBlob {
 func DeserializeReservedSubmissionResult(vb *VariableBlob) (uint64,*ReservedSubmissionResult,error) {
 	var i uint64 = 0
 	s := ReservedSubmissionResult{}
-
+	
 	return i, &s, nil
 }
 
@@ -2147,7 +2147,7 @@ func (n BlockSubmissionResult) Serialize(vb *VariableBlob) *VariableBlob {
 func DeserializeBlockSubmissionResult(vb *VariableBlob) (uint64,*BlockSubmissionResult,error) {
 	var i uint64 = 0
 	s := BlockSubmissionResult{}
-
+	
 	return i, &s, nil
 }
 
@@ -2174,7 +2174,7 @@ func (n TransactionSubmissionResult) Serialize(vb *VariableBlob) *VariableBlob {
 func DeserializeTransactionSubmissionResult(vb *VariableBlob) (uint64,*TransactionSubmissionResult,error) {
 	var i uint64 = 0
 	s := TransactionSubmissionResult{}
-
+	
 	return i, &s, nil
 }
 
@@ -2389,7 +2389,7 @@ func (n VoidType) Serialize(vb *VariableBlob) *VariableBlob {
 func DeserializeVoidType(vb *VariableBlob) (uint64,*VoidType,error) {
 	var i uint64 = 0
 	s := VoidType{}
-
+	
 	return i, &s, nil
 }
 
@@ -2942,7 +2942,7 @@ func (n ApplyReservedOperationArgs) Serialize(vb *VariableBlob) *VariableBlob {
 func DeserializeApplyReservedOperationArgs(vb *VariableBlob) (uint64,*ApplyReservedOperationArgs,error) {
 	var i uint64 = 0
 	s := ApplyReservedOperationArgs{}
-
+	
 	return i, &s, nil
 }
 
@@ -5743,3 +5743,5 @@ func DeserializeVectorOperation(vb *VariableBlob) (uint64,*VectorOperation,error
 
 	return i, &result, nil
 }
+
+
