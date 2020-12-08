@@ -20,12 +20,12 @@ import (
 // ----------------------------------------
 
 func TestUnusedExtensionsType(t *testing.T) {
-	o := NewUnusedExtensionsType()
+	o := koinos.NewUnusedExtensionsType()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeUnusedExtensionsType(vb)
+	_, _, err := koinos.DeserializeUnusedExtensionsType(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -34,7 +34,7 @@ func TestUnusedExtensionsType(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewUnusedExtensionsType()
+	jo := koinos.NewUnusedExtensionsType()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -61,18 +61,18 @@ func TestUnusedExtensionsType(t *testing.T) {
 // ----------------------------------------
 
 func TestSignatureType(t *testing.T) {
-	o := NewSignatureType()
+	o := koinos.NewSignatureType()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeSignatureType(vb)
+	_, _, err := koinos.DeserializeSignatureType(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
-	vb = NewVariableBlob()
-	size, _, err := DeserializeSignatureType(vb)
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeSignatureType(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -85,7 +85,7 @@ func TestSignatureType(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewSignatureType()
+	jo := koinos.NewSignatureType()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -102,18 +102,18 @@ func TestSignatureType(t *testing.T) {
 // ----------------------------------------
 
 func TestContractIDType(t *testing.T) {
-	o := NewContractIDType()
+	o := koinos.NewContractIDType()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeContractIDType(vb)
+	_, _, err := koinos.DeserializeContractIDType(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
-	vb = NewVariableBlob()
-	size, _, err := DeserializeContractIDType(vb)
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeContractIDType(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -126,7 +126,7 @@ func TestContractIDType(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewContractIDType()
+	jo := koinos.NewContractIDType()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -143,12 +143,12 @@ func TestContractIDType(t *testing.T) {
 // ----------------------------------------
 
 func TestReservedOperation(t *testing.T) {
-	o := NewReservedOperation()
+	o := koinos.NewReservedOperation()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeReservedOperation(vb)
+	_, _, err := koinos.DeserializeReservedOperation(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -157,7 +157,7 @@ func TestReservedOperation(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewReservedOperation()
+	jo := koinos.NewReservedOperation()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -184,12 +184,12 @@ func TestReservedOperation(t *testing.T) {
 // ----------------------------------------
 
 func TestNopOperation(t *testing.T) {
-	o := NewNopOperation()
+	o := koinos.NewNopOperation()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeNopOperation(vb)
+	_, _, err := koinos.DeserializeNopOperation(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -198,7 +198,7 @@ func TestNopOperation(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewNopOperation()
+	jo := koinos.NewNopOperation()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -225,20 +225,20 @@ func TestNopOperation(t *testing.T) {
 // ----------------------------------------
 
 func TestCreateSystemContractOperation(t *testing.T) {
-	o := NewCreateSystemContractOperation()
+	o := koinos.NewCreateSystemContractOperation()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeCreateSystemContractOperation(vb)
+	_, _, err := koinos.DeserializeCreateSystemContractOperation(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test contract_id
-	vb = &VariableBlob{}
-	n, _, err = DeserializeCreateSystemContractOperation(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeCreateSystemContractOperation(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -247,8 +247,8 @@ func TestCreateSystemContractOperation(t *testing.T) {
 	}
 
 	// Test bytecode
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeCreateSystemContractOperation(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeCreateSystemContractOperation(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -261,7 +261,7 @@ func TestCreateSystemContractOperation(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewCreateSystemContractOperation()
+	jo := koinos.NewCreateSystemContractOperation()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -288,12 +288,12 @@ func TestCreateSystemContractOperation(t *testing.T) {
 // ----------------------------------------
 
 func TestSystemCallTargetReserved(t *testing.T) {
-	o := NewSystemCallTargetReserved()
+	o := koinos.NewSystemCallTargetReserved()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeSystemCallTargetReserved(vb)
+	_, _, err := koinos.DeserializeSystemCallTargetReserved(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -302,7 +302,7 @@ func TestSystemCallTargetReserved(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewSystemCallTargetReserved()
+	jo := koinos.NewSystemCallTargetReserved()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -329,44 +329,44 @@ func TestSystemCallTargetReserved(t *testing.T) {
 // ----------------------------------------
 
 func TestThunkID(t *testing.T) {
-	vals := []ThunkID{
-		ThunkIDPrints,
-		ThunkIDVerifyBlockHeader,
-		ThunkIDApplyBlock,
-		ThunkIDApplyTransaction,
-		ThunkIDApplyReservedOperation,
-		ThunkIDApplyUploadContractOperation,
-		ThunkIDApplyExecuteContractOperation,
-		ThunkIDApplySetSystemCallOperation,
-		ThunkIDDbPutObject,
-		ThunkIDDbGetObject,
-		ThunkIDDbGetNextObject,
-		ThunkIDDbGetPrevObject,
-		ThunkIDExecuteContract,
-		ThunkIDGetContractArgsSize,
-		ThunkIDGetContractArgs,
-		ThunkIDSetContractReturn,
-		ThunkIDExitContract,
-		ThunkIDGetHeadInfo,
-		ThunkIDHash,
-		ThunkIDVerifyBlockSig,
-		ThunkIDVerifyMerkleRoot,
+	vals := []koinos.ThunkID{
+		koinos.ThunkIDPrints,
+		koinos.ThunkIDVerifyBlockHeader,
+		koinos.ThunkIDApplyBlock,
+		koinos.ThunkIDApplyTransaction,
+		koinos.ThunkIDApplyReservedOperation,
+		koinos.ThunkIDApplyUploadContractOperation,
+		koinos.ThunkIDApplyExecuteContractOperation,
+		koinos.ThunkIDApplySetSystemCallOperation,
+		koinos.ThunkIDDbPutObject,
+		koinos.ThunkIDDbGetObject,
+		koinos.ThunkIDDbGetNextObject,
+		koinos.ThunkIDDbGetPrevObject,
+		koinos.ThunkIDExecuteContract,
+		koinos.ThunkIDGetContractArgsSize,
+		koinos.ThunkIDGetContractArgs,
+		koinos.ThunkIDSetContractReturn,
+		koinos.ThunkIDExitContract,
+		koinos.ThunkIDGetHeadInfo,
+		koinos.ThunkIDHash,
+		koinos.ThunkIDVerifyBlockSig,
+		koinos.ThunkIDVerifyMerkleRoot,
 	}
 
 	// Make sure all types properly serialize
 	for _, x := range vals {
-		vb := NewVariableBlob()
+		vb := koinos.NewVariableBlob()
 		vb = x.Serialize(vb)
 
-		nvb := NewVariableBlob()
-		ox := UInt32(x)
+		nvb := koinos.NewVariableBlob()
+		ox := koinos.UInt32(x)
 		nvb = ox.Serialize(nvb)
 
 		if !bytes.Equal(*vb, *nvb) {
 			t.Errorf("Serialized enum does match ideal serialization.")
 		}
 
-		_, y, err := DeserializeThunkID(vb)
+		_, y, err := koinos.DeserializeThunkID(vb)
 		if err != nil {
 			t.Error(err)
 		}
@@ -390,7 +390,7 @@ func TestThunkID(t *testing.T) {
 			t.Error(err)
 		}
 
-		r := NewThunkID()
+		r := koinos.NewThunkID()
 		if err = json.Unmarshal(jx, r); err != nil {
 			t.Error(err)
 		}
@@ -399,9 +399,9 @@ func TestThunkID(t *testing.T) {
 	// Find a value that is NOT an enum value
 	w := getInvalidThunkID()
 
-	tw := UInt32(w)
-	vb := NewVariableBlob()
-	n, _, err := DeserializeThunkID(vb)
+	tw := koinos.UInt32(w)
+	vb := koinos.NewVariableBlob()
+	n, _, err := koinos.DeserializeThunkID(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -411,11 +411,11 @@ func TestThunkID(t *testing.T) {
 
 	vb = tw.Serialize(vb)
 
-	if _, _, err := DeserializeThunkID(vb); err == nil {
+	if _, _, err := koinos.DeserializeThunkID(vb); err == nil {
 		t.Errorf("Deserializing an invalid value did not return an error.")
 	}
 
-	je := NewThunkID()
+	je := koinos.NewThunkID()
 	if err := json.Unmarshal([]byte(fmt.Sprint(tw)), &je); err == nil {
 		t.Errorf("Deserializing an invalid JSON value did not return an error.")
 	}
@@ -436,7 +436,7 @@ func TestThunkIDPanic(t *testing.T) {
 			}
 		}()
 
-		vb := NewVariableBlob()
+		vb := koinos.NewVariableBlob()
 		vb = w.Serialize(vb)
 	}()
 
@@ -451,9 +451,9 @@ func TestThunkIDPanic(t *testing.T) {
 	}()
 }
 
-func getInvalidThunkID() ThunkID {
-	w := ThunkIDVerifyMerkleRoot
-	for IsValidThunkID(w) {
+func getInvalidThunkID() koinos.ThunkID {
+	w := koinos.ThunkIDVerifyMerkleRoot
+	for koinos.IsValidThunkID(w) {
 		w++
 	}
 
@@ -464,20 +464,20 @@ func getInvalidThunkID() ThunkID {
 // ----------------------------------------
 
 func TestContractCallBundle(t *testing.T) {
-	o := NewContractCallBundle()
+	o := koinos.NewContractCallBundle()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeContractCallBundle(vb)
+	_, _, err := koinos.DeserializeContractCallBundle(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test contract_id
-	vb = &VariableBlob{}
-	n, _, err = DeserializeContractCallBundle(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeContractCallBundle(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -486,8 +486,8 @@ func TestContractCallBundle(t *testing.T) {
 	}
 
 	// Test entry_point
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeContractCallBundle(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeContractCallBundle(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -500,7 +500,7 @@ func TestContractCallBundle(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewContractCallBundle()
+	jo := koinos.NewContractCallBundle()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -527,21 +527,21 @@ func TestContractCallBundle(t *testing.T) {
 // ----------------------------------------
 
 func TestSystemCallTarget(t *testing.T) {
-	o := NewSystemCallTarget()
+	o := koinos.NewSystemCallTarget()
 	exerciseSystemCallTargetSerialization(o, t)
 	{
-		v := NewSystemCallTarget()
-		v.Value = NewSystemCallTargetReserved()
+		v := koinos.NewSystemCallTarget()
+		v.Value = koinos.NewSystemCallTargetReserved()
 		exerciseSystemCallTargetSerialization(v, t)
 
 	}
 	{
-		v := NewSystemCallTarget()
-		v.Value = NewThunkID()
+		v := koinos.NewSystemCallTarget()
+		v.Value = koinos.NewThunkID()
 		exerciseSystemCallTargetSerialization(v, t)
 
-		vb := VariableBlob{1}
-		n, _, err := DeserializeSystemCallTarget(&vb)
+		vb := koinos.VariableBlob{1}
+		n, _, err := koinos.DeserializeSystemCallTarget(&vb)
 		if err == nil {
 			t.Errorf("err == nil")
 		}
@@ -550,12 +550,12 @@ func TestSystemCallTarget(t *testing.T) {
 		}
 	}
 	{
-		v := NewSystemCallTarget()
-		v.Value = NewContractCallBundle()
+		v := koinos.NewSystemCallTarget()
+		v.Value = koinos.NewContractCallBundle()
 		exerciseSystemCallTargetSerialization(v, t)
 
-		vb := VariableBlob{2}
-		n, _, err := DeserializeSystemCallTarget(&vb)
+		vb := koinos.VariableBlob{2}
+		n, _, err := koinos.DeserializeSystemCallTarget(&vb)
 		if err == nil {
 			t.Errorf("err == nil")
 		}
@@ -565,8 +565,8 @@ func TestSystemCallTarget(t *testing.T) {
 	}
 
 	// Test bad variant tag
-	vb := VariableBlob{0x80}
-	n, _, err := DeserializeSystemCallTarget(&vb)
+	vb := koinos.VariableBlob{0x80}
+	n, _, err := koinos.DeserializeSystemCallTarget(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -575,8 +575,8 @@ func TestSystemCallTarget(t *testing.T) {
 	}
 
 	// Test unknown tag
-	vb = VariableBlob{3}
-	n, _, err = DeserializeSystemCallTarget(&vb)
+	vb = koinos.VariableBlob{3}
+	n, _, err = koinos.DeserializeSystemCallTarget(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -585,7 +585,7 @@ func TestSystemCallTarget(t *testing.T) {
 	}
 
 	// Test nonsensical json
-	o = NewSystemCallTarget()
+	o = koinos.NewSystemCallTarget()
 	if jerr := json.Unmarshal([]byte("\"!@#$%^&*\""), o); jerr == nil {
 		t.Errorf("Unmarshaling nonsense JSON did not give error.")
 	}
@@ -603,8 +603,8 @@ func TestSystemCallTarget(t *testing.T) {
 			}
 		}()
 
-		variant := SystemCallTarget{Value: int64(0)}
-		vb := NewVariableBlob()
+		variant := koinos.SystemCallTarget{Value: int64(0)}
+		vb := koinos.NewVariableBlob()
 		_ = variant.Serialize(vb)
 	}()
 
@@ -616,16 +616,16 @@ func TestSystemCallTarget(t *testing.T) {
 			}
 		}()
 
-		variant := SystemCallTarget{Value: int64(0)}
+		variant := koinos.SystemCallTarget{Value: int64(0)}
 		_, _ = json.Marshal(&variant)
 	}()
 }
 
-func exerciseSystemCallTargetSerialization(v *SystemCallTarget, t *testing.T) {
-	vb := NewVariableBlob()
+func exerciseSystemCallTargetSerialization(v *koinos.SystemCallTarget, t *testing.T) {
+	vb := koinos.NewVariableBlob()
 	vb = v.Serialize(vb)
 
-	_, _, err := DeserializeSystemCallTarget(vb)
+	_, _, err := koinos.DeserializeSystemCallTarget(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -635,7 +635,7 @@ func exerciseSystemCallTargetSerialization(v *SystemCallTarget, t *testing.T) {
 		t.Error(jerr)
 	}
 
-	nv := NewSystemCallTarget()
+	nv := koinos.NewSystemCallTarget()
 	if jerr = json.Unmarshal(jv, nv); jerr != nil {
 		t.Error(jerr)
 	}
@@ -646,20 +646,20 @@ func exerciseSystemCallTargetSerialization(v *SystemCallTarget, t *testing.T) {
 // ----------------------------------------
 
 func TestSetSystemCallOperation(t *testing.T) {
-	o := NewSetSystemCallOperation()
+	o := koinos.NewSetSystemCallOperation()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeSetSystemCallOperation(vb)
+	_, _, err := koinos.DeserializeSetSystemCallOperation(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test call_id
-	vb = &VariableBlob{}
-	n, _, err = DeserializeSetSystemCallOperation(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeSetSystemCallOperation(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -668,8 +668,8 @@ func TestSetSystemCallOperation(t *testing.T) {
 	}
 
 	// Test target
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeSetSystemCallOperation(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeSetSystemCallOperation(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -682,7 +682,7 @@ func TestSetSystemCallOperation(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewSetSystemCallOperation()
+	jo := koinos.NewSetSystemCallOperation()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -709,20 +709,20 @@ func TestSetSystemCallOperation(t *testing.T) {
 // ----------------------------------------
 
 func TestContractCallOperation(t *testing.T) {
-	o := NewContractCallOperation()
+	o := koinos.NewContractCallOperation()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeContractCallOperation(vb)
+	_, _, err := koinos.DeserializeContractCallOperation(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test contract_id
-	vb = &VariableBlob{}
-	n, _, err = DeserializeContractCallOperation(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeContractCallOperation(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -731,8 +731,8 @@ func TestContractCallOperation(t *testing.T) {
 	}
 
 	// Test entry_point
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeContractCallOperation(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeContractCallOperation(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -741,8 +741,8 @@ func TestContractCallOperation(t *testing.T) {
 	}
 
 	// Test args
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeContractCallOperation(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeContractCallOperation(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -755,7 +755,7 @@ func TestContractCallOperation(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewContractCallOperation()
+	jo := koinos.NewContractCallOperation()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -782,27 +782,27 @@ func TestContractCallOperation(t *testing.T) {
 // ----------------------------------------
 
 func TestOperation(t *testing.T) {
-	o := NewOperation()
+	o := koinos.NewOperation()
 	exerciseOperationSerialization(o, t)
 	{
-		v := NewOperation()
-		v.Value = NewReservedOperation()
+		v := koinos.NewOperation()
+		v.Value = koinos.NewReservedOperation()
 		exerciseOperationSerialization(v, t)
 
 	}
 	{
-		v := NewOperation()
-		v.Value = NewNopOperation()
+		v := koinos.NewOperation()
+		v.Value = koinos.NewNopOperation()
 		exerciseOperationSerialization(v, t)
 
 	}
 	{
-		v := NewOperation()
-		v.Value = NewCreateSystemContractOperation()
+		v := koinos.NewOperation()
+		v.Value = koinos.NewCreateSystemContractOperation()
 		exerciseOperationSerialization(v, t)
 
-		vb := VariableBlob{2}
-		n, _, err := DeserializeOperation(&vb)
+		vb := koinos.VariableBlob{2}
+		n, _, err := koinos.DeserializeOperation(&vb)
 		if err == nil {
 			t.Errorf("err == nil")
 		}
@@ -811,12 +811,12 @@ func TestOperation(t *testing.T) {
 		}
 	}
 	{
-		v := NewOperation()
-		v.Value = NewContractCallOperation()
+		v := koinos.NewOperation()
+		v.Value = koinos.NewContractCallOperation()
 		exerciseOperationSerialization(v, t)
 
-		vb := VariableBlob{3}
-		n, _, err := DeserializeOperation(&vb)
+		vb := koinos.VariableBlob{3}
+		n, _, err := koinos.DeserializeOperation(&vb)
 		if err == nil {
 			t.Errorf("err == nil")
 		}
@@ -825,12 +825,12 @@ func TestOperation(t *testing.T) {
 		}
 	}
 	{
-		v := NewOperation()
-		v.Value = NewSetSystemCallOperation()
+		v := koinos.NewOperation()
+		v.Value = koinos.NewSetSystemCallOperation()
 		exerciseOperationSerialization(v, t)
 
-		vb := VariableBlob{4}
-		n, _, err := DeserializeOperation(&vb)
+		vb := koinos.VariableBlob{4}
+		n, _, err := koinos.DeserializeOperation(&vb)
 		if err == nil {
 			t.Errorf("err == nil")
 		}
@@ -840,8 +840,8 @@ func TestOperation(t *testing.T) {
 	}
 
 	// Test bad variant tag
-	vb := VariableBlob{0x80}
-	n, _, err := DeserializeOperation(&vb)
+	vb := koinos.VariableBlob{0x80}
+	n, _, err := koinos.DeserializeOperation(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -850,8 +850,8 @@ func TestOperation(t *testing.T) {
 	}
 
 	// Test unknown tag
-	vb = VariableBlob{5}
-	n, _, err = DeserializeOperation(&vb)
+	vb = koinos.VariableBlob{5}
+	n, _, err = koinos.DeserializeOperation(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -860,7 +860,7 @@ func TestOperation(t *testing.T) {
 	}
 
 	// Test nonsensical json
-	o = NewOperation()
+	o = koinos.NewOperation()
 	if jerr := json.Unmarshal([]byte("\"!@#$%^&*\""), o); jerr == nil {
 		t.Errorf("Unmarshaling nonsense JSON did not give error.")
 	}
@@ -878,8 +878,8 @@ func TestOperation(t *testing.T) {
 			}
 		}()
 
-		variant := Operation{Value: int64(0)}
-		vb := NewVariableBlob()
+		variant := koinos.Operation{Value: int64(0)}
+		vb := koinos.NewVariableBlob()
 		_ = variant.Serialize(vb)
 	}()
 
@@ -891,16 +891,16 @@ func TestOperation(t *testing.T) {
 			}
 		}()
 
-		variant := Operation{Value: int64(0)}
+		variant := koinos.Operation{Value: int64(0)}
 		_, _ = json.Marshal(&variant)
 	}()
 }
 
-func exerciseOperationSerialization(v *Operation, t *testing.T) {
-	vb := NewVariableBlob()
+func exerciseOperationSerialization(v *koinos.Operation, t *testing.T) {
+	vb := koinos.NewVariableBlob()
 	vb = v.Serialize(vb)
 
-	_, _, err := DeserializeOperation(vb)
+	_, _, err := koinos.DeserializeOperation(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -910,7 +910,7 @@ func exerciseOperationSerialization(v *Operation, t *testing.T) {
 		t.Error(jerr)
 	}
 
-	nv := NewOperation()
+	nv := koinos.NewOperation()
 	if jerr = json.Unmarshal(jv, nv); jerr != nil {
 		t.Error(jerr)
 	}
@@ -921,12 +921,12 @@ func exerciseOperationSerialization(v *Operation, t *testing.T) {
 // ----------------------------------------
 
 func TestActiveTransactionData(t *testing.T) {
-	o := NewActiveTransactionData()
+	o := koinos.NewActiveTransactionData()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeActiveTransactionData(vb)
+	_, _, err := koinos.DeserializeActiveTransactionData(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -935,7 +935,7 @@ func TestActiveTransactionData(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewActiveTransactionData()
+	jo := koinos.NewActiveTransactionData()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -962,12 +962,12 @@ func TestActiveTransactionData(t *testing.T) {
 // ----------------------------------------
 
 func TestPassiveTransactionData(t *testing.T) {
-	o := NewPassiveTransactionData()
+	o := koinos.NewPassiveTransactionData()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializePassiveTransactionData(vb)
+	_, _, err := koinos.DeserializePassiveTransactionData(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -976,7 +976,7 @@ func TestPassiveTransactionData(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewPassiveTransactionData()
+	jo := koinos.NewPassiveTransactionData()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -1003,20 +1003,20 @@ func TestPassiveTransactionData(t *testing.T) {
 // ----------------------------------------
 
 func TestTransaction(t *testing.T) {
-	o := NewTransaction()
+	o := koinos.NewTransaction()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeTransaction(vb)
+	_, _, err := koinos.DeserializeTransaction(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test active_data
-	vb = &VariableBlob{}
-	n, _, err = DeserializeTransaction(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeTransaction(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1025,8 +1025,8 @@ func TestTransaction(t *testing.T) {
 	}
 
 	// Test passive_data
-	vb = &VariableBlob{0x00}
-	n, _, err = DeserializeTransaction(vb)
+	vb = &koinos.VariableBlob{0x00}
+	n, _, err = koinos.DeserializeTransaction(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1035,8 +1035,8 @@ func TestTransaction(t *testing.T) {
 	}
 
 	// Test signature_data
-	vb = &VariableBlob{0x00, 0x00}
-	n, _, err = DeserializeTransaction(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00}
+	n, _, err = koinos.DeserializeTransaction(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1045,8 +1045,8 @@ func TestTransaction(t *testing.T) {
 	}
 
 	// Test operations
-	vb = &VariableBlob{0x00, 0x00, 0x00}
-	n, _, err = DeserializeTransaction(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeTransaction(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1059,7 +1059,7 @@ func TestTransaction(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewTransaction()
+	jo := koinos.NewTransaction()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -1086,27 +1086,27 @@ func TestTransaction(t *testing.T) {
 // ----------------------------------------
 
 func TestHeaderHashIndex(t *testing.T) {
-	vals := []HeaderHashIndex{
-		HeaderHashIndexPreviousBlockHashIndex,
-		HeaderHashIndexTransactionMerkleRootHashIndex,
-		HeaderHashIndexPassiveDataMerkleRootHashIndex,
-		HeaderHashIndexNumHeaderHashes,
+	vals := []koinos.HeaderHashIndex{
+		koinos.HeaderHashIndexPreviousBlockHashIndex,
+		koinos.HeaderHashIndexTransactionMerkleRootHashIndex,
+		koinos.HeaderHashIndexPassiveDataMerkleRootHashIndex,
+		koinos.HeaderHashIndexNumHeaderHashes,
 	}
 
 	// Make sure all types properly serialize
 	for _, x := range vals {
-		vb := NewVariableBlob()
+		vb := koinos.NewVariableBlob()
 		vb = x.Serialize(vb)
 
-		nvb := NewVariableBlob()
-		ox := UInt32(x)
+		nvb := koinos.NewVariableBlob()
+		ox := koinos.UInt32(x)
 		nvb = ox.Serialize(nvb)
 
 		if !bytes.Equal(*vb, *nvb) {
 			t.Errorf("Serialized enum does match ideal serialization.")
 		}
 
-		_, y, err := DeserializeHeaderHashIndex(vb)
+		_, y, err := koinos.DeserializeHeaderHashIndex(vb)
 		if err != nil {
 			t.Error(err)
 		}
@@ -1130,7 +1130,7 @@ func TestHeaderHashIndex(t *testing.T) {
 			t.Error(err)
 		}
 
-		r := NewHeaderHashIndex()
+		r := koinos.NewHeaderHashIndex()
 		if err = json.Unmarshal(jx, r); err != nil {
 			t.Error(err)
 		}
@@ -1139,9 +1139,9 @@ func TestHeaderHashIndex(t *testing.T) {
 	// Find a value that is NOT an enum value
 	w := getInvalidHeaderHashIndex()
 
-	tw := UInt32(w)
-	vb := NewVariableBlob()
-	n, _, err := DeserializeHeaderHashIndex(vb)
+	tw := koinos.UInt32(w)
+	vb := koinos.NewVariableBlob()
+	n, _, err := koinos.DeserializeHeaderHashIndex(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1151,11 +1151,11 @@ func TestHeaderHashIndex(t *testing.T) {
 
 	vb = tw.Serialize(vb)
 
-	if _, _, err := DeserializeHeaderHashIndex(vb); err == nil {
+	if _, _, err := koinos.DeserializeHeaderHashIndex(vb); err == nil {
 		t.Errorf("Deserializing an invalid value did not return an error.")
 	}
 
-	je := NewHeaderHashIndex()
+	je := koinos.NewHeaderHashIndex()
 	if err := json.Unmarshal([]byte(fmt.Sprint(tw)), &je); err == nil {
 		t.Errorf("Deserializing an invalid JSON value did not return an error.")
 	}
@@ -1176,7 +1176,7 @@ func TestHeaderHashIndexPanic(t *testing.T) {
 			}
 		}()
 
-		vb := NewVariableBlob()
+		vb := koinos.NewVariableBlob()
 		vb = w.Serialize(vb)
 	}()
 
@@ -1191,9 +1191,9 @@ func TestHeaderHashIndexPanic(t *testing.T) {
 	}()
 }
 
-func getInvalidHeaderHashIndex() HeaderHashIndex {
-	w := HeaderHashIndexNumHeaderHashes
-	for IsValidHeaderHashIndex(w) {
+func getInvalidHeaderHashIndex() koinos.HeaderHashIndex {
+	w := koinos.HeaderHashIndexNumHeaderHashes
+	for koinos.IsValidHeaderHashIndex(w) {
 		w++
 	}
 
@@ -1204,20 +1204,20 @@ func getInvalidHeaderHashIndex() HeaderHashIndex {
 // ----------------------------------------
 
 func TestActiveBlockData(t *testing.T) {
-	o := NewActiveBlockData()
+	o := koinos.NewActiveBlockData()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeActiveBlockData(vb)
+	_, _, err := koinos.DeserializeActiveBlockData(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test header_hashes
-	vb = &VariableBlob{}
-	n, _, err = DeserializeActiveBlockData(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeActiveBlockData(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1226,8 +1226,8 @@ func TestActiveBlockData(t *testing.T) {
 	}
 
 	// Test height
-	vb = &VariableBlob{0x00, 0x00, 0x00}
-	n, _, err = DeserializeActiveBlockData(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeActiveBlockData(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1236,8 +1236,8 @@ func TestActiveBlockData(t *testing.T) {
 	}
 
 	// Test timestamp
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeActiveBlockData(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeActiveBlockData(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1250,7 +1250,7 @@ func TestActiveBlockData(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewActiveBlockData()
+	jo := koinos.NewActiveBlockData()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -1277,12 +1277,12 @@ func TestActiveBlockData(t *testing.T) {
 // ----------------------------------------
 
 func TestPassiveBlockData(t *testing.T) {
-	o := NewPassiveBlockData()
+	o := koinos.NewPassiveBlockData()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializePassiveBlockData(vb)
+	_, _, err := koinos.DeserializePassiveBlockData(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -1291,7 +1291,7 @@ func TestPassiveBlockData(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewPassiveBlockData()
+	jo := koinos.NewPassiveBlockData()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -1320,20 +1320,20 @@ func TestPassiveBlockData(t *testing.T) {
 // ----------------------------------------
 
 func TestBlock(t *testing.T) {
-	o := NewBlock()
+	o := koinos.NewBlock()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeBlock(vb)
+	_, _, err := koinos.DeserializeBlock(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test active_data
-	vb = &VariableBlob{}
-	n, _, err = DeserializeBlock(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeBlock(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1342,8 +1342,8 @@ func TestBlock(t *testing.T) {
 	}
 
 	// Test passive_data
-	vb = &VariableBlob{0x00}
-	n, _, err = DeserializeBlock(vb)
+	vb = &koinos.VariableBlob{0x00}
+	n, _, err = koinos.DeserializeBlock(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1352,8 +1352,8 @@ func TestBlock(t *testing.T) {
 	}
 
 	// Test signature_data
-	vb = &VariableBlob{0x00, 0x00}
-	n, _, err = DeserializeBlock(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00}
+	n, _, err = koinos.DeserializeBlock(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1362,8 +1362,8 @@ func TestBlock(t *testing.T) {
 	}
 
 	// Test transactions
-	vb = &VariableBlob{0x00, 0x00, 0x00}
-	n, _, err = DeserializeBlock(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeBlock(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1376,7 +1376,7 @@ func TestBlock(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewBlock()
+	jo := koinos.NewBlock()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -1403,12 +1403,12 @@ func TestBlock(t *testing.T) {
 // ----------------------------------------
 
 func TestReservedQueryParams(t *testing.T) {
-	o := NewReservedQueryParams()
+	o := koinos.NewReservedQueryParams()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeReservedQueryParams(vb)
+	_, _, err := koinos.DeserializeReservedQueryParams(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -1417,7 +1417,7 @@ func TestReservedQueryParams(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewReservedQueryParams()
+	jo := koinos.NewReservedQueryParams()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -1444,12 +1444,12 @@ func TestReservedQueryParams(t *testing.T) {
 // ----------------------------------------
 
 func TestGetHeadInfoParams(t *testing.T) {
-	o := NewGetHeadInfoParams()
+	o := koinos.NewGetHeadInfoParams()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeGetHeadInfoParams(vb)
+	_, _, err := koinos.DeserializeGetHeadInfoParams(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -1458,7 +1458,7 @@ func TestGetHeadInfoParams(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewGetHeadInfoParams()
+	jo := koinos.NewGetHeadInfoParams()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -1485,24 +1485,24 @@ func TestGetHeadInfoParams(t *testing.T) {
 // ----------------------------------------
 
 func TestQueryParamItem(t *testing.T) {
-	o := NewQueryParamItem()
+	o := koinos.NewQueryParamItem()
 	exerciseQueryParamItemSerialization(o, t)
 	{
-		v := NewQueryParamItem()
-		v.Value = NewReservedQueryParams()
+		v := koinos.NewQueryParamItem()
+		v.Value = koinos.NewReservedQueryParams()
 		exerciseQueryParamItemSerialization(v, t)
 
 	}
 	{
-		v := NewQueryParamItem()
-		v.Value = NewGetHeadInfoParams()
+		v := koinos.NewQueryParamItem()
+		v.Value = koinos.NewGetHeadInfoParams()
 		exerciseQueryParamItemSerialization(v, t)
 
 	}
 
 	// Test bad variant tag
-	vb := VariableBlob{0x80}
-	n, _, err := DeserializeQueryParamItem(&vb)
+	vb := koinos.VariableBlob{0x80}
+	n, _, err := koinos.DeserializeQueryParamItem(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1511,8 +1511,8 @@ func TestQueryParamItem(t *testing.T) {
 	}
 
 	// Test unknown tag
-	vb = VariableBlob{2}
-	n, _, err = DeserializeQueryParamItem(&vb)
+	vb = koinos.VariableBlob{2}
+	n, _, err = koinos.DeserializeQueryParamItem(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1521,7 +1521,7 @@ func TestQueryParamItem(t *testing.T) {
 	}
 
 	// Test nonsensical json
-	o = NewQueryParamItem()
+	o = koinos.NewQueryParamItem()
 	if jerr := json.Unmarshal([]byte("\"!@#$%^&*\""), o); jerr == nil {
 		t.Errorf("Unmarshaling nonsense JSON did not give error.")
 	}
@@ -1539,8 +1539,8 @@ func TestQueryParamItem(t *testing.T) {
 			}
 		}()
 
-		variant := QueryParamItem{Value: int64(0)}
-		vb := NewVariableBlob()
+		variant := koinos.QueryParamItem{Value: int64(0)}
+		vb := koinos.NewVariableBlob()
 		_ = variant.Serialize(vb)
 	}()
 
@@ -1552,16 +1552,16 @@ func TestQueryParamItem(t *testing.T) {
 			}
 		}()
 
-		variant := QueryParamItem{Value: int64(0)}
+		variant := koinos.QueryParamItem{Value: int64(0)}
 		_, _ = json.Marshal(&variant)
 	}()
 }
 
-func exerciseQueryParamItemSerialization(v *QueryParamItem, t *testing.T) {
-	vb := NewVariableBlob()
+func exerciseQueryParamItemSerialization(v *koinos.QueryParamItem, t *testing.T) {
+	vb := koinos.NewVariableBlob()
 	vb = v.Serialize(vb)
 
-	_, _, err := DeserializeQueryParamItem(vb)
+	_, _, err := koinos.DeserializeQueryParamItem(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -1571,7 +1571,7 @@ func exerciseQueryParamItemSerialization(v *QueryParamItem, t *testing.T) {
 		t.Error(jerr)
 	}
 
-	nv := NewQueryParamItem()
+	nv := koinos.NewQueryParamItem()
 	if jerr = json.Unmarshal(jv, nv); jerr != nil {
 		t.Error(jerr)
 	}
@@ -1582,18 +1582,18 @@ func exerciseQueryParamItemSerialization(v *QueryParamItem, t *testing.T) {
 // ----------------------------------------
 
 func TestQuerySubmission(t *testing.T) {
-	o := NewQuerySubmission()
+	o := koinos.NewQuerySubmission()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeQuerySubmission(vb)
+	_, _, err := koinos.DeserializeQuerySubmission(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
-	vb = NewVariableBlob()
-	size, _, err := DeserializeQuerySubmission(vb)
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeQuerySubmission(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1606,7 +1606,7 @@ func TestQuerySubmission(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewQuerySubmission()
+	jo := koinos.NewQuerySubmission()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -1623,12 +1623,12 @@ func TestQuerySubmission(t *testing.T) {
 // ----------------------------------------
 
 func TestReservedQueryResult(t *testing.T) {
-	o := NewReservedQueryResult()
+	o := koinos.NewReservedQueryResult()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeReservedQueryResult(vb)
+	_, _, err := koinos.DeserializeReservedQueryResult(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -1637,7 +1637,7 @@ func TestReservedQueryResult(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewReservedQueryResult()
+	jo := koinos.NewReservedQueryResult()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -1664,20 +1664,20 @@ func TestReservedQueryResult(t *testing.T) {
 // ----------------------------------------
 
 func TestQueryError(t *testing.T) {
-	o := NewQueryError()
+	o := koinos.NewQueryError()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeQueryError(vb)
+	_, _, err := koinos.DeserializeQueryError(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test error_text
-	vb = &VariableBlob{}
-	n, _, err = DeserializeQueryError(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeQueryError(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1690,7 +1690,7 @@ func TestQueryError(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewQueryError()
+	jo := koinos.NewQueryError()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -1717,20 +1717,20 @@ func TestQueryError(t *testing.T) {
 // ----------------------------------------
 
 func TestHeadInfo(t *testing.T) {
-	o := NewHeadInfo()
+	o := koinos.NewHeadInfo()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeHeadInfo(vb)
+	_, _, err := koinos.DeserializeHeadInfo(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test id
-	vb = &VariableBlob{}
-	n, _, err = DeserializeHeadInfo(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeHeadInfo(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1739,8 +1739,8 @@ func TestHeadInfo(t *testing.T) {
 	}
 
 	// Test height
-	vb = &VariableBlob{0x00, 0x00}
-	n, _, err = DeserializeHeadInfo(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00}
+	n, _, err = koinos.DeserializeHeadInfo(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1753,7 +1753,7 @@ func TestHeadInfo(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewHeadInfo()
+	jo := koinos.NewHeadInfo()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -1780,18 +1780,18 @@ func TestHeadInfo(t *testing.T) {
 // ----------------------------------------
 
 func TestGetHeadInfoResult(t *testing.T) {
-	o := NewGetHeadInfoResult()
+	o := koinos.NewGetHeadInfoResult()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeGetHeadInfoResult(vb)
+	_, _, err := koinos.DeserializeGetHeadInfoResult(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
-	vb = NewVariableBlob()
-	size, _, err := DeserializeGetHeadInfoResult(vb)
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeGetHeadInfoResult(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1804,7 +1804,7 @@ func TestGetHeadInfoResult(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewGetHeadInfoResult()
+	jo := koinos.NewGetHeadInfoResult()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -1821,21 +1821,21 @@ func TestGetHeadInfoResult(t *testing.T) {
 // ----------------------------------------
 
 func TestQueryItemResult(t *testing.T) {
-	o := NewQueryItemResult()
+	o := koinos.NewQueryItemResult()
 	exerciseQueryItemResultSerialization(o, t)
 	{
-		v := NewQueryItemResult()
-		v.Value = NewReservedQueryResult()
+		v := koinos.NewQueryItemResult()
+		v.Value = koinos.NewReservedQueryResult()
 		exerciseQueryItemResultSerialization(v, t)
 
 	}
 	{
-		v := NewQueryItemResult()
-		v.Value = NewQueryError()
+		v := koinos.NewQueryItemResult()
+		v.Value = koinos.NewQueryError()
 		exerciseQueryItemResultSerialization(v, t)
 
-		vb := VariableBlob{1}
-		n, _, err := DeserializeQueryItemResult(&vb)
+		vb := koinos.VariableBlob{1}
+		n, _, err := koinos.DeserializeQueryItemResult(&vb)
 		if err == nil {
 			t.Errorf("err == nil")
 		}
@@ -1844,12 +1844,12 @@ func TestQueryItemResult(t *testing.T) {
 		}
 	}
 	{
-		v := NewQueryItemResult()
-		v.Value = NewGetHeadInfoResult()
+		v := koinos.NewQueryItemResult()
+		v.Value = koinos.NewGetHeadInfoResult()
 		exerciseQueryItemResultSerialization(v, t)
 
-		vb := VariableBlob{2}
-		n, _, err := DeserializeQueryItemResult(&vb)
+		vb := koinos.VariableBlob{2}
+		n, _, err := koinos.DeserializeQueryItemResult(&vb)
 		if err == nil {
 			t.Errorf("err == nil")
 		}
@@ -1859,8 +1859,8 @@ func TestQueryItemResult(t *testing.T) {
 	}
 
 	// Test bad variant tag
-	vb := VariableBlob{0x80}
-	n, _, err := DeserializeQueryItemResult(&vb)
+	vb := koinos.VariableBlob{0x80}
+	n, _, err := koinos.DeserializeQueryItemResult(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1869,8 +1869,8 @@ func TestQueryItemResult(t *testing.T) {
 	}
 
 	// Test unknown tag
-	vb = VariableBlob{3}
-	n, _, err = DeserializeQueryItemResult(&vb)
+	vb = koinos.VariableBlob{3}
+	n, _, err = koinos.DeserializeQueryItemResult(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1879,7 +1879,7 @@ func TestQueryItemResult(t *testing.T) {
 	}
 
 	// Test nonsensical json
-	o = NewQueryItemResult()
+	o = koinos.NewQueryItemResult()
 	if jerr := json.Unmarshal([]byte("\"!@#$%^&*\""), o); jerr == nil {
 		t.Errorf("Unmarshaling nonsense JSON did not give error.")
 	}
@@ -1897,8 +1897,8 @@ func TestQueryItemResult(t *testing.T) {
 			}
 		}()
 
-		variant := QueryItemResult{Value: int64(0)}
-		vb := NewVariableBlob()
+		variant := koinos.QueryItemResult{Value: int64(0)}
+		vb := koinos.NewVariableBlob()
 		_ = variant.Serialize(vb)
 	}()
 
@@ -1910,16 +1910,16 @@ func TestQueryItemResult(t *testing.T) {
 			}
 		}()
 
-		variant := QueryItemResult{Value: int64(0)}
+		variant := koinos.QueryItemResult{Value: int64(0)}
 		_, _ = json.Marshal(&variant)
 	}()
 }
 
-func exerciseQueryItemResultSerialization(v *QueryItemResult, t *testing.T) {
-	vb := NewVariableBlob()
+func exerciseQueryItemResultSerialization(v *koinos.QueryItemResult, t *testing.T) {
+	vb := koinos.NewVariableBlob()
 	vb = v.Serialize(vb)
 
-	_, _, err := DeserializeQueryItemResult(vb)
+	_, _, err := koinos.DeserializeQueryItemResult(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -1929,7 +1929,7 @@ func exerciseQueryItemResultSerialization(v *QueryItemResult, t *testing.T) {
 		t.Error(jerr)
 	}
 
-	nv := NewQueryItemResult()
+	nv := koinos.NewQueryItemResult()
 	if jerr = json.Unmarshal(jv, nv); jerr != nil {
 		t.Error(jerr)
 	}
@@ -1940,18 +1940,18 @@ func exerciseQueryItemResultSerialization(v *QueryItemResult, t *testing.T) {
 // ----------------------------------------
 
 func TestQuerySubmissionResult(t *testing.T) {
-	o := NewQuerySubmissionResult()
+	o := koinos.NewQuerySubmissionResult()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeQuerySubmissionResult(vb)
+	_, _, err := koinos.DeserializeQuerySubmissionResult(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
-	vb = NewVariableBlob()
-	size, _, err := DeserializeQuerySubmissionResult(vb)
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeQuerySubmissionResult(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -1964,7 +1964,7 @@ func TestQuerySubmissionResult(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewQuerySubmissionResult()
+	jo := koinos.NewQuerySubmissionResult()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -1981,20 +1981,20 @@ func TestQuerySubmissionResult(t *testing.T) {
 // ----------------------------------------
 
 func TestBlockTopology(t *testing.T) {
-	o := NewBlockTopology()
+	o := koinos.NewBlockTopology()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeBlockTopology(vb)
+	_, _, err := koinos.DeserializeBlockTopology(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test id
-	vb = &VariableBlob{}
-	n, _, err = DeserializeBlockTopology(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeBlockTopology(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2003,8 +2003,8 @@ func TestBlockTopology(t *testing.T) {
 	}
 
 	// Test height
-	vb = &VariableBlob{0x00, 0x00}
-	n, _, err = DeserializeBlockTopology(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00}
+	n, _, err = koinos.DeserializeBlockTopology(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2013,8 +2013,8 @@ func TestBlockTopology(t *testing.T) {
 	}
 
 	// Test previous
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeBlockTopology(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeBlockTopology(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2027,7 +2027,7 @@ func TestBlockTopology(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewBlockTopology()
+	jo := koinos.NewBlockTopology()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -2054,12 +2054,12 @@ func TestBlockTopology(t *testing.T) {
 // ----------------------------------------
 
 func TestReservedSubmission(t *testing.T) {
-	o := NewReservedSubmission()
+	o := koinos.NewReservedSubmission()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeReservedSubmission(vb)
+	_, _, err := koinos.DeserializeReservedSubmission(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -2068,7 +2068,7 @@ func TestReservedSubmission(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewReservedSubmission()
+	jo := koinos.NewReservedSubmission()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -2095,20 +2095,20 @@ func TestReservedSubmission(t *testing.T) {
 // ----------------------------------------
 
 func TestBlockSubmission(t *testing.T) {
-	o := NewBlockSubmission()
+	o := koinos.NewBlockSubmission()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeBlockSubmission(vb)
+	_, _, err := koinos.DeserializeBlockSubmission(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test topology
-	vb = &VariableBlob{}
-	n, _, err = DeserializeBlockSubmission(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeBlockSubmission(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2117,8 +2117,8 @@ func TestBlockSubmission(t *testing.T) {
 	}
 
 	// Test block
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeBlockSubmission(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeBlockSubmission(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2127,8 +2127,8 @@ func TestBlockSubmission(t *testing.T) {
 	}
 
 	// Test verify_passive_data
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeBlockSubmission(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeBlockSubmission(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2137,8 +2137,8 @@ func TestBlockSubmission(t *testing.T) {
 	}
 
 	// Test verify_block_signature
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeBlockSubmission(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeBlockSubmission(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2147,8 +2147,8 @@ func TestBlockSubmission(t *testing.T) {
 	}
 
 	// Test verify_transaction_signatures
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeBlockSubmission(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeBlockSubmission(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2161,7 +2161,7 @@ func TestBlockSubmission(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewBlockSubmission()
+	jo := koinos.NewBlockSubmission()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -2188,20 +2188,20 @@ func TestBlockSubmission(t *testing.T) {
 // ----------------------------------------
 
 func TestTransactionSubmission(t *testing.T) {
-	o := NewTransactionSubmission()
+	o := koinos.NewTransactionSubmission()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeTransactionSubmission(vb)
+	_, _, err := koinos.DeserializeTransactionSubmission(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test active_bytes
-	vb = &VariableBlob{}
-	n, _, err = DeserializeTransactionSubmission(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeTransactionSubmission(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2210,8 +2210,8 @@ func TestTransactionSubmission(t *testing.T) {
 	}
 
 	// Test passive_bytes
-	vb = &VariableBlob{0x00}
-	n, _, err = DeserializeTransactionSubmission(vb)
+	vb = &koinos.VariableBlob{0x00}
+	n, _, err = koinos.DeserializeTransactionSubmission(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2224,7 +2224,7 @@ func TestTransactionSubmission(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewTransactionSubmission()
+	jo := koinos.NewTransactionSubmission()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -2251,21 +2251,21 @@ func TestTransactionSubmission(t *testing.T) {
 // ----------------------------------------
 
 func TestSubmissionItem(t *testing.T) {
-	o := NewSubmissionItem()
+	o := koinos.NewSubmissionItem()
 	exerciseSubmissionItemSerialization(o, t)
 	{
-		v := NewSubmissionItem()
-		v.Value = NewReservedSubmission()
+		v := koinos.NewSubmissionItem()
+		v.Value = koinos.NewReservedSubmission()
 		exerciseSubmissionItemSerialization(v, t)
 
 	}
 	{
-		v := NewSubmissionItem()
-		v.Value = NewBlockSubmission()
+		v := koinos.NewSubmissionItem()
+		v.Value = koinos.NewBlockSubmission()
 		exerciseSubmissionItemSerialization(v, t)
 
-		vb := VariableBlob{1}
-		n, _, err := DeserializeSubmissionItem(&vb)
+		vb := koinos.VariableBlob{1}
+		n, _, err := koinos.DeserializeSubmissionItem(&vb)
 		if err == nil {
 			t.Errorf("err == nil")
 		}
@@ -2274,12 +2274,12 @@ func TestSubmissionItem(t *testing.T) {
 		}
 	}
 	{
-		v := NewSubmissionItem()
-		v.Value = NewTransactionSubmission()
+		v := koinos.NewSubmissionItem()
+		v.Value = koinos.NewTransactionSubmission()
 		exerciseSubmissionItemSerialization(v, t)
 
-		vb := VariableBlob{2}
-		n, _, err := DeserializeSubmissionItem(&vb)
+		vb := koinos.VariableBlob{2}
+		n, _, err := koinos.DeserializeSubmissionItem(&vb)
 		if err == nil {
 			t.Errorf("err == nil")
 		}
@@ -2288,12 +2288,12 @@ func TestSubmissionItem(t *testing.T) {
 		}
 	}
 	{
-		v := NewSubmissionItem()
-		v.Value = NewQuerySubmission()
+		v := koinos.NewSubmissionItem()
+		v.Value = koinos.NewQuerySubmission()
 		exerciseSubmissionItemSerialization(v, t)
 
-		vb := VariableBlob{3}
-		n, _, err := DeserializeSubmissionItem(&vb)
+		vb := koinos.VariableBlob{3}
+		n, _, err := koinos.DeserializeSubmissionItem(&vb)
 		if err == nil {
 			t.Errorf("err == nil")
 		}
@@ -2303,8 +2303,8 @@ func TestSubmissionItem(t *testing.T) {
 	}
 
 	// Test bad variant tag
-	vb := VariableBlob{0x80}
-	n, _, err := DeserializeSubmissionItem(&vb)
+	vb := koinos.VariableBlob{0x80}
+	n, _, err := koinos.DeserializeSubmissionItem(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2313,8 +2313,8 @@ func TestSubmissionItem(t *testing.T) {
 	}
 
 	// Test unknown tag
-	vb = VariableBlob{4}
-	n, _, err = DeserializeSubmissionItem(&vb)
+	vb = koinos.VariableBlob{4}
+	n, _, err = koinos.DeserializeSubmissionItem(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2323,7 +2323,7 @@ func TestSubmissionItem(t *testing.T) {
 	}
 
 	// Test nonsensical json
-	o = NewSubmissionItem()
+	o = koinos.NewSubmissionItem()
 	if jerr := json.Unmarshal([]byte("\"!@#$%^&*\""), o); jerr == nil {
 		t.Errorf("Unmarshaling nonsense JSON did not give error.")
 	}
@@ -2341,8 +2341,8 @@ func TestSubmissionItem(t *testing.T) {
 			}
 		}()
 
-		variant := SubmissionItem{Value: int64(0)}
-		vb := NewVariableBlob()
+		variant := koinos.SubmissionItem{Value: int64(0)}
+		vb := koinos.NewVariableBlob()
 		_ = variant.Serialize(vb)
 	}()
 
@@ -2354,16 +2354,16 @@ func TestSubmissionItem(t *testing.T) {
 			}
 		}()
 
-		variant := SubmissionItem{Value: int64(0)}
+		variant := koinos.SubmissionItem{Value: int64(0)}
 		_, _ = json.Marshal(&variant)
 	}()
 }
 
-func exerciseSubmissionItemSerialization(v *SubmissionItem, t *testing.T) {
-	vb := NewVariableBlob()
+func exerciseSubmissionItemSerialization(v *koinos.SubmissionItem, t *testing.T) {
+	vb := koinos.NewVariableBlob()
 	vb = v.Serialize(vb)
 
-	_, _, err := DeserializeSubmissionItem(vb)
+	_, _, err := koinos.DeserializeSubmissionItem(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -2373,7 +2373,7 @@ func exerciseSubmissionItemSerialization(v *SubmissionItem, t *testing.T) {
 		t.Error(jerr)
 	}
 
-	nv := NewSubmissionItem()
+	nv := koinos.NewSubmissionItem()
 	if jerr = json.Unmarshal(jv, nv); jerr != nil {
 		t.Error(jerr)
 	}
@@ -2384,12 +2384,12 @@ func exerciseSubmissionItemSerialization(v *SubmissionItem, t *testing.T) {
 // ----------------------------------------
 
 func TestReservedSubmissionResult(t *testing.T) {
-	o := NewReservedSubmissionResult()
+	o := koinos.NewReservedSubmissionResult()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeReservedSubmissionResult(vb)
+	_, _, err := koinos.DeserializeReservedSubmissionResult(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -2398,7 +2398,7 @@ func TestReservedSubmissionResult(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewReservedSubmissionResult()
+	jo := koinos.NewReservedSubmissionResult()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -2425,12 +2425,12 @@ func TestReservedSubmissionResult(t *testing.T) {
 // ----------------------------------------
 
 func TestBlockSubmissionResult(t *testing.T) {
-	o := NewBlockSubmissionResult()
+	o := koinos.NewBlockSubmissionResult()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeBlockSubmissionResult(vb)
+	_, _, err := koinos.DeserializeBlockSubmissionResult(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -2439,7 +2439,7 @@ func TestBlockSubmissionResult(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewBlockSubmissionResult()
+	jo := koinos.NewBlockSubmissionResult()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -2466,12 +2466,12 @@ func TestBlockSubmissionResult(t *testing.T) {
 // ----------------------------------------
 
 func TestTransactionSubmissionResult(t *testing.T) {
-	o := NewTransactionSubmissionResult()
+	o := koinos.NewTransactionSubmissionResult()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeTransactionSubmissionResult(vb)
+	_, _, err := koinos.DeserializeTransactionSubmissionResult(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -2480,7 +2480,7 @@ func TestTransactionSubmissionResult(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewTransactionSubmissionResult()
+	jo := koinos.NewTransactionSubmissionResult()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -2507,20 +2507,20 @@ func TestTransactionSubmissionResult(t *testing.T) {
 // ----------------------------------------
 
 func TestSubmissionErrorResult(t *testing.T) {
-	o := NewSubmissionErrorResult()
+	o := koinos.NewSubmissionErrorResult()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeSubmissionErrorResult(vb)
+	_, _, err := koinos.DeserializeSubmissionErrorResult(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test error_text
-	vb = &VariableBlob{}
-	n, _, err = DeserializeSubmissionErrorResult(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeSubmissionErrorResult(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2533,7 +2533,7 @@ func TestSubmissionErrorResult(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewSubmissionErrorResult()
+	jo := koinos.NewSubmissionErrorResult()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -2560,33 +2560,33 @@ func TestSubmissionErrorResult(t *testing.T) {
 // ----------------------------------------
 
 func TestSubmissionResult(t *testing.T) {
-	o := NewSubmissionResult()
+	o := koinos.NewSubmissionResult()
 	exerciseSubmissionResultSerialization(o, t)
 	{
-		v := NewSubmissionResult()
-		v.Value = NewReservedSubmissionResult()
+		v := koinos.NewSubmissionResult()
+		v.Value = koinos.NewReservedSubmissionResult()
 		exerciseSubmissionResultSerialization(v, t)
 
 	}
 	{
-		v := NewSubmissionResult()
-		v.Value = NewBlockSubmissionResult()
+		v := koinos.NewSubmissionResult()
+		v.Value = koinos.NewBlockSubmissionResult()
 		exerciseSubmissionResultSerialization(v, t)
 
 	}
 	{
-		v := NewSubmissionResult()
-		v.Value = NewTransactionSubmissionResult()
+		v := koinos.NewSubmissionResult()
+		v.Value = koinos.NewTransactionSubmissionResult()
 		exerciseSubmissionResultSerialization(v, t)
 
 	}
 	{
-		v := NewSubmissionResult()
-		v.Value = NewQuerySubmissionResult()
+		v := koinos.NewSubmissionResult()
+		v.Value = koinos.NewQuerySubmissionResult()
 		exerciseSubmissionResultSerialization(v, t)
 
-		vb := VariableBlob{3}
-		n, _, err := DeserializeSubmissionResult(&vb)
+		vb := koinos.VariableBlob{3}
+		n, _, err := koinos.DeserializeSubmissionResult(&vb)
 		if err == nil {
 			t.Errorf("err == nil")
 		}
@@ -2595,12 +2595,12 @@ func TestSubmissionResult(t *testing.T) {
 		}
 	}
 	{
-		v := NewSubmissionResult()
-		v.Value = NewSubmissionErrorResult()
+		v := koinos.NewSubmissionResult()
+		v.Value = koinos.NewSubmissionErrorResult()
 		exerciseSubmissionResultSerialization(v, t)
 
-		vb := VariableBlob{4}
-		n, _, err := DeserializeSubmissionResult(&vb)
+		vb := koinos.VariableBlob{4}
+		n, _, err := koinos.DeserializeSubmissionResult(&vb)
 		if err == nil {
 			t.Errorf("err == nil")
 		}
@@ -2610,8 +2610,8 @@ func TestSubmissionResult(t *testing.T) {
 	}
 
 	// Test bad variant tag
-	vb := VariableBlob{0x80}
-	n, _, err := DeserializeSubmissionResult(&vb)
+	vb := koinos.VariableBlob{0x80}
+	n, _, err := koinos.DeserializeSubmissionResult(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2620,8 +2620,8 @@ func TestSubmissionResult(t *testing.T) {
 	}
 
 	// Test unknown tag
-	vb = VariableBlob{5}
-	n, _, err = DeserializeSubmissionResult(&vb)
+	vb = koinos.VariableBlob{5}
+	n, _, err = koinos.DeserializeSubmissionResult(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2630,7 +2630,7 @@ func TestSubmissionResult(t *testing.T) {
 	}
 
 	// Test nonsensical json
-	o = NewSubmissionResult()
+	o = koinos.NewSubmissionResult()
 	if jerr := json.Unmarshal([]byte("\"!@#$%^&*\""), o); jerr == nil {
 		t.Errorf("Unmarshaling nonsense JSON did not give error.")
 	}
@@ -2648,8 +2648,8 @@ func TestSubmissionResult(t *testing.T) {
 			}
 		}()
 
-		variant := SubmissionResult{Value: int64(0)}
-		vb := NewVariableBlob()
+		variant := koinos.SubmissionResult{Value: int64(0)}
+		vb := koinos.NewVariableBlob()
 		_ = variant.Serialize(vb)
 	}()
 
@@ -2661,16 +2661,16 @@ func TestSubmissionResult(t *testing.T) {
 			}
 		}()
 
-		variant := SubmissionResult{Value: int64(0)}
+		variant := koinos.SubmissionResult{Value: int64(0)}
 		_, _ = json.Marshal(&variant)
 	}()
 }
 
-func exerciseSubmissionResultSerialization(v *SubmissionResult, t *testing.T) {
-	vb := NewVariableBlob()
+func exerciseSubmissionResultSerialization(v *koinos.SubmissionResult, t *testing.T) {
+	vb := koinos.NewVariableBlob()
 	vb = v.Serialize(vb)
 
-	_, _, err := DeserializeSubmissionResult(vb)
+	_, _, err := koinos.DeserializeSubmissionResult(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -2680,7 +2680,7 @@ func exerciseSubmissionResultSerialization(v *SubmissionResult, t *testing.T) {
 		t.Error(jerr)
 	}
 
-	nv := NewSubmissionResult()
+	nv := koinos.NewSubmissionResult()
 	if jerr = json.Unmarshal(jv, nv); jerr != nil {
 		t.Error(jerr)
 	}
@@ -2691,12 +2691,12 @@ func exerciseSubmissionResultSerialization(v *SubmissionResult, t *testing.T) {
 // ----------------------------------------
 
 func TestVoidType(t *testing.T) {
-	o := NewVoidType()
+	o := koinos.NewVoidType()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeVoidType(vb)
+	_, _, err := koinos.DeserializeVoidType(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -2705,7 +2705,7 @@ func TestVoidType(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewVoidType()
+	jo := koinos.NewVoidType()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -2732,20 +2732,20 @@ func TestVoidType(t *testing.T) {
 // ----------------------------------------
 
 func TestPrintsArgs(t *testing.T) {
-	o := NewPrintsArgs()
+	o := koinos.NewPrintsArgs()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializePrintsArgs(vb)
+	_, _, err := koinos.DeserializePrintsArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test message
-	vb = &VariableBlob{}
-	n, _, err = DeserializePrintsArgs(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializePrintsArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2758,7 +2758,7 @@ func TestPrintsArgs(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewPrintsArgs()
+	jo := koinos.NewPrintsArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -2785,12 +2785,12 @@ func TestPrintsArgs(t *testing.T) {
 // ----------------------------------------
 
 func TestPrintsRet(t *testing.T) {
-	o := NewPrintsRet()
+	o := koinos.NewPrintsRet()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializePrintsRet(vb)
+	_, _, err := koinos.DeserializePrintsRet(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -2800,7 +2800,7 @@ func TestPrintsRet(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewPrintsRet()
+	jo := koinos.NewPrintsRet()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -2817,20 +2817,20 @@ func TestPrintsRet(t *testing.T) {
 // ----------------------------------------
 
 func TestVerifyBlockSigArgs(t *testing.T) {
-	o := NewVerifyBlockSigArgs()
+	o := koinos.NewVerifyBlockSigArgs()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeVerifyBlockSigArgs(vb)
+	_, _, err := koinos.DeserializeVerifyBlockSigArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test sig_data
-	vb = &VariableBlob{}
-	n, _, err = DeserializeVerifyBlockSigArgs(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeVerifyBlockSigArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2839,8 +2839,8 @@ func TestVerifyBlockSigArgs(t *testing.T) {
 	}
 
 	// Test digest
-	vb = &VariableBlob{0x00}
-	n, _, err = DeserializeVerifyBlockSigArgs(vb)
+	vb = &koinos.VariableBlob{0x00}
+	n, _, err = koinos.DeserializeVerifyBlockSigArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2853,7 +2853,7 @@ func TestVerifyBlockSigArgs(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewVerifyBlockSigArgs()
+	jo := koinos.NewVerifyBlockSigArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -2880,18 +2880,18 @@ func TestVerifyBlockSigArgs(t *testing.T) {
 // ----------------------------------------
 
 func TestVerifyBlockSigRet(t *testing.T) {
-	o := NewVerifyBlockSigRet()
+	o := koinos.NewVerifyBlockSigRet()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeVerifyBlockSigRet(vb)
+	_, _, err := koinos.DeserializeVerifyBlockSigRet(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
-	vb = NewVariableBlob()
-	size, _, err := DeserializeVerifyBlockSigRet(vb)
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeVerifyBlockSigRet(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2904,7 +2904,7 @@ func TestVerifyBlockSigRet(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewVerifyBlockSigRet()
+	jo := koinos.NewVerifyBlockSigRet()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -2921,20 +2921,20 @@ func TestVerifyBlockSigRet(t *testing.T) {
 // ----------------------------------------
 
 func TestVerifyMerkleRootArgs(t *testing.T) {
-	o := NewVerifyMerkleRootArgs()
+	o := koinos.NewVerifyMerkleRootArgs()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeVerifyMerkleRootArgs(vb)
+	_, _, err := koinos.DeserializeVerifyMerkleRootArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test root
-	vb = &VariableBlob{}
-	n, _, err = DeserializeVerifyMerkleRootArgs(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeVerifyMerkleRootArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2943,8 +2943,8 @@ func TestVerifyMerkleRootArgs(t *testing.T) {
 	}
 
 	// Test hashes
-	vb = &VariableBlob{0x00, 0x00}
-	n, _, err = DeserializeVerifyMerkleRootArgs(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00}
+	n, _, err = koinos.DeserializeVerifyMerkleRootArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2957,7 +2957,7 @@ func TestVerifyMerkleRootArgs(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewVerifyMerkleRootArgs()
+	jo := koinos.NewVerifyMerkleRootArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -2984,18 +2984,18 @@ func TestVerifyMerkleRootArgs(t *testing.T) {
 // ----------------------------------------
 
 func TestVerifyMerkleRootRet(t *testing.T) {
-	o := NewVerifyMerkleRootRet()
+	o := koinos.NewVerifyMerkleRootRet()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeVerifyMerkleRootRet(vb)
+	_, _, err := koinos.DeserializeVerifyMerkleRootRet(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
-	vb = NewVariableBlob()
-	size, _, err := DeserializeVerifyMerkleRootRet(vb)
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeVerifyMerkleRootRet(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3008,7 +3008,7 @@ func TestVerifyMerkleRootRet(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewVerifyMerkleRootRet()
+	jo := koinos.NewVerifyMerkleRootRet()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3025,20 +3025,20 @@ func TestVerifyMerkleRootRet(t *testing.T) {
 // ----------------------------------------
 
 func TestApplyBlockArgs(t *testing.T) {
-	o := NewApplyBlockArgs()
+	o := koinos.NewApplyBlockArgs()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeApplyBlockArgs(vb)
+	_, _, err := koinos.DeserializeApplyBlockArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test block
-	vb = &VariableBlob{}
-	n, _, err = DeserializeApplyBlockArgs(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeApplyBlockArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3047,8 +3047,8 @@ func TestApplyBlockArgs(t *testing.T) {
 	}
 
 	// Test enable_check_passive_data
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeApplyBlockArgs(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeApplyBlockArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3057,8 +3057,8 @@ func TestApplyBlockArgs(t *testing.T) {
 	}
 
 	// Test enable_check_block_signature
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeApplyBlockArgs(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeApplyBlockArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3067,8 +3067,8 @@ func TestApplyBlockArgs(t *testing.T) {
 	}
 
 	// Test enable_check_transaction_signatures
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeApplyBlockArgs(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeApplyBlockArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3081,7 +3081,7 @@ func TestApplyBlockArgs(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewApplyBlockArgs()
+	jo := koinos.NewApplyBlockArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3108,12 +3108,12 @@ func TestApplyBlockArgs(t *testing.T) {
 // ----------------------------------------
 
 func TestApplyBlockRet(t *testing.T) {
-	o := NewApplyBlockRet()
+	o := koinos.NewApplyBlockRet()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeApplyBlockRet(vb)
+	_, _, err := koinos.DeserializeApplyBlockRet(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -3123,7 +3123,7 @@ func TestApplyBlockRet(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewApplyBlockRet()
+	jo := koinos.NewApplyBlockRet()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3140,20 +3140,20 @@ func TestApplyBlockRet(t *testing.T) {
 // ----------------------------------------
 
 func TestApplyTransactionArgs(t *testing.T) {
-	o := NewApplyTransactionArgs()
+	o := koinos.NewApplyTransactionArgs()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeApplyTransactionArgs(vb)
+	_, _, err := koinos.DeserializeApplyTransactionArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test trx
-	vb = &VariableBlob{}
-	n, _, err = DeserializeApplyTransactionArgs(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeApplyTransactionArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3166,7 +3166,7 @@ func TestApplyTransactionArgs(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewApplyTransactionArgs()
+	jo := koinos.NewApplyTransactionArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3193,12 +3193,12 @@ func TestApplyTransactionArgs(t *testing.T) {
 // ----------------------------------------
 
 func TestApplyTransactionRet(t *testing.T) {
-	o := NewApplyTransactionRet()
+	o := koinos.NewApplyTransactionRet()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeApplyTransactionRet(vb)
+	_, _, err := koinos.DeserializeApplyTransactionRet(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -3208,7 +3208,7 @@ func TestApplyTransactionRet(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewApplyTransactionRet()
+	jo := koinos.NewApplyTransactionRet()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3225,20 +3225,20 @@ func TestApplyTransactionRet(t *testing.T) {
 // ----------------------------------------
 
 func TestApplyUploadContractOperationArgs(t *testing.T) {
-	o := NewApplyUploadContractOperationArgs()
+	o := koinos.NewApplyUploadContractOperationArgs()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeApplyUploadContractOperationArgs(vb)
+	_, _, err := koinos.DeserializeApplyUploadContractOperationArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test op
-	vb = &VariableBlob{}
-	n, _, err = DeserializeApplyUploadContractOperationArgs(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeApplyUploadContractOperationArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3251,7 +3251,7 @@ func TestApplyUploadContractOperationArgs(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewApplyUploadContractOperationArgs()
+	jo := koinos.NewApplyUploadContractOperationArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3278,12 +3278,12 @@ func TestApplyUploadContractOperationArgs(t *testing.T) {
 // ----------------------------------------
 
 func TestApplyUploadContractOperationRet(t *testing.T) {
-	o := NewApplyUploadContractOperationRet()
+	o := koinos.NewApplyUploadContractOperationRet()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeApplyUploadContractOperationRet(vb)
+	_, _, err := koinos.DeserializeApplyUploadContractOperationRet(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -3293,7 +3293,7 @@ func TestApplyUploadContractOperationRet(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewApplyUploadContractOperationRet()
+	jo := koinos.NewApplyUploadContractOperationRet()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3310,12 +3310,12 @@ func TestApplyUploadContractOperationRet(t *testing.T) {
 // ----------------------------------------
 
 func TestApplyReservedOperationArgs(t *testing.T) {
-	o := NewApplyReservedOperationArgs()
+	o := koinos.NewApplyReservedOperationArgs()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeApplyReservedOperationArgs(vb)
+	_, _, err := koinos.DeserializeApplyReservedOperationArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -3324,7 +3324,7 @@ func TestApplyReservedOperationArgs(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewApplyReservedOperationArgs()
+	jo := koinos.NewApplyReservedOperationArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3351,12 +3351,12 @@ func TestApplyReservedOperationArgs(t *testing.T) {
 // ----------------------------------------
 
 func TestApplyReservedOperationRet(t *testing.T) {
-	o := NewApplyReservedOperationRet()
+	o := koinos.NewApplyReservedOperationRet()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeApplyReservedOperationRet(vb)
+	_, _, err := koinos.DeserializeApplyReservedOperationRet(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -3366,7 +3366,7 @@ func TestApplyReservedOperationRet(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewApplyReservedOperationRet()
+	jo := koinos.NewApplyReservedOperationRet()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3383,20 +3383,20 @@ func TestApplyReservedOperationRet(t *testing.T) {
 // ----------------------------------------
 
 func TestApplyExecuteContractOperationArgs(t *testing.T) {
-	o := NewApplyExecuteContractOperationArgs()
+	o := koinos.NewApplyExecuteContractOperationArgs()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeApplyExecuteContractOperationArgs(vb)
+	_, _, err := koinos.DeserializeApplyExecuteContractOperationArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test op
-	vb = &VariableBlob{}
-	n, _, err = DeserializeApplyExecuteContractOperationArgs(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeApplyExecuteContractOperationArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3409,7 +3409,7 @@ func TestApplyExecuteContractOperationArgs(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewApplyExecuteContractOperationArgs()
+	jo := koinos.NewApplyExecuteContractOperationArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3436,12 +3436,12 @@ func TestApplyExecuteContractOperationArgs(t *testing.T) {
 // ----------------------------------------
 
 func TestApplyExecuteContractOperationRet(t *testing.T) {
-	o := NewApplyExecuteContractOperationRet()
+	o := koinos.NewApplyExecuteContractOperationRet()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeApplyExecuteContractOperationRet(vb)
+	_, _, err := koinos.DeserializeApplyExecuteContractOperationRet(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -3451,7 +3451,7 @@ func TestApplyExecuteContractOperationRet(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewApplyExecuteContractOperationRet()
+	jo := koinos.NewApplyExecuteContractOperationRet()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3468,20 +3468,20 @@ func TestApplyExecuteContractOperationRet(t *testing.T) {
 // ----------------------------------------
 
 func TestApplySetSystemCallOperationArgs(t *testing.T) {
-	o := NewApplySetSystemCallOperationArgs()
+	o := koinos.NewApplySetSystemCallOperationArgs()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeApplySetSystemCallOperationArgs(vb)
+	_, _, err := koinos.DeserializeApplySetSystemCallOperationArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test op
-	vb = &VariableBlob{}
-	n, _, err = DeserializeApplySetSystemCallOperationArgs(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeApplySetSystemCallOperationArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3494,7 +3494,7 @@ func TestApplySetSystemCallOperationArgs(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewApplySetSystemCallOperationArgs()
+	jo := koinos.NewApplySetSystemCallOperationArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3521,12 +3521,12 @@ func TestApplySetSystemCallOperationArgs(t *testing.T) {
 // ----------------------------------------
 
 func TestApplySetSystemCallOperationRet(t *testing.T) {
-	o := NewApplySetSystemCallOperationRet()
+	o := koinos.NewApplySetSystemCallOperationRet()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeApplySetSystemCallOperationRet(vb)
+	_, _, err := koinos.DeserializeApplySetSystemCallOperationRet(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -3536,7 +3536,7 @@ func TestApplySetSystemCallOperationRet(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewApplySetSystemCallOperationRet()
+	jo := koinos.NewApplySetSystemCallOperationRet()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3553,20 +3553,20 @@ func TestApplySetSystemCallOperationRet(t *testing.T) {
 // ----------------------------------------
 
 func TestDbPutObjectArgs(t *testing.T) {
-	o := NewDbPutObjectArgs()
+	o := koinos.NewDbPutObjectArgs()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeDbPutObjectArgs(vb)
+	_, _, err := koinos.DeserializeDbPutObjectArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test space
-	vb = &VariableBlob{}
-	n, _, err = DeserializeDbPutObjectArgs(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeDbPutObjectArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3575,8 +3575,8 @@ func TestDbPutObjectArgs(t *testing.T) {
 	}
 
 	// Test key
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeDbPutObjectArgs(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeDbPutObjectArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3585,8 +3585,8 @@ func TestDbPutObjectArgs(t *testing.T) {
 	}
 
 	// Test obj
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeDbPutObjectArgs(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeDbPutObjectArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3599,7 +3599,7 @@ func TestDbPutObjectArgs(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewDbPutObjectArgs()
+	jo := koinos.NewDbPutObjectArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3626,18 +3626,18 @@ func TestDbPutObjectArgs(t *testing.T) {
 // ----------------------------------------
 
 func TestDbPutObjectRet(t *testing.T) {
-	o := NewDbPutObjectRet()
+	o := koinos.NewDbPutObjectRet()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeDbPutObjectRet(vb)
+	_, _, err := koinos.DeserializeDbPutObjectRet(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
-	vb = NewVariableBlob()
-	size, _, err := DeserializeDbPutObjectRet(vb)
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeDbPutObjectRet(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3650,7 +3650,7 @@ func TestDbPutObjectRet(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewDbPutObjectRet()
+	jo := koinos.NewDbPutObjectRet()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3667,20 +3667,20 @@ func TestDbPutObjectRet(t *testing.T) {
 // ----------------------------------------
 
 func TestDbGetObjectArgs(t *testing.T) {
-	o := NewDbGetObjectArgs()
+	o := koinos.NewDbGetObjectArgs()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeDbGetObjectArgs(vb)
+	_, _, err := koinos.DeserializeDbGetObjectArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test space
-	vb = &VariableBlob{}
-	n, _, err = DeserializeDbGetObjectArgs(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeDbGetObjectArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3689,8 +3689,8 @@ func TestDbGetObjectArgs(t *testing.T) {
 	}
 
 	// Test key
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeDbGetObjectArgs(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeDbGetObjectArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3699,8 +3699,8 @@ func TestDbGetObjectArgs(t *testing.T) {
 	}
 
 	// Test object_size_hint
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeDbGetObjectArgs(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeDbGetObjectArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3713,7 +3713,7 @@ func TestDbGetObjectArgs(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewDbGetObjectArgs()
+	jo := koinos.NewDbGetObjectArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3740,18 +3740,18 @@ func TestDbGetObjectArgs(t *testing.T) {
 // ----------------------------------------
 
 func TestDbGetObjectRet(t *testing.T) {
-	o := NewDbGetObjectRet()
+	o := koinos.NewDbGetObjectRet()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeDbGetObjectRet(vb)
+	_, _, err := koinos.DeserializeDbGetObjectRet(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
-	vb = NewVariableBlob()
-	size, _, err := DeserializeDbGetObjectRet(vb)
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeDbGetObjectRet(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3764,7 +3764,7 @@ func TestDbGetObjectRet(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewDbGetObjectRet()
+	jo := koinos.NewDbGetObjectRet()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3781,18 +3781,18 @@ func TestDbGetObjectRet(t *testing.T) {
 // ----------------------------------------
 
 func TestDbGetNextObjectArgs(t *testing.T) {
-	o := NewDbGetNextObjectArgs()
+	o := koinos.NewDbGetNextObjectArgs()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeDbGetNextObjectArgs(vb)
+	_, _, err := koinos.DeserializeDbGetNextObjectArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
-	vb = NewVariableBlob()
-	size, _, err := DeserializeDbGetNextObjectArgs(vb)
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeDbGetNextObjectArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3805,7 +3805,7 @@ func TestDbGetNextObjectArgs(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewDbGetNextObjectArgs()
+	jo := koinos.NewDbGetNextObjectArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3822,18 +3822,18 @@ func TestDbGetNextObjectArgs(t *testing.T) {
 // ----------------------------------------
 
 func TestDbGetNextObjectRet(t *testing.T) {
-	o := NewDbGetNextObjectRet()
+	o := koinos.NewDbGetNextObjectRet()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeDbGetNextObjectRet(vb)
+	_, _, err := koinos.DeserializeDbGetNextObjectRet(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
-	vb = NewVariableBlob()
-	size, _, err := DeserializeDbGetNextObjectRet(vb)
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeDbGetNextObjectRet(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3846,7 +3846,7 @@ func TestDbGetNextObjectRet(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewDbGetNextObjectRet()
+	jo := koinos.NewDbGetNextObjectRet()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3863,18 +3863,18 @@ func TestDbGetNextObjectRet(t *testing.T) {
 // ----------------------------------------
 
 func TestDbGetPrevObjectArgs(t *testing.T) {
-	o := NewDbGetPrevObjectArgs()
+	o := koinos.NewDbGetPrevObjectArgs()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeDbGetPrevObjectArgs(vb)
+	_, _, err := koinos.DeserializeDbGetPrevObjectArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
-	vb = NewVariableBlob()
-	size, _, err := DeserializeDbGetPrevObjectArgs(vb)
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeDbGetPrevObjectArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3887,7 +3887,7 @@ func TestDbGetPrevObjectArgs(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewDbGetPrevObjectArgs()
+	jo := koinos.NewDbGetPrevObjectArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3904,18 +3904,18 @@ func TestDbGetPrevObjectArgs(t *testing.T) {
 // ----------------------------------------
 
 func TestDbGetPrevObjectRet(t *testing.T) {
-	o := NewDbGetPrevObjectRet()
+	o := koinos.NewDbGetPrevObjectRet()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeDbGetPrevObjectRet(vb)
+	_, _, err := koinos.DeserializeDbGetPrevObjectRet(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
-	vb = NewVariableBlob()
-	size, _, err := DeserializeDbGetPrevObjectRet(vb)
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeDbGetPrevObjectRet(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3928,7 +3928,7 @@ func TestDbGetPrevObjectRet(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewDbGetPrevObjectRet()
+	jo := koinos.NewDbGetPrevObjectRet()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -3945,20 +3945,20 @@ func TestDbGetPrevObjectRet(t *testing.T) {
 // ----------------------------------------
 
 func TestExecuteContractArgs(t *testing.T) {
-	o := NewExecuteContractArgs()
+	o := koinos.NewExecuteContractArgs()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeExecuteContractArgs(vb)
+	_, _, err := koinos.DeserializeExecuteContractArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test contract_id
-	vb = &VariableBlob{}
-	n, _, err = DeserializeExecuteContractArgs(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeExecuteContractArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3967,8 +3967,8 @@ func TestExecuteContractArgs(t *testing.T) {
 	}
 
 	// Test entry_point
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeExecuteContractArgs(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeExecuteContractArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3977,8 +3977,8 @@ func TestExecuteContractArgs(t *testing.T) {
 	}
 
 	// Test args
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeExecuteContractArgs(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeExecuteContractArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3991,7 +3991,7 @@ func TestExecuteContractArgs(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewExecuteContractArgs()
+	jo := koinos.NewExecuteContractArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -4018,18 +4018,18 @@ func TestExecuteContractArgs(t *testing.T) {
 // ----------------------------------------
 
 func TestExecuteContractRet(t *testing.T) {
-	o := NewExecuteContractRet()
+	o := koinos.NewExecuteContractRet()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeExecuteContractRet(vb)
+	_, _, err := koinos.DeserializeExecuteContractRet(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
-	vb = NewVariableBlob()
-	size, _, err := DeserializeExecuteContractRet(vb)
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeExecuteContractRet(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -4042,7 +4042,7 @@ func TestExecuteContractRet(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewExecuteContractRet()
+	jo := koinos.NewExecuteContractRet()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -4059,12 +4059,12 @@ func TestExecuteContractRet(t *testing.T) {
 // ----------------------------------------
 
 func TestGetContractArgsSizeArgs(t *testing.T) {
-	o := NewGetContractArgsSizeArgs()
+	o := koinos.NewGetContractArgsSizeArgs()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeGetContractArgsSizeArgs(vb)
+	_, _, err := koinos.DeserializeGetContractArgsSizeArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -4074,7 +4074,7 @@ func TestGetContractArgsSizeArgs(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewGetContractArgsSizeArgs()
+	jo := koinos.NewGetContractArgsSizeArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -4091,18 +4091,18 @@ func TestGetContractArgsSizeArgs(t *testing.T) {
 // ----------------------------------------
 
 func TestGetContractArgsSizeRet(t *testing.T) {
-	o := NewGetContractArgsSizeRet()
+	o := koinos.NewGetContractArgsSizeRet()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeGetContractArgsSizeRet(vb)
+	_, _, err := koinos.DeserializeGetContractArgsSizeRet(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
-	vb = NewVariableBlob()
-	size, _, err := DeserializeGetContractArgsSizeRet(vb)
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeGetContractArgsSizeRet(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -4115,7 +4115,7 @@ func TestGetContractArgsSizeRet(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewGetContractArgsSizeRet()
+	jo := koinos.NewGetContractArgsSizeRet()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -4132,12 +4132,12 @@ func TestGetContractArgsSizeRet(t *testing.T) {
 // ----------------------------------------
 
 func TestGetContractArgsArgs(t *testing.T) {
-	o := NewGetContractArgsArgs()
+	o := koinos.NewGetContractArgsArgs()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeGetContractArgsArgs(vb)
+	_, _, err := koinos.DeserializeGetContractArgsArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -4147,7 +4147,7 @@ func TestGetContractArgsArgs(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewGetContractArgsArgs()
+	jo := koinos.NewGetContractArgsArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -4164,18 +4164,18 @@ func TestGetContractArgsArgs(t *testing.T) {
 // ----------------------------------------
 
 func TestGetContractArgsRet(t *testing.T) {
-	o := NewGetContractArgsRet()
+	o := koinos.NewGetContractArgsRet()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeGetContractArgsRet(vb)
+	_, _, err := koinos.DeserializeGetContractArgsRet(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
-	vb = NewVariableBlob()
-	size, _, err := DeserializeGetContractArgsRet(vb)
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeGetContractArgsRet(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -4188,7 +4188,7 @@ func TestGetContractArgsRet(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewGetContractArgsRet()
+	jo := koinos.NewGetContractArgsRet()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -4205,20 +4205,20 @@ func TestGetContractArgsRet(t *testing.T) {
 // ----------------------------------------
 
 func TestSetContractReturnArgs(t *testing.T) {
-	o := NewSetContractReturnArgs()
+	o := koinos.NewSetContractReturnArgs()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeSetContractReturnArgs(vb)
+	_, _, err := koinos.DeserializeSetContractReturnArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test ret
-	vb = &VariableBlob{}
-	n, _, err = DeserializeSetContractReturnArgs(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeSetContractReturnArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -4231,7 +4231,7 @@ func TestSetContractReturnArgs(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewSetContractReturnArgs()
+	jo := koinos.NewSetContractReturnArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -4258,12 +4258,12 @@ func TestSetContractReturnArgs(t *testing.T) {
 // ----------------------------------------
 
 func TestSetContractReturnRet(t *testing.T) {
-	o := NewSetContractReturnRet()
+	o := koinos.NewSetContractReturnRet()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeSetContractReturnRet(vb)
+	_, _, err := koinos.DeserializeSetContractReturnRet(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -4273,7 +4273,7 @@ func TestSetContractReturnRet(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewSetContractReturnRet()
+	jo := koinos.NewSetContractReturnRet()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -4290,20 +4290,20 @@ func TestSetContractReturnRet(t *testing.T) {
 // ----------------------------------------
 
 func TestExitContractArgs(t *testing.T) {
-	o := NewExitContractArgs()
+	o := koinos.NewExitContractArgs()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeExitContractArgs(vb)
+	_, _, err := koinos.DeserializeExitContractArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test exit_code
-	vb = &VariableBlob{}
-	n, _, err = DeserializeExitContractArgs(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeExitContractArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -4316,7 +4316,7 @@ func TestExitContractArgs(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewExitContractArgs()
+	jo := koinos.NewExitContractArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -4343,12 +4343,12 @@ func TestExitContractArgs(t *testing.T) {
 // ----------------------------------------
 
 func TestExitContractRet(t *testing.T) {
-	o := NewExitContractRet()
+	o := koinos.NewExitContractRet()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeExitContractRet(vb)
+	_, _, err := koinos.DeserializeExitContractRet(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -4358,7 +4358,7 @@ func TestExitContractRet(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewExitContractRet()
+	jo := koinos.NewExitContractRet()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -4375,12 +4375,12 @@ func TestExitContractRet(t *testing.T) {
 // ----------------------------------------
 
 func TestGetHeadInfoArgs(t *testing.T) {
-	o := NewGetHeadInfoArgs()
+	o := koinos.NewGetHeadInfoArgs()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeGetHeadInfoArgs(vb)
+	_, _, err := koinos.DeserializeGetHeadInfoArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -4390,7 +4390,7 @@ func TestGetHeadInfoArgs(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewGetHeadInfoArgs()
+	jo := koinos.NewGetHeadInfoArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -4407,18 +4407,18 @@ func TestGetHeadInfoArgs(t *testing.T) {
 // ----------------------------------------
 
 func TestGetHeadInfoRet(t *testing.T) {
-	o := NewGetHeadInfoRet()
+	o := koinos.NewGetHeadInfoRet()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeGetHeadInfoRet(vb)
+	_, _, err := koinos.DeserializeGetHeadInfoRet(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
-	vb = NewVariableBlob()
-	size, _, err := DeserializeGetHeadInfoRet(vb)
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeGetHeadInfoRet(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -4431,7 +4431,7 @@ func TestGetHeadInfoRet(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewGetHeadInfoRet()
+	jo := koinos.NewGetHeadInfoRet()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -4448,20 +4448,20 @@ func TestGetHeadInfoRet(t *testing.T) {
 // ----------------------------------------
 
 func TestHashArgs(t *testing.T) {
-	o := NewHashArgs()
+	o := koinos.NewHashArgs()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeHashArgs(vb)
+	_, _, err := koinos.DeserializeHashArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test code
-	vb = &VariableBlob{}
-	n, _, err = DeserializeHashArgs(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeHashArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -4470,8 +4470,8 @@ func TestHashArgs(t *testing.T) {
 	}
 
 	// Test obj
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeHashArgs(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeHashArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -4480,8 +4480,8 @@ func TestHashArgs(t *testing.T) {
 	}
 
 	// Test size
-	vb = &VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = DeserializeHashArgs(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeHashArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -4494,7 +4494,7 @@ func TestHashArgs(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewHashArgs()
+	jo := koinos.NewHashArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -4521,18 +4521,18 @@ func TestHashArgs(t *testing.T) {
 // ----------------------------------------
 
 func TestHashRet(t *testing.T) {
-	o := NewHashRet()
+	o := koinos.NewHashRet()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeHashRet(vb)
+	_, _, err := koinos.DeserializeHashRet(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
-	vb = NewVariableBlob()
-	size, _, err := DeserializeHashRet(vb)
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeHashRet(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -4545,7 +4545,7 @@ func TestHashRet(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewHashRet()
+	jo := koinos.NewHashRet()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -4562,44 +4562,44 @@ func TestHashRet(t *testing.T) {
 // ----------------------------------------
 
 func TestSystemCallID(t *testing.T) {
-	vals := []SystemCallID{
-		SystemCallIDPrints,
-		SystemCallIDVerifyBlockHeader,
-		SystemCallIDApplyBlock,
-		SystemCallIDApplyTransaction,
-		SystemCallIDApplyReservedOperation,
-		SystemCallIDApplyUploadContractOperation,
-		SystemCallIDApplyExecuteContractOperation,
-		SystemCallIDApplySetSystemCallOperation,
-		SystemCallIDDbPutObject,
-		SystemCallIDDbGetObject,
-		SystemCallIDDbGetNextObject,
-		SystemCallIDDbGetPrevObject,
-		SystemCallIDExecuteContract,
-		SystemCallIDGetContractArgsSize,
-		SystemCallIDGetContractArgs,
-		SystemCallIDSetContractReturn,
-		SystemCallIDExitContract,
-		SystemCallIDGetHeadInfo,
-		SystemCallIDHash,
-		SystemCallIDVerifyBlockSig,
-		SystemCallIDVerifyMerkleRoot,
+	vals := []koinos.SystemCallID{
+		koinos.SystemCallIDPrints,
+		koinos.SystemCallIDVerifyBlockHeader,
+		koinos.SystemCallIDApplyBlock,
+		koinos.SystemCallIDApplyTransaction,
+		koinos.SystemCallIDApplyReservedOperation,
+		koinos.SystemCallIDApplyUploadContractOperation,
+		koinos.SystemCallIDApplyExecuteContractOperation,
+		koinos.SystemCallIDApplySetSystemCallOperation,
+		koinos.SystemCallIDDbPutObject,
+		koinos.SystemCallIDDbGetObject,
+		koinos.SystemCallIDDbGetNextObject,
+		koinos.SystemCallIDDbGetPrevObject,
+		koinos.SystemCallIDExecuteContract,
+		koinos.SystemCallIDGetContractArgsSize,
+		koinos.SystemCallIDGetContractArgs,
+		koinos.SystemCallIDSetContractReturn,
+		koinos.SystemCallIDExitContract,
+		koinos.SystemCallIDGetHeadInfo,
+		koinos.SystemCallIDHash,
+		koinos.SystemCallIDVerifyBlockSig,
+		koinos.SystemCallIDVerifyMerkleRoot,
 	}
 
 	// Make sure all types properly serialize
 	for _, x := range vals {
-		vb := NewVariableBlob()
+		vb := koinos.NewVariableBlob()
 		vb = x.Serialize(vb)
 
-		nvb := NewVariableBlob()
-		ox := UInt32(x)
+		nvb := koinos.NewVariableBlob()
+		ox := koinos.UInt32(x)
 		nvb = ox.Serialize(nvb)
 
 		if !bytes.Equal(*vb, *nvb) {
 			t.Errorf("Serialized enum does match ideal serialization.")
 		}
 
-		_, y, err := DeserializeSystemCallID(vb)
+		_, y, err := koinos.DeserializeSystemCallID(vb)
 		if err != nil {
 			t.Error(err)
 		}
@@ -4623,7 +4623,7 @@ func TestSystemCallID(t *testing.T) {
 			t.Error(err)
 		}
 
-		r := NewSystemCallID()
+		r := koinos.NewSystemCallID()
 		if err = json.Unmarshal(jx, r); err != nil {
 			t.Error(err)
 		}
@@ -4632,9 +4632,9 @@ func TestSystemCallID(t *testing.T) {
 	// Find a value that is NOT an enum value
 	w := getInvalidSystemCallID()
 
-	tw := UInt32(w)
-	vb := NewVariableBlob()
-	n, _, err := DeserializeSystemCallID(vb)
+	tw := koinos.UInt32(w)
+	vb := koinos.NewVariableBlob()
+	n, _, err := koinos.DeserializeSystemCallID(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -4644,11 +4644,11 @@ func TestSystemCallID(t *testing.T) {
 
 	vb = tw.Serialize(vb)
 
-	if _, _, err := DeserializeSystemCallID(vb); err == nil {
+	if _, _, err := koinos.DeserializeSystemCallID(vb); err == nil {
 		t.Errorf("Deserializing an invalid value did not return an error.")
 	}
 
-	je := NewSystemCallID()
+	je := koinos.NewSystemCallID()
 	if err := json.Unmarshal([]byte(fmt.Sprint(tw)), &je); err == nil {
 		t.Errorf("Deserializing an invalid JSON value did not return an error.")
 	}
@@ -4669,7 +4669,7 @@ func TestSystemCallIDPanic(t *testing.T) {
 			}
 		}()
 
-		vb := NewVariableBlob()
+		vb := koinos.NewVariableBlob()
 		vb = w.Serialize(vb)
 	}()
 
@@ -4684,9 +4684,9 @@ func TestSystemCallIDPanic(t *testing.T) {
 	}()
 }
 
-func getInvalidSystemCallID() SystemCallID {
-	w := SystemCallIDVerifyMerkleRoot
-	for IsValidSystemCallID(w) {
+func getInvalidSystemCallID() koinos.SystemCallID {
+	w := koinos.SystemCallIDVerifyMerkleRoot
+	for koinos.IsValidSystemCallID(w) {
 		w++
 	}
 
@@ -4697,20 +4697,20 @@ func getInvalidSystemCallID() SystemCallID {
 // ----------------------------------------
 
 func TestBlockPart(t *testing.T) {
-	o := NewBlockPart()
+	o := koinos.NewBlockPart()
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := DeserializeBlockPart(vb)
+	_, _, err := koinos.DeserializeBlockPart(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
 	// Test active_data
-	vb = &VariableBlob{}
-	n, _, err = DeserializeBlockPart(vb)
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeBlockPart(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -4719,8 +4719,8 @@ func TestBlockPart(t *testing.T) {
 	}
 
 	// Test passive_data
-	vb = &VariableBlob{0x00}
-	n, _, err = DeserializeBlockPart(vb)
+	vb = &koinos.VariableBlob{0x00}
+	n, _, err = koinos.DeserializeBlockPart(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -4729,8 +4729,8 @@ func TestBlockPart(t *testing.T) {
 	}
 
 	// Test sig_data
-	vb = &VariableBlob{0x00, 0x00}
-	n, _, err = DeserializeBlockPart(vb)
+	vb = &koinos.VariableBlob{0x00, 0x00}
+	n, _, err = koinos.DeserializeBlockPart(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -4743,7 +4743,7 @@ func TestBlockPart(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewBlockPart()
+	jo := koinos.NewBlockPart()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -4771,15 +4771,15 @@ func TestBlockPart(t *testing.T) {
 // ----------------------------------------
 
 func TestFixedBlob20(t *testing.T) {
-	fb := NewFixedBlob20()
+	fb := koinos.NewFixedBlob20()
 	for i := 0; i < 20; i++ {
 		fb[i] = byte((20 + i) % 256)
 	}
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = fb.Serialize(vb)
 
-	size, nfb, err := DeserializeFixedBlob20(vb)
+	size, nfb, err := koinos.DeserializeFixedBlob20(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -4792,8 +4792,8 @@ func TestFixedBlob20(t *testing.T) {
 		t.Errorf("Binary deserialized fixed blob does not match source.")
 	}
 
-	vb = NewVariableBlob()
-	size, _, err = DeserializeFixedBlob20(vb)
+	vb = koinos.NewVariableBlob()
+	size, _, err = koinos.DeserializeFixedBlob20(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -4806,7 +4806,7 @@ func TestFixedBlob20(t *testing.T) {
 		t.Error(err)
 	}
 
-	jfb := NewFixedBlob20()
+	jfb := koinos.NewFixedBlob20()
 	err = json.Unmarshal(j, &jfb)
 	if err != nil {
 		t.Error(err)
@@ -4831,7 +4831,7 @@ func TestFixedBlob20(t *testing.T) {
 	for i := 0; i < 20+1; i++ {
 		wfb[i] = byte((20 + i) % 256)
 	}
-	s := EncodeBytes(wfb)
+	s := koinos.EncodeBytes(wfb)
 	err = json.Unmarshal([]byte("\""+s+"\""), &jfb)
 	if err == nil {
 		t.Errorf("deserialized JSON from a string which was not the proper size.")
@@ -4842,7 +4842,7 @@ func TestFixedBlob20(t *testing.T) {
 	for i := 0; i < 20; i++ {
 		wfb[i] = byte((20 + i) % 256)
 	}
-	s = EncodeBytes(wfb)
+	s = koinos.EncodeBytes(wfb)
 	s = "0" + s[1:]
 	err = json.Unmarshal([]byte("\""+s+"\""), &jfb)
 	if err == nil {
@@ -4855,15 +4855,15 @@ func TestFixedBlob20(t *testing.T) {
 // ----------------------------------------
 
 func TestFixedBlob65(t *testing.T) {
-	fb := NewFixedBlob65()
+	fb := koinos.NewFixedBlob65()
 	for i := 0; i < 65; i++ {
 		fb[i] = byte((65 + i) % 256)
 	}
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = fb.Serialize(vb)
 
-	size, nfb, err := DeserializeFixedBlob65(vb)
+	size, nfb, err := koinos.DeserializeFixedBlob65(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -4876,8 +4876,8 @@ func TestFixedBlob65(t *testing.T) {
 		t.Errorf("Binary deserialized fixed blob does not match source.")
 	}
 
-	vb = NewVariableBlob()
-	size, _, err = DeserializeFixedBlob65(vb)
+	vb = koinos.NewVariableBlob()
+	size, _, err = koinos.DeserializeFixedBlob65(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -4890,7 +4890,7 @@ func TestFixedBlob65(t *testing.T) {
 		t.Error(err)
 	}
 
-	jfb := NewFixedBlob65()
+	jfb := koinos.NewFixedBlob65()
 	err = json.Unmarshal(j, &jfb)
 	if err != nil {
 		t.Error(err)
@@ -4915,7 +4915,7 @@ func TestFixedBlob65(t *testing.T) {
 	for i := 0; i < 65+1; i++ {
 		wfb[i] = byte((65 + i) % 256)
 	}
-	s := EncodeBytes(wfb)
+	s := koinos.EncodeBytes(wfb)
 	err = json.Unmarshal([]byte("\""+s+"\""), &jfb)
 	if err == nil {
 		t.Errorf("deserialized JSON from a string which was not the proper size.")
@@ -4926,7 +4926,7 @@ func TestFixedBlob65(t *testing.T) {
 	for i := 0; i < 65; i++ {
 		wfb[i] = byte((65 + i) % 256)
 	}
-	s = EncodeBytes(wfb)
+	s = koinos.EncodeBytes(wfb)
 	s = "0" + s[1:]
 	err = json.Unmarshal([]byte("\""+s+"\""), &jfb)
 	if err == nil {
@@ -4941,7 +4941,7 @@ func TestFixedBlob65(t *testing.T) {
 // ----------------------------------------
 
 func TestOpaqueActiveBlockData(t *testing.T) {
-	o := NewOpaqueActiveBlockData()
+	o := koinos.NewOpaqueActiveBlockData()
 
 	o.Box()
 	if o.IsUnboxed() {
@@ -5029,7 +5029,7 @@ func TestOpaqueActiveBlockData(t *testing.T) {
 
 	// Test serialization
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 	b := o.GetBlob()
 
@@ -5044,7 +5044,7 @@ func TestOpaqueActiveBlockData(t *testing.T) {
 		t.Errorf("GetBlob and Serialization do not match")
 	}
 
-	_, _, err2 := DeserializeOpaqueActiveBlockData(vb)
+	_, _, err2 := koinos.DeserializeOpaqueActiveBlockData(vb)
 	if err2 != nil {
 		t.Error(err2)
 	}
@@ -5054,7 +5054,7 @@ func TestOpaqueActiveBlockData(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewOpaqueActiveBlockData()
+	jo := koinos.NewOpaqueActiveBlockData()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -5105,7 +5105,7 @@ func TestOpaqueActiveBlockData(t *testing.T) {
 // ----------------------------------------
 
 func TestOpaqueActiveTransactionData(t *testing.T) {
-	o := NewOpaqueActiveTransactionData()
+	o := koinos.NewOpaqueActiveTransactionData()
 
 	o.Box()
 	if o.IsUnboxed() {
@@ -5193,7 +5193,7 @@ func TestOpaqueActiveTransactionData(t *testing.T) {
 
 	// Test serialization
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 	b := o.GetBlob()
 
@@ -5208,7 +5208,7 @@ func TestOpaqueActiveTransactionData(t *testing.T) {
 		t.Errorf("GetBlob and Serialization do not match")
 	}
 
-	_, _, err2 := DeserializeOpaqueActiveTransactionData(vb)
+	_, _, err2 := koinos.DeserializeOpaqueActiveTransactionData(vb)
 	if err2 != nil {
 		t.Error(err2)
 	}
@@ -5218,7 +5218,7 @@ func TestOpaqueActiveTransactionData(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewOpaqueActiveTransactionData()
+	jo := koinos.NewOpaqueActiveTransactionData()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -5265,7 +5265,7 @@ func TestOpaqueActiveTransactionData(t *testing.T) {
 // ----------------------------------------
 
 func TestOpaquePassiveBlockData(t *testing.T) {
-	o := NewOpaquePassiveBlockData()
+	o := koinos.NewOpaquePassiveBlockData()
 
 	o.Box()
 	if o.IsUnboxed() {
@@ -5353,7 +5353,7 @@ func TestOpaquePassiveBlockData(t *testing.T) {
 
 	// Test serialization
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 	b := o.GetBlob()
 
@@ -5368,7 +5368,7 @@ func TestOpaquePassiveBlockData(t *testing.T) {
 		t.Errorf("GetBlob and Serialization do not match")
 	}
 
-	_, _, err2 := DeserializeOpaquePassiveBlockData(vb)
+	_, _, err2 := koinos.DeserializeOpaquePassiveBlockData(vb)
 	if err2 != nil {
 		t.Error(err2)
 	}
@@ -5378,7 +5378,7 @@ func TestOpaquePassiveBlockData(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewOpaquePassiveBlockData()
+	jo := koinos.NewOpaquePassiveBlockData()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -5425,7 +5425,7 @@ func TestOpaquePassiveBlockData(t *testing.T) {
 // ----------------------------------------
 
 func TestOpaquePassiveTransactionData(t *testing.T) {
-	o := NewOpaquePassiveTransactionData()
+	o := koinos.NewOpaquePassiveTransactionData()
 
 	o.Box()
 	if o.IsUnboxed() {
@@ -5513,7 +5513,7 @@ func TestOpaquePassiveTransactionData(t *testing.T) {
 
 	// Test serialization
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 	b := o.GetBlob()
 
@@ -5528,7 +5528,7 @@ func TestOpaquePassiveTransactionData(t *testing.T) {
 		t.Errorf("GetBlob and Serialization do not match")
 	}
 
-	_, _, err2 := DeserializeOpaquePassiveTransactionData(vb)
+	_, _, err2 := koinos.DeserializeOpaquePassiveTransactionData(vb)
 	if err2 != nil {
 		t.Error(err2)
 	}
@@ -5538,7 +5538,7 @@ func TestOpaquePassiveTransactionData(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewOpaquePassiveTransactionData()
+	jo := koinos.NewOpaquePassiveTransactionData()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -5585,7 +5585,7 @@ func TestOpaquePassiveTransactionData(t *testing.T) {
 // ----------------------------------------
 
 func TestOpaqueQueryItemResult(t *testing.T) {
-	o := NewOpaqueQueryItemResult()
+	o := koinos.NewOpaqueQueryItemResult()
 
 	o.Box()
 	if o.IsUnboxed() {
@@ -5673,7 +5673,7 @@ func TestOpaqueQueryItemResult(t *testing.T) {
 
 	// Test serialization
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 	b := o.GetBlob()
 
@@ -5688,7 +5688,7 @@ func TestOpaqueQueryItemResult(t *testing.T) {
 		t.Errorf("GetBlob and Serialization do not match")
 	}
 
-	_, _, err2 := DeserializeOpaqueQueryItemResult(vb)
+	_, _, err2 := koinos.DeserializeOpaqueQueryItemResult(vb)
 	if err2 != nil {
 		t.Error(err2)
 	}
@@ -5698,7 +5698,7 @@ func TestOpaqueQueryItemResult(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewOpaqueQueryItemResult()
+	jo := koinos.NewOpaqueQueryItemResult()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -5749,7 +5749,7 @@ func TestOpaqueQueryItemResult(t *testing.T) {
 // ----------------------------------------
 
 func TestOpaqueQueryParamItem(t *testing.T) {
-	o := NewOpaqueQueryParamItem()
+	o := koinos.NewOpaqueQueryParamItem()
 
 	o.Box()
 	if o.IsUnboxed() {
@@ -5837,7 +5837,7 @@ func TestOpaqueQueryParamItem(t *testing.T) {
 
 	// Test serialization
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 	b := o.GetBlob()
 
@@ -5852,7 +5852,7 @@ func TestOpaqueQueryParamItem(t *testing.T) {
 		t.Errorf("GetBlob and Serialization do not match")
 	}
 
-	_, _, err2 := DeserializeOpaqueQueryParamItem(vb)
+	_, _, err2 := koinos.DeserializeOpaqueQueryParamItem(vb)
 	if err2 != nil {
 		t.Error(err2)
 	}
@@ -5862,7 +5862,7 @@ func TestOpaqueQueryParamItem(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewOpaqueQueryParamItem()
+	jo := koinos.NewOpaqueQueryParamItem()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -5913,7 +5913,7 @@ func TestOpaqueQueryParamItem(t *testing.T) {
 // ----------------------------------------
 
 func TestOpaqueTransaction(t *testing.T) {
-	o := NewOpaqueTransaction()
+	o := koinos.NewOpaqueTransaction()
 
 	o.Box()
 	if o.IsUnboxed() {
@@ -6001,7 +6001,7 @@ func TestOpaqueTransaction(t *testing.T) {
 
 	// Test serialization
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 	b := o.GetBlob()
 
@@ -6016,7 +6016,7 @@ func TestOpaqueTransaction(t *testing.T) {
 		t.Errorf("GetBlob and Serialization do not match")
 	}
 
-	_, _, err2 := DeserializeOpaqueTransaction(vb)
+	_, _, err2 := koinos.DeserializeOpaqueTransaction(vb)
 	if err2 != nil {
 		t.Error(err2)
 	}
@@ -6026,7 +6026,7 @@ func TestOpaqueTransaction(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := NewOpaqueTransaction()
+	jo := koinos.NewOpaqueTransaction()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -6078,16 +6078,16 @@ func TestOpaqueTransaction(t *testing.T) {
 // ----------------------------------------
 
 func TestVectorMultihash(t *testing.T) {
-	v := NewVectorMultihash()
+	v := koinos.NewVectorMultihash()
 	for i := 0; i < 16; i++ {
-		no := NewMultihash()
+		no := koinos.NewMultihash()
 		*v = append(*v, *no)
 	}
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = v.Serialize(vb)
 
-	_, nv, err := DeserializeVectorMultihash(vb)
+	_, nv, err := koinos.DeserializeVectorMultihash(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -6101,15 +6101,15 @@ func TestVectorMultihash(t *testing.T) {
 		t.Error(err)
 	}
 
-	jv := NewVectorMultihash()
+	jv := koinos.NewVectorMultihash()
 	err = json.Unmarshal(j, &jv)
 	if err != nil {
 		t.Error(err)
 	}
 
 	// Test no data in the vector
-	vb = &VariableBlob{0x01}
-	n, _, err := DeserializeVectorMultihash(vb)
+	vb = &koinos.VariableBlob{0x01}
+	n, _, err := koinos.DeserializeVectorMultihash(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -6123,16 +6123,16 @@ func TestVectorMultihash(t *testing.T) {
 // ----------------------------------------
 
 func TestVectorOpaqueTransaction(t *testing.T) {
-	v := NewVectorOpaqueTransaction()
+	v := koinos.NewVectorOpaqueTransaction()
 	for i := 0; i < 16; i++ {
-		no := NewOpaqueTransaction()
+		no := koinos.NewOpaqueTransaction()
 		*v = append(*v, *no)
 	}
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = v.Serialize(vb)
 
-	_, nv, err := DeserializeVectorOpaqueTransaction(vb)
+	_, nv, err := koinos.DeserializeVectorOpaqueTransaction(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -6146,15 +6146,15 @@ func TestVectorOpaqueTransaction(t *testing.T) {
 		t.Error(err)
 	}
 
-	jv := NewVectorOpaqueTransaction()
+	jv := koinos.NewVectorOpaqueTransaction()
 	err = json.Unmarshal(j, &jv)
 	if err != nil {
 		t.Error(err)
 	}
 
 	// Test no data in the vector
-	vb = &VariableBlob{0x01}
-	n, _, err := DeserializeVectorOpaqueTransaction(vb)
+	vb = &koinos.VariableBlob{0x01}
+	n, _, err := koinos.DeserializeVectorOpaqueTransaction(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -6168,16 +6168,16 @@ func TestVectorOpaqueTransaction(t *testing.T) {
 // ----------------------------------------
 
 func TestVectorOperation(t *testing.T) {
-	v := NewVectorOperation()
+	v := koinos.NewVectorOperation()
 	for i := 0; i < 16; i++ {
-		no := NewOperation()
+		no := koinos.NewOperation()
 		*v = append(*v, *no)
 	}
 
-	vb := NewVariableBlob()
+	vb := koinos.NewVariableBlob()
 	vb = v.Serialize(vb)
 
-	_, nv, err := DeserializeVectorOperation(vb)
+	_, nv, err := koinos.DeserializeVectorOperation(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -6191,15 +6191,15 @@ func TestVectorOperation(t *testing.T) {
 		t.Error(err)
 	}
 
-	jv := NewVectorOperation()
+	jv := koinos.NewVectorOperation()
 	err = json.Unmarshal(j, &jv)
 	if err != nil {
 		t.Error(err)
 	}
 
 	// Test no data in the vector
-	vb = &VariableBlob{0x01}
-	n, _, err := DeserializeVectorOperation(vb)
+	vb = &koinos.VariableBlob{0x01}
+	n, _, err := koinos.DeserializeVectorOperation(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
