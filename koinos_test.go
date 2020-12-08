@@ -5,13 +5,13 @@
 //  \____|\___|_| |_|\___|_|  \__,_|\__\___|\__,_|   |_|\___||___/\__|___/
 //                         Please do not modify
 
-package main
+package koinos_test
 
 import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	. "koinos"
+	"github.com/koinos/koinos-types-golang"
 	"testing"
 )
 
@@ -6207,5 +6207,3 @@ func TestVectorOperation(t *testing.T) {
 		t.Errorf("Bytes were consumed on error")
 	}
 }
-
-
