@@ -556,8 +556,8 @@ func DeserializeSystemCallTarget(vb *VariableBlob) (uint64,*SystemCallTarget,err
 // UnmarshalJSON *SystemCallTarget
 func (n *SystemCallTarget) UnmarshalJSON(data []byte) error {
 	variant := struct {
-		Type string `json:"type"`
-		Value interface{} `json:"value"`
+		Type  string          `json:"type"`
+		Value json.RawMessage `json:"value"`
 	}{}
 
 	err := json.Unmarshal(data, &variant)
@@ -565,21 +565,18 @@ func (n *SystemCallTarget) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	var tmp []byte
-	tmp, _ = json.Marshal(&variant.Value)
-
 	switch variant.Type {
 		case "koinos::types::system::system_call_target_reserved":
 			v := NewSystemCallTargetReserved()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::types::thunks::thunk_id":
 			v := NewThunkID()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::types::system::contract_call_bundle":
 			v := NewContractCallBundle()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
 			return errors.New("unknown variant type: " + variant.Type)
@@ -811,8 +808,8 @@ func DeserializeOperation(vb *VariableBlob) (uint64,*Operation,error) {
 // UnmarshalJSON *Operation
 func (n *Operation) UnmarshalJSON(data []byte) error {
 	variant := struct {
-		Type string `json:"type"`
-		Value interface{} `json:"value"`
+		Type  string          `json:"type"`
+		Value json.RawMessage `json:"value"`
 	}{}
 
 	err := json.Unmarshal(data, &variant)
@@ -820,29 +817,26 @@ func (n *Operation) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	var tmp []byte
-	tmp, _ = json.Marshal(&variant.Value)
-
 	switch variant.Type {
 		case "koinos::types::protocol::reserved_operation":
 			v := NewReservedOperation()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::types::protocol::nop_operation":
 			v := NewNopOperation()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::types::protocol::create_system_contract_operation":
 			v := NewCreateSystemContractOperation()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::types::protocol::contract_call_operation":
 			v := NewContractCallOperation()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::types::protocol::set_system_call_operation":
 			v := NewSetSystemCallOperation()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
 			return errors.New("unknown variant type: " + variant.Type)
@@ -1341,8 +1335,8 @@ func DeserializeQueryParamItem(vb *VariableBlob) (uint64,*QueryParamItem,error) 
 // UnmarshalJSON *QueryParamItem
 func (n *QueryParamItem) UnmarshalJSON(data []byte) error {
 	variant := struct {
-		Type string `json:"type"`
-		Value interface{} `json:"value"`
+		Type  string          `json:"type"`
+		Value json.RawMessage `json:"value"`
 	}{}
 
 	err := json.Unmarshal(data, &variant)
@@ -1350,17 +1344,14 @@ func (n *QueryParamItem) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	var tmp []byte
-	tmp, _ = json.Marshal(&variant.Value)
-
 	switch variant.Type {
 		case "koinos::types::rpc::reserved_query_params":
 			v := NewReservedQueryParams()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::types::rpc::get_head_info_params":
 			v := NewGetHeadInfoParams()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
 			return errors.New("unknown variant type: " + variant.Type)
@@ -1671,8 +1662,8 @@ func DeserializeQueryItemResult(vb *VariableBlob) (uint64,*QueryItemResult,error
 // UnmarshalJSON *QueryItemResult
 func (n *QueryItemResult) UnmarshalJSON(data []byte) error {
 	variant := struct {
-		Type string `json:"type"`
-		Value interface{} `json:"value"`
+		Type  string          `json:"type"`
+		Value json.RawMessage `json:"value"`
 	}{}
 
 	err := json.Unmarshal(data, &variant)
@@ -1680,21 +1671,18 @@ func (n *QueryItemResult) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	var tmp []byte
-	tmp, _ = json.Marshal(&variant.Value)
-
 	switch variant.Type {
 		case "koinos::types::rpc::reserved_query_result":
 			v := NewReservedQueryResult()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::types::rpc::query_error":
 			v := NewQueryError()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::types::rpc::get_head_info_result":
 			v := NewGetHeadInfoResult()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
 			return errors.New("unknown variant type: " + variant.Type)
@@ -2060,8 +2048,8 @@ func DeserializeSubmissionItem(vb *VariableBlob) (uint64,*SubmissionItem,error) 
 // UnmarshalJSON *SubmissionItem
 func (n *SubmissionItem) UnmarshalJSON(data []byte) error {
 	variant := struct {
-		Type string `json:"type"`
-		Value interface{} `json:"value"`
+		Type  string          `json:"type"`
+		Value json.RawMessage `json:"value"`
 	}{}
 
 	err := json.Unmarshal(data, &variant)
@@ -2069,25 +2057,22 @@ func (n *SubmissionItem) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	var tmp []byte
-	tmp, _ = json.Marshal(&variant.Value)
-
 	switch variant.Type {
 		case "koinos::types::rpc::reserved_submission":
 			v := NewReservedSubmission()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::types::rpc::block_submission":
 			v := NewBlockSubmission()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::types::rpc::transaction_submission":
 			v := NewTransactionSubmission()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::types::rpc::query_submission":
 			v := NewQuerySubmission()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
 			return errors.New("unknown variant type: " + variant.Type)
@@ -2325,8 +2310,8 @@ func DeserializeSubmissionResult(vb *VariableBlob) (uint64,*SubmissionResult,err
 // UnmarshalJSON *SubmissionResult
 func (n *SubmissionResult) UnmarshalJSON(data []byte) error {
 	variant := struct {
-		Type string `json:"type"`
-		Value interface{} `json:"value"`
+		Type  string          `json:"type"`
+		Value json.RawMessage `json:"value"`
 	}{}
 
 	err := json.Unmarshal(data, &variant)
@@ -2334,29 +2319,26 @@ func (n *SubmissionResult) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	var tmp []byte
-	tmp, _ = json.Marshal(&variant.Value)
-
 	switch variant.Type {
 		case "koinos::types::rpc::reserved_submission_result":
 			v := NewReservedSubmissionResult()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::types::rpc::block_submission_result":
 			v := NewBlockSubmissionResult()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::types::rpc::transaction_submission_result":
 			v := NewTransactionSubmissionResult()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::types::rpc::query_submission_result":
 			v := NewQuerySubmissionResult()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::types::rpc::submission_error_result":
 			v := NewSubmissionErrorResult()
-			json.Unmarshal(tmp, &v)
+			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
 			return errors.New("unknown variant type: " + variant.Type)
