@@ -43,100 +43,6 @@ func DeserializeUnusedExtensionsType(vb *VariableBlob) (uint64,*UnusedExtensions
 }
 
 // ----------------------------------------
-//  Typedef: SignatureType
-// ----------------------------------------
-
-// SignatureType type
-type SignatureType FixedBlob65
-
-// NewSignatureType factory
-func NewSignatureType() *SignatureType {
-	o := SignatureType(*NewFixedBlob65())
-	return &o
-}
-
-// Serialize SignatureType
-func (n SignatureType) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := FixedBlob65(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeSignatureType function
-func DeserializeSignatureType(vb *VariableBlob) (uint64,*SignatureType,error) {
-	var ot SignatureType
-	i,n,err := DeserializeFixedBlob65(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = SignatureType(*n)
-	return i,&ot,nil}
-
-// MarshalJSON SignatureType
-func (n SignatureType) MarshalJSON() ([]byte, error) {
-	v := FixedBlob65(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *SignatureType
-func (n *SignatureType) UnmarshalJSON(data []byte) error {
-	v := FixedBlob65(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = SignatureType(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Typedef: ContractIDType
-// ----------------------------------------
-
-// ContractIDType type
-type ContractIDType FixedBlob20
-
-// NewContractIDType factory
-func NewContractIDType() *ContractIDType {
-	o := ContractIDType(*NewFixedBlob20())
-	return &o
-}
-
-// Serialize ContractIDType
-func (n ContractIDType) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := FixedBlob20(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeContractIDType function
-func DeserializeContractIDType(vb *VariableBlob) (uint64,*ContractIDType,error) {
-	var ot ContractIDType
-	i,n,err := DeserializeFixedBlob20(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = ContractIDType(*n)
-	return i,&ot,nil}
-
-// MarshalJSON ContractIDType
-func (n ContractIDType) MarshalJSON() ([]byte, error) {
-	v := FixedBlob20(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *ContractIDType
-func (n *ContractIDType) UnmarshalJSON(data []byte) error {
-	v := FixedBlob20(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = ContractIDType(v)
-	return nil
-}
-
-
-// ----------------------------------------
 //  Struct: ReservedOperation
 // ----------------------------------------
 
@@ -195,6 +101,53 @@ func DeserializeNopOperation(vb *VariableBlob) (uint64,*NopOperation,error) {
 	
 	return i, &s, nil
 }
+
+// ----------------------------------------
+//  Typedef: ContractIDType
+// ----------------------------------------
+
+// ContractIDType type
+type ContractIDType FixedBlob20
+
+// NewContractIDType factory
+func NewContractIDType() *ContractIDType {
+	o := ContractIDType(*NewFixedBlob20())
+	return &o
+}
+
+// Serialize ContractIDType
+func (n ContractIDType) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := FixedBlob20(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeContractIDType function
+func DeserializeContractIDType(vb *VariableBlob) (uint64,*ContractIDType,error) {
+	var ot ContractIDType
+	i,n,err := DeserializeFixedBlob20(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = ContractIDType(*n)
+	return i,&ot,nil}
+
+// MarshalJSON ContractIDType
+func (n ContractIDType) MarshalJSON() ([]byte, error) {
+	v := FixedBlob20(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *ContractIDType
+func (n *ContractIDType) UnmarshalJSON(data []byte) error {
+	v := FixedBlob20(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = ContractIDType(v)
+	return nil
+}
+
 
 // ----------------------------------------
 //  Struct: CreateSystemContractOperation
@@ -1201,6 +1154,1122 @@ func DeserializeBlock(vb *VariableBlob) (uint64,*Block,error) {
 }
 
 // ----------------------------------------
+//  Struct: ReservedReq
+// ----------------------------------------
+
+// ReservedReq type
+type ReservedReq struct {
+}
+
+// NewReservedReq factory
+func NewReservedReq() *ReservedReq {
+	o := ReservedReq{}
+	return &o
+}
+
+// Serialize ReservedReq
+func (n ReservedReq) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeReservedReq function
+func DeserializeReservedReq(vb *VariableBlob) (uint64,*ReservedReq,error) {
+	var i uint64 = 0
+	s := ReservedReq{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: ReservedResp
+// ----------------------------------------
+
+// ReservedResp type
+type ReservedResp struct {
+}
+
+// NewReservedResp factory
+func NewReservedResp() *ReservedResp {
+	o := ReservedResp{}
+	return &o
+}
+
+// Serialize ReservedResp
+func (n ReservedResp) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeReservedResp function
+func DeserializeReservedResp(vb *VariableBlob) (uint64,*ReservedResp,error) {
+	var i uint64 = 0
+	s := ReservedResp{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: GetBlocksByIDReq
+// ----------------------------------------
+
+// GetBlocksByIDReq type
+type GetBlocksByIDReq struct {
+    BlockID VectorMultihash `json:"block_id"`
+    ReturnBlockBlob Boolean `json:"return_block_blob"`
+    ReturnReceiptBlob Boolean `json:"return_receipt_blob"`
+}
+
+// NewGetBlocksByIDReq factory
+func NewGetBlocksByIDReq() *GetBlocksByIDReq {
+	o := GetBlocksByIDReq{}
+	o.BlockID = *NewVectorMultihash()
+	o.ReturnBlockBlob = *NewBoolean()
+	o.ReturnReceiptBlob = *NewBoolean()
+	return &o
+}
+
+// Serialize GetBlocksByIDReq
+func (n GetBlocksByIDReq) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.BlockID.Serialize(vb)
+	vb = n.ReturnBlockBlob.Serialize(vb)
+	vb = n.ReturnReceiptBlob.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetBlocksByIDReq function
+func DeserializeGetBlocksByIDReq(vb *VariableBlob) (uint64,*GetBlocksByIDReq,error) {
+	var i,j uint64 = 0,0
+	s := GetBlocksByIDReq{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tBlockID,err := DeserializeVectorMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &GetBlocksByIDReq{}, err
+	}
+	s.BlockID = *tBlockID
+	ovb = (*vb)[i:]
+	j,tReturnBlockBlob,err := DeserializeBoolean(&ovb); i+=j
+	if err != nil {
+		return 0, &GetBlocksByIDReq{}, err
+	}
+	s.ReturnBlockBlob = *tReturnBlockBlob
+	ovb = (*vb)[i:]
+	j,tReturnReceiptBlob,err := DeserializeBoolean(&ovb); i+=j
+	if err != nil {
+		return 0, &GetBlocksByIDReq{}, err
+	}
+	s.ReturnReceiptBlob = *tReturnReceiptBlob
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: BlockItem
+// ----------------------------------------
+
+// BlockItem type
+type BlockItem struct {
+    BlockID Multihash `json:"block_id"`
+    BlockHeight BlockHeightType `json:"block_height"`
+    BlockBlob VariableBlob `json:"block_blob"`
+    BlockReceiptBlob VariableBlob `json:"block_receipt_blob"`
+}
+
+// NewBlockItem factory
+func NewBlockItem() *BlockItem {
+	o := BlockItem{}
+	o.BlockID = *NewMultihash()
+	o.BlockHeight = *NewBlockHeightType()
+	o.BlockBlob = *NewVariableBlob()
+	o.BlockReceiptBlob = *NewVariableBlob()
+	return &o
+}
+
+// Serialize BlockItem
+func (n BlockItem) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.BlockID.Serialize(vb)
+	vb = n.BlockHeight.Serialize(vb)
+	vb = n.BlockBlob.Serialize(vb)
+	vb = n.BlockReceiptBlob.Serialize(vb)
+	return vb
+}
+
+// DeserializeBlockItem function
+func DeserializeBlockItem(vb *VariableBlob) (uint64,*BlockItem,error) {
+	var i,j uint64 = 0,0
+	s := BlockItem{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tBlockID,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockItem{}, err
+	}
+	s.BlockID = *tBlockID
+	ovb = (*vb)[i:]
+	j,tBlockHeight,err := DeserializeBlockHeightType(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockItem{}, err
+	}
+	s.BlockHeight = *tBlockHeight
+	ovb = (*vb)[i:]
+	j,tBlockBlob,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockItem{}, err
+	}
+	s.BlockBlob = *tBlockBlob
+	ovb = (*vb)[i:]
+	j,tBlockReceiptBlob,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockItem{}, err
+	}
+	s.BlockReceiptBlob = *tBlockReceiptBlob
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: GetBlocksByIDResp
+// ----------------------------------------
+
+// GetBlocksByIDResp type
+type GetBlocksByIDResp struct {
+    BlockItems VectorBlockItem `json:"block_items"`
+}
+
+// NewGetBlocksByIDResp factory
+func NewGetBlocksByIDResp() *GetBlocksByIDResp {
+	o := GetBlocksByIDResp{}
+	o.BlockItems = *NewVectorBlockItem()
+	return &o
+}
+
+// Serialize GetBlocksByIDResp
+func (n GetBlocksByIDResp) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.BlockItems.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetBlocksByIDResp function
+func DeserializeGetBlocksByIDResp(vb *VariableBlob) (uint64,*GetBlocksByIDResp,error) {
+	var i,j uint64 = 0,0
+	s := GetBlocksByIDResp{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tBlockItems,err := DeserializeVectorBlockItem(&ovb); i+=j
+	if err != nil {
+		return 0, &GetBlocksByIDResp{}, err
+	}
+	s.BlockItems = *tBlockItems
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: GetBlocksByHeightReq
+// ----------------------------------------
+
+// GetBlocksByHeightReq type
+type GetBlocksByHeightReq struct {
+    HeadBlockID Multihash `json:"head_block_id"`
+    AncestorStartHeight BlockHeightType `json:"ancestor_start_height"`
+    NumBlocks UInt32 `json:"num_blocks"`
+    ReturnBlockBlob Boolean `json:"return_block_blob"`
+    ReturnReceiptBlob Boolean `json:"return_receipt_blob"`
+}
+
+// NewGetBlocksByHeightReq factory
+func NewGetBlocksByHeightReq() *GetBlocksByHeightReq {
+	o := GetBlocksByHeightReq{}
+	o.HeadBlockID = *NewMultihash()
+	o.AncestorStartHeight = *NewBlockHeightType()
+	o.NumBlocks = *NewUInt32()
+	o.ReturnBlockBlob = *NewBoolean()
+	o.ReturnReceiptBlob = *NewBoolean()
+	return &o
+}
+
+// Serialize GetBlocksByHeightReq
+func (n GetBlocksByHeightReq) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.HeadBlockID.Serialize(vb)
+	vb = n.AncestorStartHeight.Serialize(vb)
+	vb = n.NumBlocks.Serialize(vb)
+	vb = n.ReturnBlockBlob.Serialize(vb)
+	vb = n.ReturnReceiptBlob.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetBlocksByHeightReq function
+func DeserializeGetBlocksByHeightReq(vb *VariableBlob) (uint64,*GetBlocksByHeightReq,error) {
+	var i,j uint64 = 0,0
+	s := GetBlocksByHeightReq{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tHeadBlockID,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &GetBlocksByHeightReq{}, err
+	}
+	s.HeadBlockID = *tHeadBlockID
+	ovb = (*vb)[i:]
+	j,tAncestorStartHeight,err := DeserializeBlockHeightType(&ovb); i+=j
+	if err != nil {
+		return 0, &GetBlocksByHeightReq{}, err
+	}
+	s.AncestorStartHeight = *tAncestorStartHeight
+	ovb = (*vb)[i:]
+	j,tNumBlocks,err := DeserializeUInt32(&ovb); i+=j
+	if err != nil {
+		return 0, &GetBlocksByHeightReq{}, err
+	}
+	s.NumBlocks = *tNumBlocks
+	ovb = (*vb)[i:]
+	j,tReturnBlockBlob,err := DeserializeBoolean(&ovb); i+=j
+	if err != nil {
+		return 0, &GetBlocksByHeightReq{}, err
+	}
+	s.ReturnBlockBlob = *tReturnBlockBlob
+	ovb = (*vb)[i:]
+	j,tReturnReceiptBlob,err := DeserializeBoolean(&ovb); i+=j
+	if err != nil {
+		return 0, &GetBlocksByHeightReq{}, err
+	}
+	s.ReturnReceiptBlob = *tReturnReceiptBlob
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: GetBlocksByHeightResp
+// ----------------------------------------
+
+// GetBlocksByHeightResp type
+type GetBlocksByHeightResp struct {
+    BlockItems VectorBlockItem `json:"block_items"`
+}
+
+// NewGetBlocksByHeightResp factory
+func NewGetBlocksByHeightResp() *GetBlocksByHeightResp {
+	o := GetBlocksByHeightResp{}
+	o.BlockItems = *NewVectorBlockItem()
+	return &o
+}
+
+// Serialize GetBlocksByHeightResp
+func (n GetBlocksByHeightResp) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.BlockItems.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetBlocksByHeightResp function
+func DeserializeGetBlocksByHeightResp(vb *VariableBlob) (uint64,*GetBlocksByHeightResp,error) {
+	var i,j uint64 = 0,0
+	s := GetBlocksByHeightResp{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tBlockItems,err := DeserializeVectorBlockItem(&ovb); i+=j
+	if err != nil {
+		return 0, &GetBlocksByHeightResp{}, err
+	}
+	s.BlockItems = *tBlockItems
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: AddBlockReq
+// ----------------------------------------
+
+// AddBlockReq type
+type AddBlockReq struct {
+    BlockToAdd BlockItem `json:"block_to_add"`
+    PreviousBlockID Multihash `json:"previous_block_id"`
+}
+
+// NewAddBlockReq factory
+func NewAddBlockReq() *AddBlockReq {
+	o := AddBlockReq{}
+	o.BlockToAdd = *NewBlockItem()
+	o.PreviousBlockID = *NewMultihash()
+	return &o
+}
+
+// Serialize AddBlockReq
+func (n AddBlockReq) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.BlockToAdd.Serialize(vb)
+	vb = n.PreviousBlockID.Serialize(vb)
+	return vb
+}
+
+// DeserializeAddBlockReq function
+func DeserializeAddBlockReq(vb *VariableBlob) (uint64,*AddBlockReq,error) {
+	var i,j uint64 = 0,0
+	s := AddBlockReq{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tBlockToAdd,err := DeserializeBlockItem(&ovb); i+=j
+	if err != nil {
+		return 0, &AddBlockReq{}, err
+	}
+	s.BlockToAdd = *tBlockToAdd
+	ovb = (*vb)[i:]
+	j,tPreviousBlockID,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &AddBlockReq{}, err
+	}
+	s.PreviousBlockID = *tPreviousBlockID
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: AddBlockResp
+// ----------------------------------------
+
+// AddBlockResp type
+type AddBlockResp struct {
+}
+
+// NewAddBlockResp factory
+func NewAddBlockResp() *AddBlockResp {
+	o := AddBlockResp{}
+	return &o
+}
+
+// Serialize AddBlockResp
+func (n AddBlockResp) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeAddBlockResp function
+func DeserializeAddBlockResp(vb *VariableBlob) (uint64,*AddBlockResp,error) {
+	var i uint64 = 0
+	s := AddBlockResp{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: BlockRecord
+// ----------------------------------------
+
+// BlockRecord type
+type BlockRecord struct {
+    BlockID Multihash `json:"block_id"`
+    BlockHeight BlockHeightType `json:"block_height"`
+    PreviousBlockIds VectorMultihash `json:"previous_block_ids"`
+    BlockBlob VariableBlob `json:"block_blob"`
+    BlockReceiptBlob VariableBlob `json:"block_receipt_blob"`
+}
+
+// NewBlockRecord factory
+func NewBlockRecord() *BlockRecord {
+	o := BlockRecord{}
+	o.BlockID = *NewMultihash()
+	o.BlockHeight = *NewBlockHeightType()
+	o.PreviousBlockIds = *NewVectorMultihash()
+	o.BlockBlob = *NewVariableBlob()
+	o.BlockReceiptBlob = *NewVariableBlob()
+	return &o
+}
+
+// Serialize BlockRecord
+func (n BlockRecord) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.BlockID.Serialize(vb)
+	vb = n.BlockHeight.Serialize(vb)
+	vb = n.PreviousBlockIds.Serialize(vb)
+	vb = n.BlockBlob.Serialize(vb)
+	vb = n.BlockReceiptBlob.Serialize(vb)
+	return vb
+}
+
+// DeserializeBlockRecord function
+func DeserializeBlockRecord(vb *VariableBlob) (uint64,*BlockRecord,error) {
+	var i,j uint64 = 0,0
+	s := BlockRecord{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tBlockID,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockRecord{}, err
+	}
+	s.BlockID = *tBlockID
+	ovb = (*vb)[i:]
+	j,tBlockHeight,err := DeserializeBlockHeightType(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockRecord{}, err
+	}
+	s.BlockHeight = *tBlockHeight
+	ovb = (*vb)[i:]
+	j,tPreviousBlockIds,err := DeserializeVectorMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockRecord{}, err
+	}
+	s.PreviousBlockIds = *tPreviousBlockIds
+	ovb = (*vb)[i:]
+	j,tBlockBlob,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockRecord{}, err
+	}
+	s.BlockBlob = *tBlockBlob
+	ovb = (*vb)[i:]
+	j,tBlockReceiptBlob,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockRecord{}, err
+	}
+	s.BlockReceiptBlob = *tBlockReceiptBlob
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: AddTransactionReq
+// ----------------------------------------
+
+// AddTransactionReq type
+type AddTransactionReq struct {
+    TransactionID Multihash `json:"transaction_id"`
+    TransactionBlob VariableBlob `json:"transaction_blob"`
+}
+
+// NewAddTransactionReq factory
+func NewAddTransactionReq() *AddTransactionReq {
+	o := AddTransactionReq{}
+	o.TransactionID = *NewMultihash()
+	o.TransactionBlob = *NewVariableBlob()
+	return &o
+}
+
+// Serialize AddTransactionReq
+func (n AddTransactionReq) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.TransactionID.Serialize(vb)
+	vb = n.TransactionBlob.Serialize(vb)
+	return vb
+}
+
+// DeserializeAddTransactionReq function
+func DeserializeAddTransactionReq(vb *VariableBlob) (uint64,*AddTransactionReq,error) {
+	var i,j uint64 = 0,0
+	s := AddTransactionReq{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tTransactionID,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &AddTransactionReq{}, err
+	}
+	s.TransactionID = *tTransactionID
+	ovb = (*vb)[i:]
+	j,tTransactionBlob,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &AddTransactionReq{}, err
+	}
+	s.TransactionBlob = *tTransactionBlob
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: AddTransactionResp
+// ----------------------------------------
+
+// AddTransactionResp type
+type AddTransactionResp struct {
+}
+
+// NewAddTransactionResp factory
+func NewAddTransactionResp() *AddTransactionResp {
+	o := AddTransactionResp{}
+	return &o
+}
+
+// Serialize AddTransactionResp
+func (n AddTransactionResp) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeAddTransactionResp function
+func DeserializeAddTransactionResp(vb *VariableBlob) (uint64,*AddTransactionResp,error) {
+	var i uint64 = 0
+	s := AddTransactionResp{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: TransactionRecord
+// ----------------------------------------
+
+// TransactionRecord type
+type TransactionRecord struct {
+    TransactionBlob VariableBlob `json:"transaction_blob"`
+}
+
+// NewTransactionRecord factory
+func NewTransactionRecord() *TransactionRecord {
+	o := TransactionRecord{}
+	o.TransactionBlob = *NewVariableBlob()
+	return &o
+}
+
+// Serialize TransactionRecord
+func (n TransactionRecord) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.TransactionBlob.Serialize(vb)
+	return vb
+}
+
+// DeserializeTransactionRecord function
+func DeserializeTransactionRecord(vb *VariableBlob) (uint64,*TransactionRecord,error) {
+	var i,j uint64 = 0,0
+	s := TransactionRecord{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tTransactionBlob,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &TransactionRecord{}, err
+	}
+	s.TransactionBlob = *tTransactionBlob
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: GetTransactionsByIDReq
+// ----------------------------------------
+
+// GetTransactionsByIDReq type
+type GetTransactionsByIDReq struct {
+    TransactionIds VectorMultihash `json:"transaction_ids"`
+}
+
+// NewGetTransactionsByIDReq factory
+func NewGetTransactionsByIDReq() *GetTransactionsByIDReq {
+	o := GetTransactionsByIDReq{}
+	o.TransactionIds = *NewVectorMultihash()
+	return &o
+}
+
+// Serialize GetTransactionsByIDReq
+func (n GetTransactionsByIDReq) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.TransactionIds.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetTransactionsByIDReq function
+func DeserializeGetTransactionsByIDReq(vb *VariableBlob) (uint64,*GetTransactionsByIDReq,error) {
+	var i,j uint64 = 0,0
+	s := GetTransactionsByIDReq{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tTransactionIds,err := DeserializeVectorMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &GetTransactionsByIDReq{}, err
+	}
+	s.TransactionIds = *tTransactionIds
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: TransactionItem
+// ----------------------------------------
+
+// TransactionItem type
+type TransactionItem struct {
+    TransactionBlob VariableBlob `json:"transaction_blob"`
+}
+
+// NewTransactionItem factory
+func NewTransactionItem() *TransactionItem {
+	o := TransactionItem{}
+	o.TransactionBlob = *NewVariableBlob()
+	return &o
+}
+
+// Serialize TransactionItem
+func (n TransactionItem) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.TransactionBlob.Serialize(vb)
+	return vb
+}
+
+// DeserializeTransactionItem function
+func DeserializeTransactionItem(vb *VariableBlob) (uint64,*TransactionItem,error) {
+	var i,j uint64 = 0,0
+	s := TransactionItem{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tTransactionBlob,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &TransactionItem{}, err
+	}
+	s.TransactionBlob = *tTransactionBlob
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: GetTransactionsByIDResp
+// ----------------------------------------
+
+// GetTransactionsByIDResp type
+type GetTransactionsByIDResp struct {
+    TransactionItems VectorTransactionItem `json:"transaction_items"`
+}
+
+// NewGetTransactionsByIDResp factory
+func NewGetTransactionsByIDResp() *GetTransactionsByIDResp {
+	o := GetTransactionsByIDResp{}
+	o.TransactionItems = *NewVectorTransactionItem()
+	return &o
+}
+
+// Serialize GetTransactionsByIDResp
+func (n GetTransactionsByIDResp) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.TransactionItems.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetTransactionsByIDResp function
+func DeserializeGetTransactionsByIDResp(vb *VariableBlob) (uint64,*GetTransactionsByIDResp,error) {
+	var i,j uint64 = 0,0
+	s := GetTransactionsByIDResp{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tTransactionItems,err := DeserializeVectorTransactionItem(&ovb); i+=j
+	if err != nil {
+		return 0, &GetTransactionsByIDResp{}, err
+	}
+	s.TransactionItems = *tTransactionItems
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Variant: BlockStoreReq
+// ----------------------------------------
+
+// BlockStoreReq type
+type BlockStoreReq struct {
+	Value interface{}
+}
+
+// NewBlockStoreReq factory
+func NewBlockStoreReq() *BlockStoreReq {
+	v := BlockStoreReq{}
+	v.Value = NewReservedReq()
+	return &v
+}
+
+// Serialize BlockStoreReq
+func (n BlockStoreReq) Serialize(vb *VariableBlob) *VariableBlob {
+	var i uint64
+	switch n.Value.(type) {
+		case *ReservedReq:
+			i = 0
+		case *GetBlocksByIDReq:
+			i = 1
+		case *GetBlocksByHeightReq:
+			i = 2
+		case *AddBlockReq:
+			i = 3
+		case *AddTransactionReq:
+			i = 4
+		case *GetTransactionsByIDReq:
+			i = 5
+		default:
+			panic("Unknown variant type")
+	}
+
+	vb = EncodeVarint(vb, i)
+	ser,_ := n.Value.(Serializeable)
+	return ser.Serialize(vb)
+}
+
+// TypeToName BlockStoreReq
+func (n BlockStoreReq) TypeToName() (string) {
+	switch n.Value.(type) {
+		case *ReservedReq:
+			return "koinos::types::block_store::reserved_req"
+		case *GetBlocksByIDReq:
+			return "koinos::types::block_store::get_blocks_by_id_req"
+		case *GetBlocksByHeightReq:
+			return "koinos::types::block_store::get_blocks_by_height_req"
+		case *AddBlockReq:
+			return "koinos::types::block_store::add_block_req"
+		case *AddTransactionReq:
+			return "koinos::types::block_store::add_transaction_req"
+		case *GetTransactionsByIDReq:
+			return "koinos::types::block_store::get_transactions_by_id_req"
+		default:
+			panic("Variant type is not serializeable.")
+	}
+}
+
+// MarshalJSON BlockStoreReq
+func (n BlockStoreReq) MarshalJSON() ([]byte, error) {
+	variant := struct {
+		Type string `json:"type"`
+		Value *interface{} `json:"value"`
+	}{
+		n.TypeToName(),
+		&n.Value,
+	}
+
+	return json.Marshal(&variant)
+}
+
+// DeserializeBlockStoreReq function
+func DeserializeBlockStoreReq(vb *VariableBlob) (uint64,*BlockStoreReq,error) {
+	var v BlockStoreReq
+	typeID,i := binary.Uvarint(*vb)
+	if i <= 0 {
+		return 0, &v, errors.New("could not deserialize variant tag")
+	}
+	var j uint64
+
+	switch( typeID ) {
+		case 0:
+			v.Value = NewReservedReq()
+		case 1:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetBlocksByIDReq(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		case 2:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetBlocksByHeightReq(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		case 3:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeAddBlockReq(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		case 4:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeAddTransactionReq(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		case 5:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetTransactionsByIDReq(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		default:
+			return 0, &v, errors.New("unknown variant tag")
+	}
+	return uint64(i)+j,&v,nil
+}
+
+// UnmarshalJSON *BlockStoreReq
+func (n *BlockStoreReq) UnmarshalJSON(data []byte) error {
+	variant := struct {
+		Type  string          `json:"type"`
+		Value json.RawMessage `json:"value"`
+	}{}
+
+	err := json.Unmarshal(data, &variant)
+	if err != nil {
+		return err
+	}
+
+	switch variant.Type {
+		case "koinos::types::block_store::reserved_req":
+			v := NewReservedReq()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::types::block_store::get_blocks_by_id_req":
+			v := NewGetBlocksByIDReq()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::types::block_store::get_blocks_by_height_req":
+			v := NewGetBlocksByHeightReq()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::types::block_store::add_block_req":
+			v := NewAddBlockReq()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::types::block_store::add_transaction_req":
+			v := NewAddTransactionReq()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::types::block_store::get_transactions_by_id_req":
+			v := NewGetTransactionsByIDReq()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		default:
+			return errors.New("unknown variant type: " + variant.Type)
+	}
+
+	return nil
+}
+
+
+// ----------------------------------------
+//  Variant: BlockStoreResp
+// ----------------------------------------
+
+// BlockStoreResp type
+type BlockStoreResp struct {
+	Value interface{}
+}
+
+// NewBlockStoreResp factory
+func NewBlockStoreResp() *BlockStoreResp {
+	v := BlockStoreResp{}
+	v.Value = NewReservedResp()
+	return &v
+}
+
+// Serialize BlockStoreResp
+func (n BlockStoreResp) Serialize(vb *VariableBlob) *VariableBlob {
+	var i uint64
+	switch n.Value.(type) {
+		case *ReservedResp:
+			i = 0
+		case *GetBlocksByIDResp:
+			i = 1
+		case *GetBlocksByHeightResp:
+			i = 2
+		case *AddBlockResp:
+			i = 3
+		case *AddTransactionResp:
+			i = 4
+		case *GetTransactionsByIDResp:
+			i = 5
+		default:
+			panic("Unknown variant type")
+	}
+
+	vb = EncodeVarint(vb, i)
+	ser,_ := n.Value.(Serializeable)
+	return ser.Serialize(vb)
+}
+
+// TypeToName BlockStoreResp
+func (n BlockStoreResp) TypeToName() (string) {
+	switch n.Value.(type) {
+		case *ReservedResp:
+			return "koinos::types::block_store::reserved_resp"
+		case *GetBlocksByIDResp:
+			return "koinos::types::block_store::get_blocks_by_id_resp"
+		case *GetBlocksByHeightResp:
+			return "koinos::types::block_store::get_blocks_by_height_resp"
+		case *AddBlockResp:
+			return "koinos::types::block_store::add_block_resp"
+		case *AddTransactionResp:
+			return "koinos::types::block_store::add_transaction_resp"
+		case *GetTransactionsByIDResp:
+			return "koinos::types::block_store::get_transactions_by_id_resp"
+		default:
+			panic("Variant type is not serializeable.")
+	}
+}
+
+// MarshalJSON BlockStoreResp
+func (n BlockStoreResp) MarshalJSON() ([]byte, error) {
+	variant := struct {
+		Type string `json:"type"`
+		Value *interface{} `json:"value"`
+	}{
+		n.TypeToName(),
+		&n.Value,
+	}
+
+	return json.Marshal(&variant)
+}
+
+// DeserializeBlockStoreResp function
+func DeserializeBlockStoreResp(vb *VariableBlob) (uint64,*BlockStoreResp,error) {
+	var v BlockStoreResp
+	typeID,i := binary.Uvarint(*vb)
+	if i <= 0 {
+		return 0, &v, errors.New("could not deserialize variant tag")
+	}
+	var j uint64
+
+	switch( typeID ) {
+		case 0:
+			v.Value = NewReservedResp()
+		case 1:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetBlocksByIDResp(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		case 2:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetBlocksByHeightResp(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		case 3:
+			v.Value = NewAddBlockResp()
+		case 4:
+			v.Value = NewAddTransactionResp()
+		case 5:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetTransactionsByIDResp(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		default:
+			return 0, &v, errors.New("unknown variant tag")
+	}
+	return uint64(i)+j,&v,nil
+}
+
+// UnmarshalJSON *BlockStoreResp
+func (n *BlockStoreResp) UnmarshalJSON(data []byte) error {
+	variant := struct {
+		Type  string          `json:"type"`
+		Value json.RawMessage `json:"value"`
+	}{}
+
+	err := json.Unmarshal(data, &variant)
+	if err != nil {
+		return err
+	}
+
+	switch variant.Type {
+		case "koinos::types::block_store::reserved_resp":
+			v := NewReservedResp()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::types::block_store::get_blocks_by_id_resp":
+			v := NewGetBlocksByIDResp()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::types::block_store::get_blocks_by_height_resp":
+			v := NewGetBlocksByHeightResp()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::types::block_store::add_block_resp":
+			v := NewAddBlockResp()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::types::block_store::add_transaction_resp":
+			v := NewAddTransactionResp()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::types::block_store::get_transactions_by_id_resp":
+			v := NewGetTransactionsByIDResp()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		default:
+			return errors.New("unknown variant type: " + variant.Type)
+	}
+
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: HeadInfo
+// ----------------------------------------
+
+// HeadInfo type
+type HeadInfo struct {
+    ID Multihash `json:"id"`
+    Height BlockHeightType `json:"height"`
+}
+
+// NewHeadInfo factory
+func NewHeadInfo() *HeadInfo {
+	o := HeadInfo{}
+	o.ID = *NewMultihash()
+	o.Height = *NewBlockHeightType()
+	return &o
+}
+
+// Serialize HeadInfo
+func (n HeadInfo) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ID.Serialize(vb)
+	vb = n.Height.Serialize(vb)
+	return vb
+}
+
+// DeserializeHeadInfo function
+func DeserializeHeadInfo(vb *VariableBlob) (uint64,*HeadInfo,error) {
+	var i,j uint64 = 0,0
+	s := HeadInfo{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tID,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &HeadInfo{}, err
+	}
+	s.ID = *tID
+	ovb = (*vb)[i:]
+	j,tHeight,err := DeserializeBlockHeightType(&ovb); i+=j
+	if err != nil {
+		return 0, &HeadInfo{}, err
+	}
+	s.Height = *tHeight
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: BlockPart
+// ----------------------------------------
+
+// BlockPart type
+type BlockPart struct {
+    ActiveData VariableBlob `json:"active_data"`
+    PassiveData VariableBlob `json:"passive_data"`
+    SigData VariableBlob `json:"sig_data"`
+}
+
+// NewBlockPart factory
+func NewBlockPart() *BlockPart {
+	o := BlockPart{}
+	o.ActiveData = *NewVariableBlob()
+	o.PassiveData = *NewVariableBlob()
+	o.SigData = *NewVariableBlob()
+	return &o
+}
+
+// Serialize BlockPart
+func (n BlockPart) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ActiveData.Serialize(vb)
+	vb = n.PassiveData.Serialize(vb)
+	vb = n.SigData.Serialize(vb)
+	return vb
+}
+
+// DeserializeBlockPart function
+func DeserializeBlockPart(vb *VariableBlob) (uint64,*BlockPart,error) {
+	var i,j uint64 = 0,0
+	s := BlockPart{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tActiveData,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockPart{}, err
+	}
+	s.ActiveData = *tActiveData
+	ovb = (*vb)[i:]
+	j,tPassiveData,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockPart{}, err
+	}
+	s.PassiveData = *tPassiveData
+	ovb = (*vb)[i:]
+	j,tSigData,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockPart{}, err
+	}
+	s.SigData = *tSigData
+	return i, &s, nil
+}
+
+// ----------------------------------------
 //  Struct: ReservedQueryParams
 // ----------------------------------------
 
@@ -1468,51 +2537,6 @@ func DeserializeQueryError(vb *VariableBlob) (uint64,*QueryError,error) {
 		return 0, &QueryError{}, err
 	}
 	s.ErrorText = *tErrorText
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: HeadInfo
-// ----------------------------------------
-
-// HeadInfo type
-type HeadInfo struct {
-    ID Multihash `json:"id"`
-    Height BlockHeightType `json:"height"`
-}
-
-// NewHeadInfo factory
-func NewHeadInfo() *HeadInfo {
-	o := HeadInfo{}
-	o.ID = *NewMultihash()
-	o.Height = *NewBlockHeightType()
-	return &o
-}
-
-// Serialize HeadInfo
-func (n HeadInfo) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.ID.Serialize(vb)
-	vb = n.Height.Serialize(vb)
-	return vb
-}
-
-// DeserializeHeadInfo function
-func DeserializeHeadInfo(vb *VariableBlob) (uint64,*HeadInfo,error) {
-	var i,j uint64 = 0,0
-	s := HeadInfo{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tID,err := DeserializeMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &HeadInfo{}, err
-	}
-	s.ID = *tID
-	ovb = (*vb)[i:]
-	j,tHeight,err := DeserializeBlockHeightType(&ovb); i+=j
-	if err != nil {
-		return 0, &HeadInfo{}, err
-	}
-	s.Height = *tHeight
 	return i, &s, nil
 }
 
@@ -2345,6 +3369,147 @@ func (n *SubmissionResult) UnmarshalJSON(data []byte) error {
 	}
 
 	return nil
+}
+
+
+// ----------------------------------------
+//  Enum: SystemCallID
+// ----------------------------------------
+
+// {'name': 'system_call_id', 'entries': [{'name': 'prints', 'value': 2602735937, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_header', 'value': 2519027790, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_block', 'value': 2494255093, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_transaction', 'value': 2643154394, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_reserved_operation', 'value': 2594724132, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_upload_contract_operation', 'value': 2658052407, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_execute_contract_operation', 'value': 2451064454, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_set_system_call_operation', 'value': 2507777116, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_put_object', 'value': 2535376802, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_object', 'value': 2540087547, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_next_object', 'value': 2577635560, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_prev_object', 'value': 2614326908, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'execute_contract', 'value': 2562796798, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args_size', 'value': 2601357273, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args', 'value': 2679873944, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'set_contract_return', 'value': 2672414186, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'exit_contract', 'value': 2564781488, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_head_info', 'value': 2507125293, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'hash', 'value': 2574716420, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_sig', 'value': 2508417296, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_merkle_root', 'value': 2574132409, 'doc': '', 'info': {'type': 'EnumEntry'}}], 'tref': {'name': ['koinos', 'types', 'uint32'], 'targs': None, 'info': {'type': 'Typeref'}}, 'doc': '', 'info': {'type': 'EnumClass'}}
+
+// SystemCallID type
+type SystemCallID UInt32
+
+// NewSystemCallID factory
+func NewSystemCallID() *SystemCallID {
+	o := SystemCallID(2602735937)
+	return &o
+}
+
+// SystemCallID values
+const (
+	SystemCallIDPrints SystemCallID = 2602735937
+	SystemCallIDVerifyBlockHeader SystemCallID = 2519027790
+	SystemCallIDApplyBlock SystemCallID = 2494255093
+	SystemCallIDApplyTransaction SystemCallID = 2643154394
+	SystemCallIDApplyReservedOperation SystemCallID = 2594724132
+	SystemCallIDApplyUploadContractOperation SystemCallID = 2658052407
+	SystemCallIDApplyExecuteContractOperation SystemCallID = 2451064454
+	SystemCallIDApplySetSystemCallOperation SystemCallID = 2507777116
+	SystemCallIDDbPutObject SystemCallID = 2535376802
+	SystemCallIDDbGetObject SystemCallID = 2540087547
+	SystemCallIDDbGetNextObject SystemCallID = 2577635560
+	SystemCallIDDbGetPrevObject SystemCallID = 2614326908
+	SystemCallIDExecuteContract SystemCallID = 2562796798
+	SystemCallIDGetContractArgsSize SystemCallID = 2601357273
+	SystemCallIDGetContractArgs SystemCallID = 2679873944
+	SystemCallIDSetContractReturn SystemCallID = 2672414186
+	SystemCallIDExitContract SystemCallID = 2564781488
+	SystemCallIDGetHeadInfo SystemCallID = 2507125293
+	SystemCallIDHash SystemCallID = 2574716420
+	SystemCallIDVerifyBlockSig SystemCallID = 2508417296
+	SystemCallIDVerifyMerkleRoot SystemCallID = 2574132409
+)
+
+// Serialize SystemCallID
+func (n SystemCallID) Serialize(vb *VariableBlob) *VariableBlob {
+	if !IsValidSystemCallID(n) {
+		panic("Attempting to serialize an invalid value")
+	}
+	x := UInt32(n)
+	return x.Serialize(vb)
+}
+
+// DeserializeSystemCallID function
+func DeserializeSystemCallID(vb *VariableBlob) (uint64,*SystemCallID,error) {
+	i,item,err := DeserializeUInt32(vb)
+	var x SystemCallID
+	if err != nil {
+		return 0,&x,err
+	}
+
+	x = SystemCallID(*item)
+	if !IsValidSystemCallID(x) {
+		return i,&x,fmt.Errorf("invalid SystemCallID: %d", x)
+	}
+	return i,&x,nil
+}
+
+// MarshalJSON SystemCallID
+func (n SystemCallID) MarshalJSON() ([]byte, error) {
+	if !IsValidSystemCallID(n) {
+		panic("Attempting to serialize an invalid value")
+	}
+
+	return json.Marshal(UInt32(n))
+}
+
+// UnmarshalJSON *SystemCallID
+func (n *SystemCallID) UnmarshalJSON(b []byte) error {
+	var o UInt32
+	if err := json.Unmarshal(b, &o); err != nil {
+		return err
+	}
+
+	ov := SystemCallID(o)
+
+	if !IsValidSystemCallID(ov) {
+		return fmt.Errorf("invalid SystemCallID: %d", o)
+	}
+
+	*n = ov
+	return nil
+}
+
+// IsValidSystemCallID validator
+func IsValidSystemCallID(v SystemCallID) bool {
+	switch v {
+		case SystemCallIDPrints:
+			return true
+		case SystemCallIDVerifyBlockHeader:
+			return true
+		case SystemCallIDApplyBlock:
+			return true
+		case SystemCallIDApplyTransaction:
+			return true
+		case SystemCallIDApplyReservedOperation:
+			return true
+		case SystemCallIDApplyUploadContractOperation:
+			return true
+		case SystemCallIDApplyExecuteContractOperation:
+			return true
+		case SystemCallIDApplySetSystemCallOperation:
+			return true
+		case SystemCallIDDbPutObject:
+			return true
+		case SystemCallIDDbGetObject:
+			return true
+		case SystemCallIDDbGetNextObject:
+			return true
+		case SystemCallIDDbGetPrevObject:
+			return true
+		case SystemCallIDExecuteContract:
+			return true
+		case SystemCallIDGetContractArgsSize:
+			return true
+		case SystemCallIDGetContractArgs:
+			return true
+		case SystemCallIDSetContractReturn:
+			return true
+		case SystemCallIDExitContract:
+			return true
+		case SystemCallIDGetHeadInfo:
+			return true
+		case SystemCallIDHash:
+			return true
+		case SystemCallIDVerifyBlockSig:
+			return true
+		case SystemCallIDVerifyMerkleRoot:
+			return true
+		default:
+			return false
+	}
 }
 
 
@@ -4142,199 +5307,51 @@ func (n *HashRet) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
-//  Enum: SystemCallID
+//  Typedef: SignatureType
 // ----------------------------------------
 
-// {'name': 'system_call_id', 'entries': [{'name': 'prints', 'value': 2602735937, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_header', 'value': 2519027790, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_block', 'value': 2494255093, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_transaction', 'value': 2643154394, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_reserved_operation', 'value': 2594724132, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_upload_contract_operation', 'value': 2658052407, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_execute_contract_operation', 'value': 2451064454, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_set_system_call_operation', 'value': 2507777116, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_put_object', 'value': 2535376802, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_object', 'value': 2540087547, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_next_object', 'value': 2577635560, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_prev_object', 'value': 2614326908, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'execute_contract', 'value': 2562796798, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args_size', 'value': 2601357273, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args', 'value': 2679873944, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'set_contract_return', 'value': 2672414186, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'exit_contract', 'value': 2564781488, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_head_info', 'value': 2507125293, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'hash', 'value': 2574716420, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_sig', 'value': 2508417296, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_merkle_root', 'value': 2574132409, 'doc': '', 'info': {'type': 'EnumEntry'}}], 'tref': {'name': ['koinos', 'types', 'uint32'], 'targs': None, 'info': {'type': 'Typeref'}}, 'doc': '', 'info': {'type': 'EnumClass'}}
+// SignatureType type
+type SignatureType FixedBlob65
 
-// SystemCallID type
-type SystemCallID UInt32
-
-// NewSystemCallID factory
-func NewSystemCallID() *SystemCallID {
-	o := SystemCallID(2602735937)
+// NewSignatureType factory
+func NewSignatureType() *SignatureType {
+	o := SignatureType(*NewFixedBlob65())
 	return &o
 }
 
-// SystemCallID values
-const (
-	SystemCallIDPrints SystemCallID = 2602735937
-	SystemCallIDVerifyBlockHeader SystemCallID = 2519027790
-	SystemCallIDApplyBlock SystemCallID = 2494255093
-	SystemCallIDApplyTransaction SystemCallID = 2643154394
-	SystemCallIDApplyReservedOperation SystemCallID = 2594724132
-	SystemCallIDApplyUploadContractOperation SystemCallID = 2658052407
-	SystemCallIDApplyExecuteContractOperation SystemCallID = 2451064454
-	SystemCallIDApplySetSystemCallOperation SystemCallID = 2507777116
-	SystemCallIDDbPutObject SystemCallID = 2535376802
-	SystemCallIDDbGetObject SystemCallID = 2540087547
-	SystemCallIDDbGetNextObject SystemCallID = 2577635560
-	SystemCallIDDbGetPrevObject SystemCallID = 2614326908
-	SystemCallIDExecuteContract SystemCallID = 2562796798
-	SystemCallIDGetContractArgsSize SystemCallID = 2601357273
-	SystemCallIDGetContractArgs SystemCallID = 2679873944
-	SystemCallIDSetContractReturn SystemCallID = 2672414186
-	SystemCallIDExitContract SystemCallID = 2564781488
-	SystemCallIDGetHeadInfo SystemCallID = 2507125293
-	SystemCallIDHash SystemCallID = 2574716420
-	SystemCallIDVerifyBlockSig SystemCallID = 2508417296
-	SystemCallIDVerifyMerkleRoot SystemCallID = 2574132409
-)
-
-// Serialize SystemCallID
-func (n SystemCallID) Serialize(vb *VariableBlob) *VariableBlob {
-	if !IsValidSystemCallID(n) {
-		panic("Attempting to serialize an invalid value")
-	}
-	x := UInt32(n)
-	return x.Serialize(vb)
+// Serialize SignatureType
+func (n SignatureType) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := FixedBlob65(n)
+	return ox.Serialize(vb)
 }
 
-// DeserializeSystemCallID function
-func DeserializeSystemCallID(vb *VariableBlob) (uint64,*SystemCallID,error) {
-	i,item,err := DeserializeUInt32(vb)
-	var x SystemCallID
+// DeserializeSignatureType function
+func DeserializeSignatureType(vb *VariableBlob) (uint64,*SignatureType,error) {
+	var ot SignatureType
+	i,n,err := DeserializeFixedBlob65(vb)
 	if err != nil {
-		return 0,&x,err
+		return 0,&ot,err
 	}
+	ot = SignatureType(*n)
+	return i,&ot,nil}
 
-	x = SystemCallID(*item)
-	if !IsValidSystemCallID(x) {
-		return i,&x,fmt.Errorf("invalid SystemCallID: %d", x)
-	}
-	return i,&x,nil
+// MarshalJSON SignatureType
+func (n SignatureType) MarshalJSON() ([]byte, error) {
+	v := FixedBlob65(n)
+	return json.Marshal(&v)
 }
 
-// MarshalJSON SystemCallID
-func (n SystemCallID) MarshalJSON() ([]byte, error) {
-	if !IsValidSystemCallID(n) {
-		panic("Attempting to serialize an invalid value")
-	}
-
-	return json.Marshal(UInt32(n))
-}
-
-// UnmarshalJSON *SystemCallID
-func (n *SystemCallID) UnmarshalJSON(b []byte) error {
-	var o UInt32
-	if err := json.Unmarshal(b, &o); err != nil {
+// UnmarshalJSON *SignatureType
+func (n *SignatureType) UnmarshalJSON(data []byte) error {
+	v := FixedBlob65(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
 
-	ov := SystemCallID(o)
-
-	if !IsValidSystemCallID(ov) {
-		return fmt.Errorf("invalid SystemCallID: %d", o)
-	}
-
-	*n = ov
+	*n = SignatureType(v)
 	return nil
 }
 
-// IsValidSystemCallID validator
-func IsValidSystemCallID(v SystemCallID) bool {
-	switch v {
-		case SystemCallIDPrints:
-			return true
-		case SystemCallIDVerifyBlockHeader:
-			return true
-		case SystemCallIDApplyBlock:
-			return true
-		case SystemCallIDApplyTransaction:
-			return true
-		case SystemCallIDApplyReservedOperation:
-			return true
-		case SystemCallIDApplyUploadContractOperation:
-			return true
-		case SystemCallIDApplyExecuteContractOperation:
-			return true
-		case SystemCallIDApplySetSystemCallOperation:
-			return true
-		case SystemCallIDDbPutObject:
-			return true
-		case SystemCallIDDbGetObject:
-			return true
-		case SystemCallIDDbGetNextObject:
-			return true
-		case SystemCallIDDbGetPrevObject:
-			return true
-		case SystemCallIDExecuteContract:
-			return true
-		case SystemCallIDGetContractArgsSize:
-			return true
-		case SystemCallIDGetContractArgs:
-			return true
-		case SystemCallIDSetContractReturn:
-			return true
-		case SystemCallIDExitContract:
-			return true
-		case SystemCallIDGetHeadInfo:
-			return true
-		case SystemCallIDHash:
-			return true
-		case SystemCallIDVerifyBlockSig:
-			return true
-		case SystemCallIDVerifyMerkleRoot:
-			return true
-		default:
-			return false
-	}
-}
-
-
-// ----------------------------------------
-//  Struct: BlockPart
-// ----------------------------------------
-
-// BlockPart type
-type BlockPart struct {
-    ActiveData VariableBlob `json:"active_data"`
-    PassiveData VariableBlob `json:"passive_data"`
-    SigData VariableBlob `json:"sig_data"`
-}
-
-// NewBlockPart factory
-func NewBlockPart() *BlockPart {
-	o := BlockPart{}
-	o.ActiveData = *NewVariableBlob()
-	o.PassiveData = *NewVariableBlob()
-	o.SigData = *NewVariableBlob()
-	return &o
-}
-
-// Serialize BlockPart
-func (n BlockPart) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.ActiveData.Serialize(vb)
-	vb = n.PassiveData.Serialize(vb)
-	vb = n.SigData.Serialize(vb)
-	return vb
-}
-
-// DeserializeBlockPart function
-func DeserializeBlockPart(vb *VariableBlob) (uint64,*BlockPart,error) {
-	var i,j uint64 = 0,0
-	s := BlockPart{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tActiveData,err := DeserializeVariableBlob(&ovb); i+=j
-	if err != nil {
-		return 0, &BlockPart{}, err
-	}
-	s.ActiveData = *tActiveData
-	ovb = (*vb)[i:]
-	j,tPassiveData,err := DeserializeVariableBlob(&ovb); i+=j
-	if err != nil {
-		return 0, &BlockPart{}, err
-	}
-	s.PassiveData = *tPassiveData
-	ovb = (*vb)[i:]
-	j,tSigData,err := DeserializeVariableBlob(&ovb); i+=j
-	if err != nil {
-		return 0, &BlockPart{}, err
-	}
-	s.SigData = *tSigData
-	return i, &s, nil
-}
 
 
 // ----------------------------------------
@@ -5574,6 +6591,57 @@ func (n *OpaqueTransaction) UnmarshalJSON(data []byte) (error) {
 
 
 // ----------------------------------------
+//  VectorBlockItem
+// ----------------------------------------
+
+// VectorBlockItem type
+type VectorBlockItem []BlockItem
+
+// NewVectorBlockItem factory
+func NewVectorBlockItem() *VectorBlockItem {
+	o := VectorBlockItem(make([]BlockItem, 0))
+	return &o
+}
+
+// Serialize VectorBlockItem
+func (n VectorBlockItem) Serialize(vb *VariableBlob) *VariableBlob {
+	header := make([]byte, binary.MaxVarintLen64)
+	bytes := binary.PutUvarint(header, uint64(len(n)))
+	ovb := append(*vb, header[:bytes]...)
+	vb = &ovb
+	for _, item := range n {
+		vb = item.Serialize(vb)
+	}
+
+	return vb
+}
+// DeserializeVectorBlockItem function
+func DeserializeVectorBlockItem(vb *VariableBlob) (uint64,*VectorBlockItem,error) {
+	var result VectorBlockItem
+	size,bytes := binary.Uvarint(*vb)
+	if bytes <= 0 {
+		return 0, &result, errors.New("could not deserialize multihash id")
+	}
+	result = VectorBlockItem(make([]BlockItem, 0, size))
+	i := uint64(bytes)
+	var j uint64
+	var item *BlockItem
+	var err error
+	for num := uint64(0); num < size; num++ {
+		ovb := (*vb)[i:]
+		j,item,err = DeserializeBlockItem(&ovb)
+		if nil != err {
+			var v VectorBlockItem
+			return 0,&v,err
+		}
+		i += j
+		result = append(result, *item)
+	}
+
+	return i, &result, nil
+}
+
+// ----------------------------------------
 //  VectorMultihash
 // ----------------------------------------
 
@@ -5717,6 +6785,57 @@ func DeserializeVectorOperation(vb *VariableBlob) (uint64,*VectorOperation,error
 		j,item,err = DeserializeOperation(&ovb)
 		if nil != err {
 			var v VectorOperation
+			return 0,&v,err
+		}
+		i += j
+		result = append(result, *item)
+	}
+
+	return i, &result, nil
+}
+
+// ----------------------------------------
+//  VectorTransactionItem
+// ----------------------------------------
+
+// VectorTransactionItem type
+type VectorTransactionItem []TransactionItem
+
+// NewVectorTransactionItem factory
+func NewVectorTransactionItem() *VectorTransactionItem {
+	o := VectorTransactionItem(make([]TransactionItem, 0))
+	return &o
+}
+
+// Serialize VectorTransactionItem
+func (n VectorTransactionItem) Serialize(vb *VariableBlob) *VariableBlob {
+	header := make([]byte, binary.MaxVarintLen64)
+	bytes := binary.PutUvarint(header, uint64(len(n)))
+	ovb := append(*vb, header[:bytes]...)
+	vb = &ovb
+	for _, item := range n {
+		vb = item.Serialize(vb)
+	}
+
+	return vb
+}
+// DeserializeVectorTransactionItem function
+func DeserializeVectorTransactionItem(vb *VariableBlob) (uint64,*VectorTransactionItem,error) {
+	var result VectorTransactionItem
+	size,bytes := binary.Uvarint(*vb)
+	if bytes <= 0 {
+		return 0, &result, errors.New("could not deserialize multihash id")
+	}
+	result = VectorTransactionItem(make([]TransactionItem, 0, size))
+	i := uint64(bytes)
+	var j uint64
+	var item *TransactionItem
+	var err error
+	for num := uint64(0); num < size; num++ {
+		ovb := (*vb)[i:]
+		j,item,err = DeserializeTransactionItem(&ovb)
+		if nil != err {
+			var v VectorTransactionItem
 			return 0,&v,err
 		}
 		i += j
