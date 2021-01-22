@@ -2324,6 +2324,33 @@ func DeserializeGetHeadInfoParams(vb *VariableBlob) (uint64,*GetHeadInfoParams,e
 }
 
 // ----------------------------------------
+//  Struct: GetChainIDParams
+// ----------------------------------------
+
+// GetChainIDParams type
+type GetChainIDParams struct {
+}
+
+// NewGetChainIDParams factory
+func NewGetChainIDParams() *GetChainIDParams {
+	o := GetChainIDParams{}
+	return &o
+}
+
+// Serialize GetChainIDParams
+func (n GetChainIDParams) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeGetChainIDParams function
+func DeserializeGetChainIDParams(vb *VariableBlob) (uint64,*GetChainIDParams,error) {
+	var i uint64 = 0
+	s := GetChainIDParams{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
 //  Variant: QueryParamItem
 // ----------------------------------------
 
@@ -2347,6 +2374,8 @@ func (n QueryParamItem) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 0
 		case *GetHeadInfoParams:
 			i = 1
+		case *GetChainIDParams:
+			i = 2
 		default:
 			panic("Unknown variant type")
 	}
@@ -2363,6 +2392,8 @@ func (n QueryParamItem) TypeToName() (string) {
 			return "koinos::types::rpc::reserved_query_params"
 		case *GetHeadInfoParams:
 			return "koinos::types::rpc::get_head_info_params"
+		case *GetChainIDParams:
+			return "koinos::types::rpc::get_chain_id_params"
 		default:
 			panic("Variant type is not serializeable.")
 	}
@@ -2395,6 +2426,8 @@ func DeserializeQueryParamItem(vb *VariableBlob) (uint64,*QueryParamItem,error) 
 			v.Value = NewReservedQueryParams()
 		case 1:
 			v.Value = NewGetHeadInfoParams()
+		case 2:
+			v.Value = NewGetChainIDParams()
 		default:
 			return 0, &v, errors.New("unknown variant tag")
 	}
@@ -2420,6 +2453,10 @@ func (n *QueryParamItem) UnmarshalJSON(data []byte) error {
 			n.Value = v
 		case "koinos::types::rpc::get_head_info_params":
 			v := NewGetHeadInfoParams()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::types::rpc::get_chain_id_params":
+			v := NewGetChainIDParams()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
@@ -2588,6 +2625,42 @@ func (n *GetHeadInfoResult) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
+//  Struct: GetChainIDResult
+// ----------------------------------------
+
+// GetChainIDResult type
+type GetChainIDResult struct {
+    ChainID Multihash `json:"chain_id"`
+}
+
+// NewGetChainIDResult factory
+func NewGetChainIDResult() *GetChainIDResult {
+	o := GetChainIDResult{}
+	o.ChainID = *NewMultihash()
+	return &o
+}
+
+// Serialize GetChainIDResult
+func (n GetChainIDResult) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ChainID.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetChainIDResult function
+func DeserializeGetChainIDResult(vb *VariableBlob) (uint64,*GetChainIDResult,error) {
+	var i,j uint64 = 0,0
+	s := GetChainIDResult{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tChainID,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &GetChainIDResult{}, err
+	}
+	s.ChainID = *tChainID
+	return i, &s, nil
+}
+
+// ----------------------------------------
 //  Variant: QueryItemResult
 // ----------------------------------------
 
@@ -2613,6 +2686,8 @@ func (n QueryItemResult) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 1
 		case *GetHeadInfoResult:
 			i = 2
+		case *GetChainIDResult:
+			i = 3
 		default:
 			panic("Unknown variant type")
 	}
@@ -2631,6 +2706,8 @@ func (n QueryItemResult) TypeToName() (string) {
 			return "koinos::types::rpc::query_error"
 		case *GetHeadInfoResult:
 			return "koinos::types::rpc::get_head_info_result"
+		case *GetChainIDResult:
+			return "koinos::types::rpc::get_chain_id_result"
 		default:
 			panic("Variant type is not serializeable.")
 	}
@@ -2677,6 +2754,14 @@ func DeserializeQueryItemResult(vb *VariableBlob) (uint64,*QueryItemResult,error
 			}
 			j = k
 			v.Value = x
+		case 3:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetChainIDResult(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
 		default:
 			return 0, &v, errors.New("unknown variant tag")
 	}
@@ -2706,6 +2791,10 @@ func (n *QueryItemResult) UnmarshalJSON(data []byte) error {
 			n.Value = v
 		case "koinos::types::rpc::get_head_info_result":
 			v := NewGetHeadInfoResult()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::types::rpc::get_chain_id_result":
+			v := NewGetChainIDResult()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:

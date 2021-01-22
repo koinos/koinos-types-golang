@@ -2832,6 +2832,47 @@ func TestGetHeadInfoParams(t *testing.T) {
 }
 
 // ----------------------------------------
+//  Struct: GetChainIDParams
+// ----------------------------------------
+
+func TestGetChainIDParams(t *testing.T) {
+	o := koinos.NewGetChainIDParams()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetChainIDParams(vb)
+	if err != nil {
+		t.Error(err)
+	}
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetChainIDParams()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
 //  Variant: QueryParamItem
 // ----------------------------------------
 
@@ -2850,6 +2891,12 @@ func TestQueryParamItem(t *testing.T) {
 		exerciseQueryParamItemSerialization(v, t)
 
 	}
+	{
+		v := koinos.NewQueryParamItem()
+		v.Value = koinos.NewGetChainIDParams()
+		exerciseQueryParamItemSerialization(v, t)
+
+	}
 
 	// Test bad variant tag
 	vb := koinos.VariableBlob{0x80}
@@ -2862,7 +2909,7 @@ func TestQueryParamItem(t *testing.T) {
 	}
 
 	// Test unknown tag
-	vb = koinos.VariableBlob{2}
+	vb = koinos.VariableBlob{3}
 	n, _, err = koinos.DeserializeQueryParamItem(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
@@ -3105,6 +3152,59 @@ func TestGetHeadInfoResult(t *testing.T) {
 }
 
 // ----------------------------------------
+//  Struct: GetChainIDResult
+// ----------------------------------------
+
+func TestGetChainIDResult(t *testing.T) {
+	o := koinos.NewGetChainIDResult()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetChainIDResult(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	var n uint64
+	// Test chain_id
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeGetChainIDResult(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetChainIDResult()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
 //  Variant: QueryItemResult
 // ----------------------------------------
 
@@ -3145,6 +3245,20 @@ func TestQueryItemResult(t *testing.T) {
 			t.Errorf("Bytes were consumed on error")
 		}
 	}
+	{
+		v := koinos.NewQueryItemResult()
+		v.Value = koinos.NewGetChainIDResult()
+		exerciseQueryItemResultSerialization(v, t)
+
+		vb := koinos.VariableBlob{3}
+		n, _, err := koinos.DeserializeQueryItemResult(&vb)
+		if err == nil {
+			t.Errorf("err == nil")
+		}
+		if n != 0 {
+			t.Errorf("Bytes were consumed on error")
+		}
+	}
 
 	// Test bad variant tag
 	vb := koinos.VariableBlob{0x80}
@@ -3157,7 +3271,7 @@ func TestQueryItemResult(t *testing.T) {
 	}
 
 	// Test unknown tag
-	vb = koinos.VariableBlob{3}
+	vb = koinos.VariableBlob{4}
 	n, _, err = koinos.DeserializeQueryItemResult(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
