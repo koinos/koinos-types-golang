@@ -1358,6 +1358,47 @@ func TestBlock(t *testing.T) {
 }
 
 // ----------------------------------------
+//  Struct: BlockReceipt
+// ----------------------------------------
+
+func TestBlockReceipt(t *testing.T) {
+	o := koinos.NewBlockReceipt()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeBlockReceipt(vb)
+	if err != nil {
+		t.Error(err)
+	}
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewBlockReceipt()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
 //  Struct: ReservedReq
 // ----------------------------------------
 
@@ -1548,7 +1589,7 @@ func TestBlockItem(t *testing.T) {
 		t.Errorf("Bytes were consumed on error")
 	}
 
-	// Test block_blob
+	// Test block
 	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 	n, _, err = koinos.DeserializeBlockItem(vb)
 	if err == nil {
@@ -1558,7 +1599,7 @@ func TestBlockItem(t *testing.T) {
 		t.Errorf("Bytes were consumed on error")
 	}
 
-	// Test block_receipt_blob
+	// Test block_receipt
 	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 	n, _, err = koinos.DeserializeBlockItem(vb)
 	if err == nil {
@@ -1694,7 +1735,7 @@ func TestGetBlocksByHeightReq(t *testing.T) {
 		t.Errorf("Bytes were consumed on error")
 	}
 
-	// Test return_block_blob
+	// Test return_block
 	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 	n, _, err = koinos.DeserializeGetBlocksByHeightReq(vb)
 	if err == nil {
@@ -1704,7 +1745,7 @@ func TestGetBlocksByHeightReq(t *testing.T) {
 		t.Errorf("Bytes were consumed on error")
 	}
 
-	// Test return_receipt_blob
+	// Test return_receipt
 	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 	n, _, err = koinos.DeserializeGetBlocksByHeightReq(vb)
 	if err == nil {
@@ -1944,7 +1985,7 @@ func TestBlockRecord(t *testing.T) {
 		t.Errorf("Bytes were consumed on error")
 	}
 
-	// Test block_blob
+	// Test block
 	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 	n, _, err = koinos.DeserializeBlockRecord(vb)
 	if err == nil {
@@ -1954,7 +1995,7 @@ func TestBlockRecord(t *testing.T) {
 		t.Errorf("Bytes were consumed on error")
 	}
 
-	// Test block_receipt_blob
+	// Test block_receipt
 	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 	n, _, err = koinos.DeserializeBlockRecord(vb)
 	if err == nil {
@@ -2017,7 +2058,7 @@ func TestAddTransactionReq(t *testing.T) {
 		t.Errorf("Bytes were consumed on error")
 	}
 
-	// Test transaction_blob
+	// Test transaction
 	vb = &koinos.VariableBlob{0x00, 0x00}
 	n, _, err = koinos.DeserializeAddTransactionReq(vb)
 	if err == nil {
@@ -2111,7 +2152,7 @@ func TestTransactionRecord(t *testing.T) {
 	}
 
 	var n uint64
-	// Test transaction_blob
+	// Test transaction
 	vb = &koinos.VariableBlob{}
 	n, _, err = koinos.DeserializeTransactionRecord(vb)
 	if err == nil {
@@ -2217,7 +2258,7 @@ func TestTransactionItem(t *testing.T) {
 	}
 
 	var n uint64
-	// Test transaction_blob
+	// Test transaction
 	vb = &koinos.VariableBlob{}
 	n, _, err = koinos.DeserializeTransactionItem(vb)
 	if err == nil {
@@ -3102,25 +3143,25 @@ func TestGetChainIDParams(t *testing.T) {
 }
 
 // ----------------------------------------
-//  Variant: KoinosdRPCParams
+//  Variant: ChainRPCParams
 // ----------------------------------------
 
-func TestKoinosdRPCParams(t *testing.T) {
-	o := koinos.NewKoinosdRPCParams()
-	exerciseKoinosdRPCParamsSerialization(o, t)
+func TestChainRPCParams(t *testing.T) {
+	o := koinos.NewChainRPCParams()
+	exerciseChainRPCParamsSerialization(o, t)
 	{
-		v := koinos.NewKoinosdRPCParams()
+		v := koinos.NewChainRPCParams()
 		v.Value = koinos.NewReservedRPCParams()
-		exerciseKoinosdRPCParamsSerialization(v, t)
+		exerciseChainRPCParamsSerialization(v, t)
 
 	}
 	{
-		v := koinos.NewKoinosdRPCParams()
+		v := koinos.NewChainRPCParams()
 		v.Value = koinos.NewSubmitBlockParams()
-		exerciseKoinosdRPCParamsSerialization(v, t)
+		exerciseChainRPCParamsSerialization(v, t)
 
 		vb := koinos.VariableBlob{1}
-		n, _, err := koinos.DeserializeKoinosdRPCParams(&vb)
+		n, _, err := koinos.DeserializeChainRPCParams(&vb)
 		if err == nil {
 			t.Errorf("err == nil")
 		}
@@ -3129,12 +3170,12 @@ func TestKoinosdRPCParams(t *testing.T) {
 		}
 	}
 	{
-		v := koinos.NewKoinosdRPCParams()
+		v := koinos.NewChainRPCParams()
 		v.Value = koinos.NewSubmitTransactionParams()
-		exerciseKoinosdRPCParamsSerialization(v, t)
+		exerciseChainRPCParamsSerialization(v, t)
 
 		vb := koinos.VariableBlob{2}
-		n, _, err := koinos.DeserializeKoinosdRPCParams(&vb)
+		n, _, err := koinos.DeserializeChainRPCParams(&vb)
 		if err == nil {
 			t.Errorf("err == nil")
 		}
@@ -3143,21 +3184,21 @@ func TestKoinosdRPCParams(t *testing.T) {
 		}
 	}
 	{
-		v := koinos.NewKoinosdRPCParams()
+		v := koinos.NewChainRPCParams()
 		v.Value = koinos.NewGetHeadInfoParams()
-		exerciseKoinosdRPCParamsSerialization(v, t)
+		exerciseChainRPCParamsSerialization(v, t)
 
 	}
 	{
-		v := koinos.NewKoinosdRPCParams()
+		v := koinos.NewChainRPCParams()
 		v.Value = koinos.NewGetChainIDParams()
-		exerciseKoinosdRPCParamsSerialization(v, t)
+		exerciseChainRPCParamsSerialization(v, t)
 
 	}
 
 	// Test bad variant tag
 	vb := koinos.VariableBlob{0x80}
-	n, _, err := koinos.DeserializeKoinosdRPCParams(&vb)
+	n, _, err := koinos.DeserializeChainRPCParams(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3167,7 +3208,7 @@ func TestKoinosdRPCParams(t *testing.T) {
 
 	// Test unknown tag
 	vb = koinos.VariableBlob{5}
-	n, _, err = koinos.DeserializeKoinosdRPCParams(&vb)
+	n, _, err = koinos.DeserializeChainRPCParams(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3176,7 +3217,7 @@ func TestKoinosdRPCParams(t *testing.T) {
 	}
 
 	// Test nonsensical json
-	o = koinos.NewKoinosdRPCParams()
+	o = koinos.NewChainRPCParams()
 	if jerr := json.Unmarshal([]byte("\"!@#$%^&*\""), o); jerr == nil {
 		t.Errorf("Unmarshaling nonsense JSON did not give error.")
 	}
@@ -3194,7 +3235,7 @@ func TestKoinosdRPCParams(t *testing.T) {
 			}
 		}()
 
-		variant := koinos.KoinosdRPCParams{Value: int64(0)}
+		variant := koinos.ChainRPCParams{Value: int64(0)}
 		vb := koinos.NewVariableBlob()
 		_ = variant.Serialize(vb)
 	}()
@@ -3207,16 +3248,16 @@ func TestKoinosdRPCParams(t *testing.T) {
 			}
 		}()
 
-		variant := koinos.KoinosdRPCParams{Value: int64(0)}
+		variant := koinos.ChainRPCParams{Value: int64(0)}
 		_, _ = json.Marshal(&variant)
 	}()
 }
 
-func exerciseKoinosdRPCParamsSerialization(v *koinos.KoinosdRPCParams, t *testing.T) {
+func exerciseChainRPCParamsSerialization(v *koinos.ChainRPCParams, t *testing.T) {
 	vb := koinos.NewVariableBlob()
 	vb = v.Serialize(vb)
 
-	_, _, err := koinos.DeserializeKoinosdRPCParams(vb)
+	_, _, err := koinos.DeserializeChainRPCParams(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -3226,7 +3267,7 @@ func exerciseKoinosdRPCParamsSerialization(v *koinos.KoinosdRPCParams, t *testin
 		t.Error(jerr)
 	}
 
-	nv := koinos.NewKoinosdRPCParams()
+	nv := koinos.NewChainRPCParams()
 	if jerr = json.Unmarshal(jv, nv); jerr != nil {
 		t.Error(jerr)
 	}
@@ -3503,25 +3544,25 @@ func TestGetChainIDResult(t *testing.T) {
 }
 
 // ----------------------------------------
-//  Variant: KoinosdRPCResult
+//  Variant: ChainRPCResult
 // ----------------------------------------
 
-func TestKoinosdRPCResult(t *testing.T) {
-	o := koinos.NewKoinosdRPCResult()
-	exerciseKoinosdRPCResultSerialization(o, t)
+func TestChainRPCResult(t *testing.T) {
+	o := koinos.NewChainRPCResult()
+	exerciseChainRPCResultSerialization(o, t)
 	{
-		v := koinos.NewKoinosdRPCResult()
+		v := koinos.NewChainRPCResult()
 		v.Value = koinos.NewReservedRPCResult()
-		exerciseKoinosdRPCResultSerialization(v, t)
+		exerciseChainRPCResultSerialization(v, t)
 
 	}
 	{
-		v := koinos.NewKoinosdRPCResult()
+		v := koinos.NewChainRPCResult()
 		v.Value = koinos.NewRPCError()
-		exerciseKoinosdRPCResultSerialization(v, t)
+		exerciseChainRPCResultSerialization(v, t)
 
 		vb := koinos.VariableBlob{1}
-		n, _, err := koinos.DeserializeKoinosdRPCResult(&vb)
+		n, _, err := koinos.DeserializeChainRPCResult(&vb)
 		if err == nil {
 			t.Errorf("err == nil")
 		}
@@ -3530,24 +3571,24 @@ func TestKoinosdRPCResult(t *testing.T) {
 		}
 	}
 	{
-		v := koinos.NewKoinosdRPCResult()
+		v := koinos.NewChainRPCResult()
 		v.Value = koinos.NewSubmitBlockResult()
-		exerciseKoinosdRPCResultSerialization(v, t)
+		exerciseChainRPCResultSerialization(v, t)
 
 	}
 	{
-		v := koinos.NewKoinosdRPCResult()
+		v := koinos.NewChainRPCResult()
 		v.Value = koinos.NewSubmitTransactionResult()
-		exerciseKoinosdRPCResultSerialization(v, t)
+		exerciseChainRPCResultSerialization(v, t)
 
 	}
 	{
-		v := koinos.NewKoinosdRPCResult()
+		v := koinos.NewChainRPCResult()
 		v.Value = koinos.NewGetHeadInfoResult()
-		exerciseKoinosdRPCResultSerialization(v, t)
+		exerciseChainRPCResultSerialization(v, t)
 
 		vb := koinos.VariableBlob{4}
-		n, _, err := koinos.DeserializeKoinosdRPCResult(&vb)
+		n, _, err := koinos.DeserializeChainRPCResult(&vb)
 		if err == nil {
 			t.Errorf("err == nil")
 		}
@@ -3556,12 +3597,12 @@ func TestKoinosdRPCResult(t *testing.T) {
 		}
 	}
 	{
-		v := koinos.NewKoinosdRPCResult()
+		v := koinos.NewChainRPCResult()
 		v.Value = koinos.NewGetChainIDResult()
-		exerciseKoinosdRPCResultSerialization(v, t)
+		exerciseChainRPCResultSerialization(v, t)
 
 		vb := koinos.VariableBlob{5}
-		n, _, err := koinos.DeserializeKoinosdRPCResult(&vb)
+		n, _, err := koinos.DeserializeChainRPCResult(&vb)
 		if err == nil {
 			t.Errorf("err == nil")
 		}
@@ -3572,7 +3613,7 @@ func TestKoinosdRPCResult(t *testing.T) {
 
 	// Test bad variant tag
 	vb := koinos.VariableBlob{0x80}
-	n, _, err := koinos.DeserializeKoinosdRPCResult(&vb)
+	n, _, err := koinos.DeserializeChainRPCResult(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3582,7 +3623,7 @@ func TestKoinosdRPCResult(t *testing.T) {
 
 	// Test unknown tag
 	vb = koinos.VariableBlob{6}
-	n, _, err = koinos.DeserializeKoinosdRPCResult(&vb)
+	n, _, err = koinos.DeserializeChainRPCResult(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -3591,7 +3632,7 @@ func TestKoinosdRPCResult(t *testing.T) {
 	}
 
 	// Test nonsensical json
-	o = koinos.NewKoinosdRPCResult()
+	o = koinos.NewChainRPCResult()
 	if jerr := json.Unmarshal([]byte("\"!@#$%^&*\""), o); jerr == nil {
 		t.Errorf("Unmarshaling nonsense JSON did not give error.")
 	}
@@ -3609,7 +3650,7 @@ func TestKoinosdRPCResult(t *testing.T) {
 			}
 		}()
 
-		variant := koinos.KoinosdRPCResult{Value: int64(0)}
+		variant := koinos.ChainRPCResult{Value: int64(0)}
 		vb := koinos.NewVariableBlob()
 		_ = variant.Serialize(vb)
 	}()
@@ -3622,16 +3663,16 @@ func TestKoinosdRPCResult(t *testing.T) {
 			}
 		}()
 
-		variant := koinos.KoinosdRPCResult{Value: int64(0)}
+		variant := koinos.ChainRPCResult{Value: int64(0)}
 		_, _ = json.Marshal(&variant)
 	}()
 }
 
-func exerciseKoinosdRPCResultSerialization(v *koinos.KoinosdRPCResult, t *testing.T) {
+func exerciseChainRPCResultSerialization(v *koinos.ChainRPCResult, t *testing.T) {
 	vb := koinos.NewVariableBlob()
 	vb = v.Serialize(vb)
 
-	_, _, err := koinos.DeserializeKoinosdRPCResult(vb)
+	_, _, err := koinos.DeserializeChainRPCResult(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -3641,7 +3682,7 @@ func exerciseKoinosdRPCResultSerialization(v *koinos.KoinosdRPCResult, t *testin
 		t.Error(jerr)
 	}
 
-	nv := koinos.NewKoinosdRPCResult()
+	nv := koinos.NewChainRPCResult()
 	if jerr = json.Unmarshal(jv, nv); jerr != nil {
 		t.Error(jerr)
 	}
@@ -7115,6 +7156,330 @@ func TestOpaqueActiveTransactionData(t *testing.T) {
 	}
 
 	expected := []byte("{\"opaque\":{\"type\":\"koinos::types::protocol::active_transaction_data\",\"value\":\"zt1Zv2yaZ\"}}")
+	v, jerr = json.Marshal(jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+	if !bytes.Equal(v, expected) {
+		t.Errorf("Marshal unknown data to json failed. Expected: %s, Was: %s", expected, v)
+	}
+
+	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"foobar\",\"value\":\"zt1Zv2yaZ\"}}"), jo)
+	if jerr == nil {
+		t.Errorf("jerr == nil")
+	}
+
+	jerr = json.Unmarshal([]byte("{\"opaque\":10}"), jo)
+	if jerr == nil {
+		t.Errorf("jerr == nil")
+	}
+
+}
+
+// ----------------------------------------
+//  OpaqueBlock
+// ----------------------------------------
+
+func TestOpaqueBlock(t *testing.T) {
+	o := koinos.NewOpaqueBlock()
+
+	o.Box()
+	if o.IsUnboxed() {
+		t.Errorf("Opaque is unboxed but should not be.")
+	}
+
+	// Test getting native on Boxed
+	_, err := o.GetNative()
+	if err == nil {
+		t.Errorf("Getting native on boxed should fail.")
+	}
+
+	o.Box() // Call Box() on Boxed
+	if o.IsUnboxed() {
+		t.Errorf("Boxed -> Boxed failed.")
+	}
+
+	o.MakeImmutable() // Call MakeImmutable() on Boxed
+	if o.IsUnboxed() {
+		t.Errorf("Unboxed -> MakeImmutable failed.")
+	}
+
+	o.Unbox() // Call Unbox() on Boxed
+	if !o.IsUnboxed() {
+		t.Errorf("Boxed -> Uboxed failed.")
+	}
+
+	// Test getting native on Unboxed
+	_, err = o.GetNative()
+	if err == nil {
+		t.Errorf("Getting native on Unboxed should fail.")
+	}
+
+	o.Unbox() // Call Unbox() on Unboxed
+	if !o.IsUnboxed() {
+		t.Errorf("Unboxed -> Unboxed failed.")
+	}
+
+	o.MakeImmutable() // Call MakeImmutable() on Unboxed
+	if !o.IsUnboxed() {
+		t.Errorf("Unboxed -> MakeImmutable failed.")
+	}
+
+	o.MakeMutable() // Call MakeMutable() on Unboxed
+	if !o.IsMutable() {
+		t.Errorf("Unboxed -> Mutable failed.")
+	}
+
+	o.MakeMutable() // Call MakeMutable() on Mutable
+	if !o.IsMutable() {
+		t.Errorf("Mutable -> Mutable failed.")
+	}
+
+	// Test getting native on Mutable
+	_, err = o.GetNative()
+	if err != nil {
+		t.Errorf("Getting native on boxed should not fail.")
+	}
+
+	o.Unbox() // Call Unbox() on Mutable
+	if !o.IsMutable() {
+		t.Errorf("Mutable -> Unboxed failed.")
+	}
+
+	o.Box() // Call Box() on Mutable
+	if o.IsUnboxed() {
+		t.Errorf("Mutable -> Boxed failed.")
+	}
+
+	o.MakeMutable()
+	o.MakeImmutable() // Call MakeImmutable() on Mutable
+	if !o.IsUnboxed() {
+		t.Errorf("Mutable -> Immutable failed.")
+	}
+
+	o.Box() // Call Box() on Unboxed
+	if o.IsUnboxed() {
+		t.Errorf("Unboxed -> Boxed failed.")
+	}
+
+	o.MakeMutable() // Call MakeMutable() on Boxed
+	if !o.IsMutable() {
+		t.Errorf("Boxed -> Mutable failed.")
+	}
+
+	// Test serialization
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+	b := o.GetBlob()
+
+	o.Box()
+	if !bytes.Equal(*b, (*vb)[1:]) {
+		t.Errorf("GetBlob and Serialization do not match")
+	}
+
+	o.Unbox()
+	b = o.GetBlob()
+	if !bytes.Equal(*b, (*vb)[1:]) {
+		t.Errorf("GetBlob and Serialization do not match")
+	}
+
+	_, _, err2 := koinos.DeserializeOpaqueBlock(vb)
+	if err2 != nil {
+		t.Error(err2)
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewOpaqueBlock()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"koinos::types::protocol::block\",\"value\":\"zt1Zv2yaZ\"}}"), jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo.Unbox()
+	if jo.IsUnboxed() {
+		t.Errorf("Unboxed incompatible serialization")
+	}
+
+	expected := []byte("{\"opaque\":{\"type\":\"koinos::types::protocol::block\",\"value\":\"zt1Zv2yaZ\"}}")
+	v, jerr = json.Marshal(jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+	if !bytes.Equal(v, expected) {
+		t.Errorf("Marshal unknown data to json failed. Expected: %s, Was: %s", expected, v)
+	}
+
+	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"foobar\",\"value\":\"zt1Zv2yaZ\"}}"), jo)
+	if jerr == nil {
+		t.Errorf("jerr == nil")
+	}
+
+	jerr = json.Unmarshal([]byte("{\"opaque\":10}"), jo)
+	if jerr == nil {
+		t.Errorf("jerr == nil")
+	}
+
+	jerr = json.Unmarshal([]byte("{\"active_data\":0,\"passive_data\":0,\"signature_data\":0,\"transactions\":0}"), jo)
+	if jerr == nil {
+		t.Errorf("jerr == nil")
+	}
+}
+
+// ----------------------------------------
+//  OpaqueBlockReceipt
+// ----------------------------------------
+
+func TestOpaqueBlockReceipt(t *testing.T) {
+	o := koinos.NewOpaqueBlockReceipt()
+
+	o.Box()
+	if o.IsUnboxed() {
+		t.Errorf("Opaque is unboxed but should not be.")
+	}
+
+	// Test getting native on Boxed
+	_, err := o.GetNative()
+	if err == nil {
+		t.Errorf("Getting native on boxed should fail.")
+	}
+
+	o.Box() // Call Box() on Boxed
+	if o.IsUnboxed() {
+		t.Errorf("Boxed -> Boxed failed.")
+	}
+
+	o.MakeImmutable() // Call MakeImmutable() on Boxed
+	if o.IsUnboxed() {
+		t.Errorf("Unboxed -> MakeImmutable failed.")
+	}
+
+	o.Unbox() // Call Unbox() on Boxed
+	if !o.IsUnboxed() {
+		t.Errorf("Boxed -> Uboxed failed.")
+	}
+
+	// Test getting native on Unboxed
+	_, err = o.GetNative()
+	if err == nil {
+		t.Errorf("Getting native on Unboxed should fail.")
+	}
+
+	o.Unbox() // Call Unbox() on Unboxed
+	if !o.IsUnboxed() {
+		t.Errorf("Unboxed -> Unboxed failed.")
+	}
+
+	o.MakeImmutable() // Call MakeImmutable() on Unboxed
+	if !o.IsUnboxed() {
+		t.Errorf("Unboxed -> MakeImmutable failed.")
+	}
+
+	o.MakeMutable() // Call MakeMutable() on Unboxed
+	if !o.IsMutable() {
+		t.Errorf("Unboxed -> Mutable failed.")
+	}
+
+	o.MakeMutable() // Call MakeMutable() on Mutable
+	if !o.IsMutable() {
+		t.Errorf("Mutable -> Mutable failed.")
+	}
+
+	// Test getting native on Mutable
+	_, err = o.GetNative()
+	if err != nil {
+		t.Errorf("Getting native on boxed should not fail.")
+	}
+
+	o.Unbox() // Call Unbox() on Mutable
+	if !o.IsMutable() {
+		t.Errorf("Mutable -> Unboxed failed.")
+	}
+
+	o.Box() // Call Box() on Mutable
+	if o.IsUnboxed() {
+		t.Errorf("Mutable -> Boxed failed.")
+	}
+
+	o.MakeMutable()
+	o.MakeImmutable() // Call MakeImmutable() on Mutable
+	if !o.IsUnboxed() {
+		t.Errorf("Mutable -> Immutable failed.")
+	}
+
+	o.Box() // Call Box() on Unboxed
+	if o.IsUnboxed() {
+		t.Errorf("Unboxed -> Boxed failed.")
+	}
+
+	o.MakeMutable() // Call MakeMutable() on Boxed
+	if !o.IsMutable() {
+		t.Errorf("Boxed -> Mutable failed.")
+	}
+
+	// Test serialization
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+	b := o.GetBlob()
+
+	o.Box()
+	if !bytes.Equal(*b, (*vb)[1:]) {
+		t.Errorf("GetBlob and Serialization do not match")
+	}
+
+	o.Unbox()
+	b = o.GetBlob()
+	if !bytes.Equal(*b, (*vb)[1:]) {
+		t.Errorf("GetBlob and Serialization do not match")
+	}
+
+	_, _, err2 := koinos.DeserializeOpaqueBlockReceipt(vb)
+	if err2 != nil {
+		t.Error(err2)
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewOpaqueBlockReceipt()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"koinos::types::protocol::block_receipt\",\"value\":\"zt1Zv2yaZ\"}}"), jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo.Unbox()
+	if jo.IsUnboxed() {
+		t.Errorf("Unboxed incompatible serialization")
+	}
+
+	expected := []byte("{\"opaque\":{\"type\":\"koinos::types::protocol::block_receipt\",\"value\":\"zt1Zv2yaZ\"}}")
 	v, jerr = json.Marshal(jo)
 	if jerr != nil {
 		t.Error(jerr)

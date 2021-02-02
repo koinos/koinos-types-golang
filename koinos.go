@@ -1154,6 +1154,33 @@ func DeserializeBlock(vb *VariableBlob) (uint64,*Block,error) {
 }
 
 // ----------------------------------------
+//  Struct: BlockReceipt
+// ----------------------------------------
+
+// BlockReceipt type
+type BlockReceipt struct {
+}
+
+// NewBlockReceipt factory
+func NewBlockReceipt() *BlockReceipt {
+	o := BlockReceipt{}
+	return &o
+}
+
+// Serialize BlockReceipt
+func (n BlockReceipt) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeBlockReceipt function
+func DeserializeBlockReceipt(vb *VariableBlob) (uint64,*BlockReceipt,error) {
+	var i uint64 = 0
+	s := BlockReceipt{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
 //  Struct: ReservedReq
 // ----------------------------------------
 
@@ -1269,8 +1296,8 @@ func DeserializeGetBlocksByIDReq(vb *VariableBlob) (uint64,*GetBlocksByIDReq,err
 type BlockItem struct {
     BlockID Multihash `json:"block_id"`
     BlockHeight BlockHeightType `json:"block_height"`
-    BlockBlob VariableBlob `json:"block_blob"`
-    BlockReceiptBlob VariableBlob `json:"block_receipt_blob"`
+    Block OpaqueBlock `json:"block"`
+    BlockReceipt OpaqueBlockReceipt `json:"block_receipt"`
 }
 
 // NewBlockItem factory
@@ -1278,8 +1305,8 @@ func NewBlockItem() *BlockItem {
 	o := BlockItem{}
 	o.BlockID = *NewMultihash()
 	o.BlockHeight = *NewBlockHeightType()
-	o.BlockBlob = *NewVariableBlob()
-	o.BlockReceiptBlob = *NewVariableBlob()
+	o.Block = *NewOpaqueBlock()
+	o.BlockReceipt = *NewOpaqueBlockReceipt()
 	return &o
 }
 
@@ -1287,8 +1314,8 @@ func NewBlockItem() *BlockItem {
 func (n BlockItem) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.BlockID.Serialize(vb)
 	vb = n.BlockHeight.Serialize(vb)
-	vb = n.BlockBlob.Serialize(vb)
-	vb = n.BlockReceiptBlob.Serialize(vb)
+	vb = n.Block.Serialize(vb)
+	vb = n.BlockReceipt.Serialize(vb)
 	return vb
 }
 
@@ -1310,17 +1337,17 @@ func DeserializeBlockItem(vb *VariableBlob) (uint64,*BlockItem,error) {
 	}
 	s.BlockHeight = *tBlockHeight
 	ovb = (*vb)[i:]
-	j,tBlockBlob,err := DeserializeVariableBlob(&ovb); i+=j
+	j,tBlock,err := DeserializeOpaqueBlock(&ovb); i+=j
 	if err != nil {
 		return 0, &BlockItem{}, err
 	}
-	s.BlockBlob = *tBlockBlob
+	s.Block = *tBlock
 	ovb = (*vb)[i:]
-	j,tBlockReceiptBlob,err := DeserializeVariableBlob(&ovb); i+=j
+	j,tBlockReceipt,err := DeserializeOpaqueBlockReceipt(&ovb); i+=j
 	if err != nil {
 		return 0, &BlockItem{}, err
 	}
-	s.BlockReceiptBlob = *tBlockReceiptBlob
+	s.BlockReceipt = *tBlockReceipt
 	return i, &s, nil
 }
 
@@ -1369,8 +1396,8 @@ type GetBlocksByHeightReq struct {
     HeadBlockID Multihash `json:"head_block_id"`
     AncestorStartHeight BlockHeightType `json:"ancestor_start_height"`
     NumBlocks UInt32 `json:"num_blocks"`
-    ReturnBlockBlob Boolean `json:"return_block_blob"`
-    ReturnReceiptBlob Boolean `json:"return_receipt_blob"`
+    ReturnBlock Boolean `json:"return_block"`
+    ReturnReceipt Boolean `json:"return_receipt"`
 }
 
 // NewGetBlocksByHeightReq factory
@@ -1379,8 +1406,8 @@ func NewGetBlocksByHeightReq() *GetBlocksByHeightReq {
 	o.HeadBlockID = *NewMultihash()
 	o.AncestorStartHeight = *NewBlockHeightType()
 	o.NumBlocks = *NewUInt32()
-	o.ReturnBlockBlob = *NewBoolean()
-	o.ReturnReceiptBlob = *NewBoolean()
+	o.ReturnBlock = *NewBoolean()
+	o.ReturnReceipt = *NewBoolean()
 	return &o
 }
 
@@ -1389,8 +1416,8 @@ func (n GetBlocksByHeightReq) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.HeadBlockID.Serialize(vb)
 	vb = n.AncestorStartHeight.Serialize(vb)
 	vb = n.NumBlocks.Serialize(vb)
-	vb = n.ReturnBlockBlob.Serialize(vb)
-	vb = n.ReturnReceiptBlob.Serialize(vb)
+	vb = n.ReturnBlock.Serialize(vb)
+	vb = n.ReturnReceipt.Serialize(vb)
 	return vb
 }
 
@@ -1418,17 +1445,17 @@ func DeserializeGetBlocksByHeightReq(vb *VariableBlob) (uint64,*GetBlocksByHeigh
 	}
 	s.NumBlocks = *tNumBlocks
 	ovb = (*vb)[i:]
-	j,tReturnBlockBlob,err := DeserializeBoolean(&ovb); i+=j
+	j,tReturnBlock,err := DeserializeBoolean(&ovb); i+=j
 	if err != nil {
 		return 0, &GetBlocksByHeightReq{}, err
 	}
-	s.ReturnBlockBlob = *tReturnBlockBlob
+	s.ReturnBlock = *tReturnBlock
 	ovb = (*vb)[i:]
-	j,tReturnReceiptBlob,err := DeserializeBoolean(&ovb); i+=j
+	j,tReturnReceipt,err := DeserializeBoolean(&ovb); i+=j
 	if err != nil {
 		return 0, &GetBlocksByHeightReq{}, err
 	}
-	s.ReturnReceiptBlob = *tReturnReceiptBlob
+	s.ReturnReceipt = *tReturnReceipt
 	return i, &s, nil
 }
 
@@ -1549,8 +1576,8 @@ type BlockRecord struct {
     BlockID Multihash `json:"block_id"`
     BlockHeight BlockHeightType `json:"block_height"`
     PreviousBlockIds VectorMultihash `json:"previous_block_ids"`
-    BlockBlob VariableBlob `json:"block_blob"`
-    BlockReceiptBlob VariableBlob `json:"block_receipt_blob"`
+    Block OpaqueBlock `json:"block"`
+    BlockReceipt OpaqueBlockReceipt `json:"block_receipt"`
 }
 
 // NewBlockRecord factory
@@ -1559,8 +1586,8 @@ func NewBlockRecord() *BlockRecord {
 	o.BlockID = *NewMultihash()
 	o.BlockHeight = *NewBlockHeightType()
 	o.PreviousBlockIds = *NewVectorMultihash()
-	o.BlockBlob = *NewVariableBlob()
-	o.BlockReceiptBlob = *NewVariableBlob()
+	o.Block = *NewOpaqueBlock()
+	o.BlockReceipt = *NewOpaqueBlockReceipt()
 	return &o
 }
 
@@ -1569,8 +1596,8 @@ func (n BlockRecord) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.BlockID.Serialize(vb)
 	vb = n.BlockHeight.Serialize(vb)
 	vb = n.PreviousBlockIds.Serialize(vb)
-	vb = n.BlockBlob.Serialize(vb)
-	vb = n.BlockReceiptBlob.Serialize(vb)
+	vb = n.Block.Serialize(vb)
+	vb = n.BlockReceipt.Serialize(vb)
 	return vb
 }
 
@@ -1598,17 +1625,17 @@ func DeserializeBlockRecord(vb *VariableBlob) (uint64,*BlockRecord,error) {
 	}
 	s.PreviousBlockIds = *tPreviousBlockIds
 	ovb = (*vb)[i:]
-	j,tBlockBlob,err := DeserializeVariableBlob(&ovb); i+=j
+	j,tBlock,err := DeserializeOpaqueBlock(&ovb); i+=j
 	if err != nil {
 		return 0, &BlockRecord{}, err
 	}
-	s.BlockBlob = *tBlockBlob
+	s.Block = *tBlock
 	ovb = (*vb)[i:]
-	j,tBlockReceiptBlob,err := DeserializeVariableBlob(&ovb); i+=j
+	j,tBlockReceipt,err := DeserializeOpaqueBlockReceipt(&ovb); i+=j
 	if err != nil {
 		return 0, &BlockRecord{}, err
 	}
-	s.BlockReceiptBlob = *tBlockReceiptBlob
+	s.BlockReceipt = *tBlockReceipt
 	return i, &s, nil
 }
 
@@ -1619,21 +1646,21 @@ func DeserializeBlockRecord(vb *VariableBlob) (uint64,*BlockRecord,error) {
 // AddTransactionReq type
 type AddTransactionReq struct {
     TransactionID Multihash `json:"transaction_id"`
-    TransactionBlob VariableBlob `json:"transaction_blob"`
+    Transaction OpaqueTransaction `json:"transaction"`
 }
 
 // NewAddTransactionReq factory
 func NewAddTransactionReq() *AddTransactionReq {
 	o := AddTransactionReq{}
 	o.TransactionID = *NewMultihash()
-	o.TransactionBlob = *NewVariableBlob()
+	o.Transaction = *NewOpaqueTransaction()
 	return &o
 }
 
 // Serialize AddTransactionReq
 func (n AddTransactionReq) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.TransactionID.Serialize(vb)
-	vb = n.TransactionBlob.Serialize(vb)
+	vb = n.Transaction.Serialize(vb)
 	return vb
 }
 
@@ -1649,11 +1676,11 @@ func DeserializeAddTransactionReq(vb *VariableBlob) (uint64,*AddTransactionReq,e
 	}
 	s.TransactionID = *tTransactionID
 	ovb = (*vb)[i:]
-	j,tTransactionBlob,err := DeserializeVariableBlob(&ovb); i+=j
+	j,tTransaction,err := DeserializeOpaqueTransaction(&ovb); i+=j
 	if err != nil {
 		return 0, &AddTransactionReq{}, err
 	}
-	s.TransactionBlob = *tTransactionBlob
+	s.Transaction = *tTransaction
 	return i, &s, nil
 }
 
@@ -1690,19 +1717,19 @@ func DeserializeAddTransactionResp(vb *VariableBlob) (uint64,*AddTransactionResp
 
 // TransactionRecord type
 type TransactionRecord struct {
-    TransactionBlob VariableBlob `json:"transaction_blob"`
+    Transaction OpaqueTransaction `json:"transaction"`
 }
 
 // NewTransactionRecord factory
 func NewTransactionRecord() *TransactionRecord {
 	o := TransactionRecord{}
-	o.TransactionBlob = *NewVariableBlob()
+	o.Transaction = *NewOpaqueTransaction()
 	return &o
 }
 
 // Serialize TransactionRecord
 func (n TransactionRecord) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.TransactionBlob.Serialize(vb)
+	vb = n.Transaction.Serialize(vb)
 	return vb
 }
 
@@ -1712,11 +1739,11 @@ func DeserializeTransactionRecord(vb *VariableBlob) (uint64,*TransactionRecord,e
 	s := TransactionRecord{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
-	j,tTransactionBlob,err := DeserializeVariableBlob(&ovb); i+=j
+	j,tTransaction,err := DeserializeOpaqueTransaction(&ovb); i+=j
 	if err != nil {
 		return 0, &TransactionRecord{}, err
 	}
-	s.TransactionBlob = *tTransactionBlob
+	s.Transaction = *tTransaction
 	return i, &s, nil
 }
 
@@ -1762,19 +1789,19 @@ func DeserializeGetTransactionsByIDReq(vb *VariableBlob) (uint64,*GetTransaction
 
 // TransactionItem type
 type TransactionItem struct {
-    TransactionBlob VariableBlob `json:"transaction_blob"`
+    Transaction OpaqueTransaction `json:"transaction"`
 }
 
 // NewTransactionItem factory
 func NewTransactionItem() *TransactionItem {
 	o := TransactionItem{}
-	o.TransactionBlob = *NewVariableBlob()
+	o.Transaction = *NewOpaqueTransaction()
 	return &o
 }
 
 // Serialize TransactionItem
 func (n TransactionItem) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.TransactionBlob.Serialize(vb)
+	vb = n.Transaction.Serialize(vb)
 	return vb
 }
 
@@ -1784,11 +1811,11 @@ func DeserializeTransactionItem(vb *VariableBlob) (uint64,*TransactionItem,error
 	s := TransactionItem{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
-	j,tTransactionBlob,err := DeserializeVariableBlob(&ovb); i+=j
+	j,tTransaction,err := DeserializeOpaqueTransaction(&ovb); i+=j
 	if err != nil {
 		return 0, &TransactionItem{}, err
 	}
-	s.TransactionBlob = *tTransactionBlob
+	s.Transaction = *tTransaction
 	return i, &s, nil
 }
 
@@ -2522,23 +2549,23 @@ func DeserializeGetChainIDParams(vb *VariableBlob) (uint64,*GetChainIDParams,err
 }
 
 // ----------------------------------------
-//  Variant: KoinosdRPCParams
+//  Variant: ChainRPCParams
 // ----------------------------------------
 
-// KoinosdRPCParams type
-type KoinosdRPCParams struct {
+// ChainRPCParams type
+type ChainRPCParams struct {
 	Value interface{}
 }
 
-// NewKoinosdRPCParams factory
-func NewKoinosdRPCParams() *KoinosdRPCParams {
-	v := KoinosdRPCParams{}
+// NewChainRPCParams factory
+func NewChainRPCParams() *ChainRPCParams {
+	v := ChainRPCParams{}
 	v.Value = NewReservedRPCParams()
 	return &v
 }
 
-// Serialize KoinosdRPCParams
-func (n KoinosdRPCParams) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize ChainRPCParams
+func (n ChainRPCParams) Serialize(vb *VariableBlob) *VariableBlob {
 	var i uint64
 	switch n.Value.(type) {
 		case *ReservedRPCParams:
@@ -2560,8 +2587,8 @@ func (n KoinosdRPCParams) Serialize(vb *VariableBlob) *VariableBlob {
 	return ser.Serialize(vb)
 }
 
-// TypeToName KoinosdRPCParams
-func (n KoinosdRPCParams) TypeToName() (string) {
+// TypeToName ChainRPCParams
+func (n ChainRPCParams) TypeToName() (string) {
 	switch n.Value.(type) {
 		case *ReservedRPCParams:
 			return "koinos::rpc::chain::reserved_rpc_params"
@@ -2578,8 +2605,8 @@ func (n KoinosdRPCParams) TypeToName() (string) {
 	}
 }
 
-// MarshalJSON KoinosdRPCParams
-func (n KoinosdRPCParams) MarshalJSON() ([]byte, error) {
+// MarshalJSON ChainRPCParams
+func (n ChainRPCParams) MarshalJSON() ([]byte, error) {
 	variant := struct {
 		Type string `json:"type"`
 		Value *interface{} `json:"value"`
@@ -2591,9 +2618,9 @@ func (n KoinosdRPCParams) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&variant)
 }
 
-// DeserializeKoinosdRPCParams function
-func DeserializeKoinosdRPCParams(vb *VariableBlob) (uint64,*KoinosdRPCParams,error) {
-	var v KoinosdRPCParams
+// DeserializeChainRPCParams function
+func DeserializeChainRPCParams(vb *VariableBlob) (uint64,*ChainRPCParams,error) {
+	var v ChainRPCParams
 	typeID,i := binary.Uvarint(*vb)
 	if i <= 0 {
 		return 0, &v, errors.New("could not deserialize variant tag")
@@ -2629,8 +2656,8 @@ func DeserializeKoinosdRPCParams(vb *VariableBlob) (uint64,*KoinosdRPCParams,err
 	return uint64(i)+j,&v,nil
 }
 
-// UnmarshalJSON *KoinosdRPCParams
-func (n *KoinosdRPCParams) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON *ChainRPCParams
+func (n *ChainRPCParams) UnmarshalJSON(data []byte) error {
 	variant := struct {
 		Type  string          `json:"type"`
 		Value json.RawMessage `json:"value"`
@@ -2871,23 +2898,23 @@ func DeserializeGetChainIDResult(vb *VariableBlob) (uint64,*GetChainIDResult,err
 }
 
 // ----------------------------------------
-//  Variant: KoinosdRPCResult
+//  Variant: ChainRPCResult
 // ----------------------------------------
 
-// KoinosdRPCResult type
-type KoinosdRPCResult struct {
+// ChainRPCResult type
+type ChainRPCResult struct {
 	Value interface{}
 }
 
-// NewKoinosdRPCResult factory
-func NewKoinosdRPCResult() *KoinosdRPCResult {
-	v := KoinosdRPCResult{}
+// NewChainRPCResult factory
+func NewChainRPCResult() *ChainRPCResult {
+	v := ChainRPCResult{}
 	v.Value = NewReservedRPCResult()
 	return &v
 }
 
-// Serialize KoinosdRPCResult
-func (n KoinosdRPCResult) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize ChainRPCResult
+func (n ChainRPCResult) Serialize(vb *VariableBlob) *VariableBlob {
 	var i uint64
 	switch n.Value.(type) {
 		case *ReservedRPCResult:
@@ -2911,8 +2938,8 @@ func (n KoinosdRPCResult) Serialize(vb *VariableBlob) *VariableBlob {
 	return ser.Serialize(vb)
 }
 
-// TypeToName KoinosdRPCResult
-func (n KoinosdRPCResult) TypeToName() (string) {
+// TypeToName ChainRPCResult
+func (n ChainRPCResult) TypeToName() (string) {
 	switch n.Value.(type) {
 		case *ReservedRPCResult:
 			return "koinos::rpc::chain::reserved_rpc_result"
@@ -2931,8 +2958,8 @@ func (n KoinosdRPCResult) TypeToName() (string) {
 	}
 }
 
-// MarshalJSON KoinosdRPCResult
-func (n KoinosdRPCResult) MarshalJSON() ([]byte, error) {
+// MarshalJSON ChainRPCResult
+func (n ChainRPCResult) MarshalJSON() ([]byte, error) {
 	variant := struct {
 		Type string `json:"type"`
 		Value *interface{} `json:"value"`
@@ -2944,9 +2971,9 @@ func (n KoinosdRPCResult) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&variant)
 }
 
-// DeserializeKoinosdRPCResult function
-func DeserializeKoinosdRPCResult(vb *VariableBlob) (uint64,*KoinosdRPCResult,error) {
-	var v KoinosdRPCResult
+// DeserializeChainRPCResult function
+func DeserializeChainRPCResult(vb *VariableBlob) (uint64,*ChainRPCResult,error) {
+	var v ChainRPCResult
 	typeID,i := binary.Uvarint(*vb)
 	if i <= 0 {
 		return 0, &v, errors.New("could not deserialize variant tag")
@@ -2990,8 +3017,8 @@ func DeserializeKoinosdRPCResult(vb *VariableBlob) (uint64,*KoinosdRPCResult,err
 	return uint64(i)+j,&v,nil
 }
 
-// UnmarshalJSON *KoinosdRPCResult
-func (n *KoinosdRPCResult) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON *ChainRPCResult
+func (n *ChainRPCResult) UnmarshalJSON(data []byte) error {
 	variant := struct {
 		Type  string          `json:"type"`
 		Value json.RawMessage `json:"value"`
@@ -6551,6 +6578,322 @@ func (n *OpaqueActiveTransactionData) UnmarshalJSON(data []byte) (error) {
 			return err
 		}
 		if strings.Compare(obj.Opaque.Type, "koinos::types::protocol::active_transaction_data") != 0 {
+			return errors.New("unexpected opaque type name")
+		}
+		n.blob = &obj.Opaque.Value
+		n.native = nil
+	} else {
+		if err := json.Unmarshal(data, &n.native); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ----------------------------------------
+//  OpaqueBlock
+// ----------------------------------------
+
+// OpaqueBlock type
+type OpaqueBlock struct {
+	blob *VariableBlob
+	native *Block
+}
+
+// NewOpaqueBlock factory
+func NewOpaqueBlock() *OpaqueBlock {
+	o := OpaqueBlock{}
+	o.native = NewBlock()
+	return &o
+}
+
+// GetBlob *OpaqueBlock
+func (n *OpaqueBlock) GetBlob() *VariableBlob {
+	if (n.native != nil && n.blob == nil) {
+		n.serializeNative()
+	}
+
+	return n.blob
+}
+
+// GetNative *OpaqueBlock
+func (n *OpaqueBlock) GetNative() (*Block,error) {
+	if( n.native == nil ) {
+		return nil,errors.New("opaque type not unboxed")
+	}
+	if( n.blob != nil ) {
+		return nil,errors.New("opaque type is not mutable")
+	}
+
+	return n.native,nil;
+}
+
+// Box *OpaqueBlock
+func (n *OpaqueBlock) Box() {
+	if (n.native != nil) {
+		// Mutable -> Unboxed
+		if (n.blob == nil) {
+			n.serializeNative()
+		}
+
+		// Unboxed -> Boxed
+		n.native = nil
+	}
+}
+
+// Unbox *OpaqueBlock
+func (n *OpaqueBlock) Unbox() {
+	if (n.native == nil && n.blob != nil) {
+		var err error
+		var b uint64
+		b,n.native,err = DeserializeBlock(n.blob)
+
+		if err != nil || b != uint64(len(*n.blob)) {
+			n.native = nil
+		}
+	}
+}
+
+// MakeMutable *OpaqueBlock
+func (n *OpaqueBlock) MakeMutable() {
+	if (n.native == nil) {
+		n.Unbox()
+	}
+
+	// Unboxed -> Mutable
+	if (n.native != nil && n.blob != nil) {
+		n.blob = nil
+	}
+}
+
+// MakeImmutable *OpaqueBlock
+func (n *OpaqueBlock) MakeImmutable() {
+	if (n.native != nil && n.blob == nil) {
+		n.serializeNative()
+	}
+}
+
+// IsUnboxed *OpaqueBlock
+func (n *OpaqueBlock) IsUnboxed() bool {
+	return n.native != nil;
+}
+
+// IsMutable *OpaqueBlock
+func (n *OpaqueBlock) IsMutable() bool {
+	return n.native != nil && n.blob == nil;
+}
+
+func (n *OpaqueBlock) serializeNative() {
+	vb := NewVariableBlob()
+	n.blob = n.native.Serialize(vb)
+}
+
+// Serialize OpaqueBlock
+func (n OpaqueBlock) Serialize(vb *VariableBlob) *VariableBlob {
+	n.Box()
+	return n.blob.Serialize(vb)
+}
+
+// DeserializeOpaqueBlock function
+func DeserializeOpaqueBlock(vb *VariableBlob) (uint64,*OpaqueBlock,error) {
+	size,nv,err := DeserializeVariableBlob(vb)
+	var o OpaqueBlock
+	if err != nil {
+		return 0, &o, err
+	}
+	o = OpaqueBlock{blob:nv, native:nil}
+	return size,&o,nil
+}
+
+// MarshalJSON OpaqueBlock
+func (n OpaqueBlock) MarshalJSON() ([]byte, error) {
+	n.Unbox()
+
+	if n.IsUnboxed() {
+		return json.Marshal(&n.native)
+	}
+
+	v := opaqueJSON{}
+	v.Opaque.Type = "koinos::types::protocol::block"
+	v.Opaque.Value = *n.blob
+
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *OpaqueBlock
+func (n *OpaqueBlock) UnmarshalJSON(data []byte) (error) {
+	var j map[string]interface{}
+	if err := json.Unmarshal(data, &j); err != nil {
+		return err
+	}
+	_, isOpaque := j["opaque"]
+
+	if isOpaque {
+		var obj opaqueJSON
+
+		if err := json.Unmarshal(data, &obj); err != nil {
+			return err
+		}
+		if strings.Compare(obj.Opaque.Type, "koinos::types::protocol::block") != 0 {
+			return errors.New("unexpected opaque type name")
+		}
+		n.blob = &obj.Opaque.Value
+		n.native = nil
+	} else {
+		if err := json.Unmarshal(data, &n.native); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ----------------------------------------
+//  OpaqueBlockReceipt
+// ----------------------------------------
+
+// OpaqueBlockReceipt type
+type OpaqueBlockReceipt struct {
+	blob *VariableBlob
+	native *BlockReceipt
+}
+
+// NewOpaqueBlockReceipt factory
+func NewOpaqueBlockReceipt() *OpaqueBlockReceipt {
+	o := OpaqueBlockReceipt{}
+	o.native = NewBlockReceipt()
+	return &o
+}
+
+// GetBlob *OpaqueBlockReceipt
+func (n *OpaqueBlockReceipt) GetBlob() *VariableBlob {
+	if (n.native != nil && n.blob == nil) {
+		n.serializeNative()
+	}
+
+	return n.blob
+}
+
+// GetNative *OpaqueBlockReceipt
+func (n *OpaqueBlockReceipt) GetNative() (*BlockReceipt,error) {
+	if( n.native == nil ) {
+		return nil,errors.New("opaque type not unboxed")
+	}
+	if( n.blob != nil ) {
+		return nil,errors.New("opaque type is not mutable")
+	}
+
+	return n.native,nil;
+}
+
+// Box *OpaqueBlockReceipt
+func (n *OpaqueBlockReceipt) Box() {
+	if (n.native != nil) {
+		// Mutable -> Unboxed
+		if (n.blob == nil) {
+			n.serializeNative()
+		}
+
+		// Unboxed -> Boxed
+		n.native = nil
+	}
+}
+
+// Unbox *OpaqueBlockReceipt
+func (n *OpaqueBlockReceipt) Unbox() {
+	if (n.native == nil && n.blob != nil) {
+		var err error
+		var b uint64
+		b,n.native,err = DeserializeBlockReceipt(n.blob)
+
+		if err != nil || b != uint64(len(*n.blob)) {
+			n.native = nil
+		}
+	}
+}
+
+// MakeMutable *OpaqueBlockReceipt
+func (n *OpaqueBlockReceipt) MakeMutable() {
+	if (n.native == nil) {
+		n.Unbox()
+	}
+
+	// Unboxed -> Mutable
+	if (n.native != nil && n.blob != nil) {
+		n.blob = nil
+	}
+}
+
+// MakeImmutable *OpaqueBlockReceipt
+func (n *OpaqueBlockReceipt) MakeImmutable() {
+	if (n.native != nil && n.blob == nil) {
+		n.serializeNative()
+	}
+}
+
+// IsUnboxed *OpaqueBlockReceipt
+func (n *OpaqueBlockReceipt) IsUnboxed() bool {
+	return n.native != nil;
+}
+
+// IsMutable *OpaqueBlockReceipt
+func (n *OpaqueBlockReceipt) IsMutable() bool {
+	return n.native != nil && n.blob == nil;
+}
+
+func (n *OpaqueBlockReceipt) serializeNative() {
+	vb := NewVariableBlob()
+	n.blob = n.native.Serialize(vb)
+}
+
+// Serialize OpaqueBlockReceipt
+func (n OpaqueBlockReceipt) Serialize(vb *VariableBlob) *VariableBlob {
+	n.Box()
+	return n.blob.Serialize(vb)
+}
+
+// DeserializeOpaqueBlockReceipt function
+func DeserializeOpaqueBlockReceipt(vb *VariableBlob) (uint64,*OpaqueBlockReceipt,error) {
+	size,nv,err := DeserializeVariableBlob(vb)
+	var o OpaqueBlockReceipt
+	if err != nil {
+		return 0, &o, err
+	}
+	o = OpaqueBlockReceipt{blob:nv, native:nil}
+	return size,&o,nil
+}
+
+// MarshalJSON OpaqueBlockReceipt
+func (n OpaqueBlockReceipt) MarshalJSON() ([]byte, error) {
+	n.Unbox()
+
+	if n.IsUnboxed() {
+		return json.Marshal(&n.native)
+	}
+
+	v := opaqueJSON{}
+	v.Opaque.Type = "koinos::types::protocol::block_receipt"
+	v.Opaque.Value = *n.blob
+
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *OpaqueBlockReceipt
+func (n *OpaqueBlockReceipt) UnmarshalJSON(data []byte) (error) {
+	var j map[string]interface{}
+	if err := json.Unmarshal(data, &j); err != nil {
+		return err
+	}
+	_, isOpaque := j["opaque"]
+
+	if isOpaque {
+		var obj opaqueJSON
+
+		if err := json.Unmarshal(data, &obj); err != nil {
+			return err
+		}
+		if strings.Compare(obj.Opaque.Type, "koinos::types::protocol::block_receipt") != 0 {
 			return errors.New("unexpected opaque type name")
 		}
 		n.blob = &obj.Opaque.Value
