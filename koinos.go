@@ -2270,29 +2270,200 @@ func DeserializeBlockPart(vb *VariableBlob) (uint64,*BlockPart,error) {
 }
 
 // ----------------------------------------
-//  Struct: ReservedQueryParams
+//  Struct: ReservedRPCParams
 // ----------------------------------------
 
-// ReservedQueryParams type
-type ReservedQueryParams struct {
+// ReservedRPCParams type
+type ReservedRPCParams struct {
 }
 
-// NewReservedQueryParams factory
-func NewReservedQueryParams() *ReservedQueryParams {
-	o := ReservedQueryParams{}
+// NewReservedRPCParams factory
+func NewReservedRPCParams() *ReservedRPCParams {
+	o := ReservedRPCParams{}
 	return &o
 }
 
-// Serialize ReservedQueryParams
-func (n ReservedQueryParams) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize ReservedRPCParams
+func (n ReservedRPCParams) Serialize(vb *VariableBlob) *VariableBlob {
 	return vb
 }
 
-// DeserializeReservedQueryParams function
-func DeserializeReservedQueryParams(vb *VariableBlob) (uint64,*ReservedQueryParams,error) {
+// DeserializeReservedRPCParams function
+func DeserializeReservedRPCParams(vb *VariableBlob) (uint64,*ReservedRPCParams,error) {
 	var i uint64 = 0
-	s := ReservedQueryParams{}
+	s := ReservedRPCParams{}
 	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: BlockTopology
+// ----------------------------------------
+
+// BlockTopology type
+type BlockTopology struct {
+    ID Multihash `json:"id"`
+    Height BlockHeightType `json:"height"`
+    Previous Multihash `json:"previous"`
+}
+
+// NewBlockTopology factory
+func NewBlockTopology() *BlockTopology {
+	o := BlockTopology{}
+	o.ID = *NewMultihash()
+	o.Height = *NewBlockHeightType()
+	o.Previous = *NewMultihash()
+	return &o
+}
+
+// Serialize BlockTopology
+func (n BlockTopology) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ID.Serialize(vb)
+	vb = n.Height.Serialize(vb)
+	vb = n.Previous.Serialize(vb)
+	return vb
+}
+
+// DeserializeBlockTopology function
+func DeserializeBlockTopology(vb *VariableBlob) (uint64,*BlockTopology,error) {
+	var i,j uint64 = 0,0
+	s := BlockTopology{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tID,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockTopology{}, err
+	}
+	s.ID = *tID
+	ovb = (*vb)[i:]
+	j,tHeight,err := DeserializeBlockHeightType(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockTopology{}, err
+	}
+	s.Height = *tHeight
+	ovb = (*vb)[i:]
+	j,tPrevious,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockTopology{}, err
+	}
+	s.Previous = *tPrevious
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: SubmitBlockParams
+// ----------------------------------------
+
+// SubmitBlockParams type
+type SubmitBlockParams struct {
+    Topology BlockTopology `json:"topology"`
+    Block Block `json:"block"`
+    VerifyPassiveData Boolean `json:"verify_passive_data"`
+    VerifyBlockSignature Boolean `json:"verify_block_signature"`
+    VerifyTransactionSignatures Boolean `json:"verify_transaction_signatures"`
+}
+
+// NewSubmitBlockParams factory
+func NewSubmitBlockParams() *SubmitBlockParams {
+	o := SubmitBlockParams{}
+	o.Topology = *NewBlockTopology()
+	o.Block = *NewBlock()
+	o.VerifyPassiveData = *NewBoolean()
+	o.VerifyBlockSignature = *NewBoolean()
+	o.VerifyTransactionSignatures = *NewBoolean()
+	return &o
+}
+
+// Serialize SubmitBlockParams
+func (n SubmitBlockParams) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Topology.Serialize(vb)
+	vb = n.Block.Serialize(vb)
+	vb = n.VerifyPassiveData.Serialize(vb)
+	vb = n.VerifyBlockSignature.Serialize(vb)
+	vb = n.VerifyTransactionSignatures.Serialize(vb)
+	return vb
+}
+
+// DeserializeSubmitBlockParams function
+func DeserializeSubmitBlockParams(vb *VariableBlob) (uint64,*SubmitBlockParams,error) {
+	var i,j uint64 = 0,0
+	s := SubmitBlockParams{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tTopology,err := DeserializeBlockTopology(&ovb); i+=j
+	if err != nil {
+		return 0, &SubmitBlockParams{}, err
+	}
+	s.Topology = *tTopology
+	ovb = (*vb)[i:]
+	j,tBlock,err := DeserializeBlock(&ovb); i+=j
+	if err != nil {
+		return 0, &SubmitBlockParams{}, err
+	}
+	s.Block = *tBlock
+	ovb = (*vb)[i:]
+	j,tVerifyPassiveData,err := DeserializeBoolean(&ovb); i+=j
+	if err != nil {
+		return 0, &SubmitBlockParams{}, err
+	}
+	s.VerifyPassiveData = *tVerifyPassiveData
+	ovb = (*vb)[i:]
+	j,tVerifyBlockSignature,err := DeserializeBoolean(&ovb); i+=j
+	if err != nil {
+		return 0, &SubmitBlockParams{}, err
+	}
+	s.VerifyBlockSignature = *tVerifyBlockSignature
+	ovb = (*vb)[i:]
+	j,tVerifyTransactionSignatures,err := DeserializeBoolean(&ovb); i+=j
+	if err != nil {
+		return 0, &SubmitBlockParams{}, err
+	}
+	s.VerifyTransactionSignatures = *tVerifyTransactionSignatures
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: SubmitTransactionParams
+// ----------------------------------------
+
+// SubmitTransactionParams type
+type SubmitTransactionParams struct {
+    ActiveBytes VariableBlob `json:"active_bytes"`
+    PassiveBytes VariableBlob `json:"passive_bytes"`
+}
+
+// NewSubmitTransactionParams factory
+func NewSubmitTransactionParams() *SubmitTransactionParams {
+	o := SubmitTransactionParams{}
+	o.ActiveBytes = *NewVariableBlob()
+	o.PassiveBytes = *NewVariableBlob()
+	return &o
+}
+
+// Serialize SubmitTransactionParams
+func (n SubmitTransactionParams) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ActiveBytes.Serialize(vb)
+	vb = n.PassiveBytes.Serialize(vb)
+	return vb
+}
+
+// DeserializeSubmitTransactionParams function
+func DeserializeSubmitTransactionParams(vb *VariableBlob) (uint64,*SubmitTransactionParams,error) {
+	var i,j uint64 = 0,0
+	s := SubmitTransactionParams{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tActiveBytes,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &SubmitTransactionParams{}, err
+	}
+	s.ActiveBytes = *tActiveBytes
+	ovb = (*vb)[i:]
+	j,tPassiveBytes,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &SubmitTransactionParams{}, err
+	}
+	s.PassiveBytes = *tPassiveBytes
 	return i, &s, nil
 }
 
@@ -2349,6 +2520,568 @@ func DeserializeGetChainIDParams(vb *VariableBlob) (uint64,*GetChainIDParams,err
 	
 	return i, &s, nil
 }
+
+// ----------------------------------------
+//  Variant: KoinosdRPCParams
+// ----------------------------------------
+
+// KoinosdRPCParams type
+type KoinosdRPCParams struct {
+	Value interface{}
+}
+
+// NewKoinosdRPCParams factory
+func NewKoinosdRPCParams() *KoinosdRPCParams {
+	v := KoinosdRPCParams{}
+	v.Value = NewReservedRPCParams()
+	return &v
+}
+
+// Serialize KoinosdRPCParams
+func (n KoinosdRPCParams) Serialize(vb *VariableBlob) *VariableBlob {
+	var i uint64
+	switch n.Value.(type) {
+		case *ReservedRPCParams:
+			i = 0
+		case *SubmitBlockParams:
+			i = 1
+		case *SubmitTransactionParams:
+			i = 2
+		case *GetHeadInfoParams:
+			i = 3
+		case *GetChainIDParams:
+			i = 4
+		default:
+			panic("Unknown variant type")
+	}
+
+	vb = EncodeVarint(vb, i)
+	ser,_ := n.Value.(Serializeable)
+	return ser.Serialize(vb)
+}
+
+// TypeToName KoinosdRPCParams
+func (n KoinosdRPCParams) TypeToName() (string) {
+	switch n.Value.(type) {
+		case *ReservedRPCParams:
+			return "koinos::rpc::chain::reserved_rpc_params"
+		case *SubmitBlockParams:
+			return "koinos::rpc::chain::submit_block_params"
+		case *SubmitTransactionParams:
+			return "koinos::rpc::chain::submit_transaction_params"
+		case *GetHeadInfoParams:
+			return "koinos::rpc::chain::get_head_info_params"
+		case *GetChainIDParams:
+			return "koinos::rpc::chain::get_chain_id_params"
+		default:
+			panic("Variant type is not serializeable.")
+	}
+}
+
+// MarshalJSON KoinosdRPCParams
+func (n KoinosdRPCParams) MarshalJSON() ([]byte, error) {
+	variant := struct {
+		Type string `json:"type"`
+		Value *interface{} `json:"value"`
+	}{
+		n.TypeToName(),
+		&n.Value,
+	}
+
+	return json.Marshal(&variant)
+}
+
+// DeserializeKoinosdRPCParams function
+func DeserializeKoinosdRPCParams(vb *VariableBlob) (uint64,*KoinosdRPCParams,error) {
+	var v KoinosdRPCParams
+	typeID,i := binary.Uvarint(*vb)
+	if i <= 0 {
+		return 0, &v, errors.New("could not deserialize variant tag")
+	}
+	var j uint64
+
+	switch( typeID ) {
+		case 0:
+			v.Value = NewReservedRPCParams()
+		case 1:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeSubmitBlockParams(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		case 2:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeSubmitTransactionParams(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		case 3:
+			v.Value = NewGetHeadInfoParams()
+		case 4:
+			v.Value = NewGetChainIDParams()
+		default:
+			return 0, &v, errors.New("unknown variant tag")
+	}
+	return uint64(i)+j,&v,nil
+}
+
+// UnmarshalJSON *KoinosdRPCParams
+func (n *KoinosdRPCParams) UnmarshalJSON(data []byte) error {
+	variant := struct {
+		Type  string          `json:"type"`
+		Value json.RawMessage `json:"value"`
+	}{}
+
+	err := json.Unmarshal(data, &variant)
+	if err != nil {
+		return err
+	}
+
+	switch variant.Type {
+		case "koinos::rpc::chain::reserved_rpc_params":
+			v := NewReservedRPCParams()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::chain::submit_block_params":
+			v := NewSubmitBlockParams()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::chain::submit_transaction_params":
+			v := NewSubmitTransactionParams()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::chain::get_head_info_params":
+			v := NewGetHeadInfoParams()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::chain::get_chain_id_params":
+			v := NewGetChainIDParams()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		default:
+			return errors.New("unknown variant type: " + variant.Type)
+	}
+
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: ReservedRPCResult
+// ----------------------------------------
+
+// ReservedRPCResult type
+type ReservedRPCResult struct {
+}
+
+// NewReservedRPCResult factory
+func NewReservedRPCResult() *ReservedRPCResult {
+	o := ReservedRPCResult{}
+	return &o
+}
+
+// Serialize ReservedRPCResult
+func (n ReservedRPCResult) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeReservedRPCResult function
+func DeserializeReservedRPCResult(vb *VariableBlob) (uint64,*ReservedRPCResult,error) {
+	var i uint64 = 0
+	s := ReservedRPCResult{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: RPCError
+// ----------------------------------------
+
+// RPCError type
+type RPCError struct {
+    ErrorText String `json:"error_text"`
+}
+
+// NewRPCError factory
+func NewRPCError() *RPCError {
+	o := RPCError{}
+	o.ErrorText = *NewString()
+	return &o
+}
+
+// Serialize RPCError
+func (n RPCError) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ErrorText.Serialize(vb)
+	return vb
+}
+
+// DeserializeRPCError function
+func DeserializeRPCError(vb *VariableBlob) (uint64,*RPCError,error) {
+	var i,j uint64 = 0,0
+	s := RPCError{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tErrorText,err := DeserializeString(&ovb); i+=j
+	if err != nil {
+		return 0, &RPCError{}, err
+	}
+	s.ErrorText = *tErrorText
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: SubmitBlockResult
+// ----------------------------------------
+
+// SubmitBlockResult type
+type SubmitBlockResult struct {
+}
+
+// NewSubmitBlockResult factory
+func NewSubmitBlockResult() *SubmitBlockResult {
+	o := SubmitBlockResult{}
+	return &o
+}
+
+// Serialize SubmitBlockResult
+func (n SubmitBlockResult) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeSubmitBlockResult function
+func DeserializeSubmitBlockResult(vb *VariableBlob) (uint64,*SubmitBlockResult,error) {
+	var i uint64 = 0
+	s := SubmitBlockResult{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: SubmitTransactionResult
+// ----------------------------------------
+
+// SubmitTransactionResult type
+type SubmitTransactionResult struct {
+}
+
+// NewSubmitTransactionResult factory
+func NewSubmitTransactionResult() *SubmitTransactionResult {
+	o := SubmitTransactionResult{}
+	return &o
+}
+
+// Serialize SubmitTransactionResult
+func (n SubmitTransactionResult) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeSubmitTransactionResult function
+func DeserializeSubmitTransactionResult(vb *VariableBlob) (uint64,*SubmitTransactionResult,error) {
+	var i uint64 = 0
+	s := SubmitTransactionResult{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: GetHeadInfoResult
+// ----------------------------------------
+
+// GetHeadInfoResult type
+type GetHeadInfoResult HeadInfo
+
+// NewGetHeadInfoResult factory
+func NewGetHeadInfoResult() *GetHeadInfoResult {
+	o := GetHeadInfoResult(*NewHeadInfo())
+	return &o
+}
+
+// Serialize GetHeadInfoResult
+func (n GetHeadInfoResult) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := HeadInfo(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeGetHeadInfoResult function
+func DeserializeGetHeadInfoResult(vb *VariableBlob) (uint64,*GetHeadInfoResult,error) {
+	var ot GetHeadInfoResult
+	i,n,err := DeserializeHeadInfo(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = GetHeadInfoResult(*n)
+	return i,&ot,nil}
+
+// MarshalJSON GetHeadInfoResult
+func (n GetHeadInfoResult) MarshalJSON() ([]byte, error) {
+	v := HeadInfo(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *GetHeadInfoResult
+func (n *GetHeadInfoResult) UnmarshalJSON(data []byte) error {
+	v := HeadInfo(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = GetHeadInfoResult(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: GetChainIDResult
+// ----------------------------------------
+
+// GetChainIDResult type
+type GetChainIDResult struct {
+    ChainID Multihash `json:"chain_id"`
+}
+
+// NewGetChainIDResult factory
+func NewGetChainIDResult() *GetChainIDResult {
+	o := GetChainIDResult{}
+	o.ChainID = *NewMultihash()
+	return &o
+}
+
+// Serialize GetChainIDResult
+func (n GetChainIDResult) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ChainID.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetChainIDResult function
+func DeserializeGetChainIDResult(vb *VariableBlob) (uint64,*GetChainIDResult,error) {
+	var i,j uint64 = 0,0
+	s := GetChainIDResult{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tChainID,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &GetChainIDResult{}, err
+	}
+	s.ChainID = *tChainID
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Variant: KoinosdRPCResult
+// ----------------------------------------
+
+// KoinosdRPCResult type
+type KoinosdRPCResult struct {
+	Value interface{}
+}
+
+// NewKoinosdRPCResult factory
+func NewKoinosdRPCResult() *KoinosdRPCResult {
+	v := KoinosdRPCResult{}
+	v.Value = NewReservedRPCResult()
+	return &v
+}
+
+// Serialize KoinosdRPCResult
+func (n KoinosdRPCResult) Serialize(vb *VariableBlob) *VariableBlob {
+	var i uint64
+	switch n.Value.(type) {
+		case *ReservedRPCResult:
+			i = 0
+		case *RPCError:
+			i = 1
+		case *SubmitBlockResult:
+			i = 2
+		case *SubmitTransactionResult:
+			i = 3
+		case *GetHeadInfoResult:
+			i = 4
+		case *GetChainIDResult:
+			i = 5
+		default:
+			panic("Unknown variant type")
+	}
+
+	vb = EncodeVarint(vb, i)
+	ser,_ := n.Value.(Serializeable)
+	return ser.Serialize(vb)
+}
+
+// TypeToName KoinosdRPCResult
+func (n KoinosdRPCResult) TypeToName() (string) {
+	switch n.Value.(type) {
+		case *ReservedRPCResult:
+			return "koinos::rpc::chain::reserved_rpc_result"
+		case *RPCError:
+			return "koinos::rpc::chain::rpc_error"
+		case *SubmitBlockResult:
+			return "koinos::rpc::chain::submit_block_result"
+		case *SubmitTransactionResult:
+			return "koinos::rpc::chain::submit_transaction_result"
+		case *GetHeadInfoResult:
+			return "koinos::rpc::chain::get_head_info_result"
+		case *GetChainIDResult:
+			return "koinos::rpc::chain::get_chain_id_result"
+		default:
+			panic("Variant type is not serializeable.")
+	}
+}
+
+// MarshalJSON KoinosdRPCResult
+func (n KoinosdRPCResult) MarshalJSON() ([]byte, error) {
+	variant := struct {
+		Type string `json:"type"`
+		Value *interface{} `json:"value"`
+	}{
+		n.TypeToName(),
+		&n.Value,
+	}
+
+	return json.Marshal(&variant)
+}
+
+// DeserializeKoinosdRPCResult function
+func DeserializeKoinosdRPCResult(vb *VariableBlob) (uint64,*KoinosdRPCResult,error) {
+	var v KoinosdRPCResult
+	typeID,i := binary.Uvarint(*vb)
+	if i <= 0 {
+		return 0, &v, errors.New("could not deserialize variant tag")
+	}
+	var j uint64
+
+	switch( typeID ) {
+		case 0:
+			v.Value = NewReservedRPCResult()
+		case 1:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeRPCError(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		case 2:
+			v.Value = NewSubmitBlockResult()
+		case 3:
+			v.Value = NewSubmitTransactionResult()
+		case 4:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetHeadInfoResult(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		case 5:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetChainIDResult(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		default:
+			return 0, &v, errors.New("unknown variant tag")
+	}
+	return uint64(i)+j,&v,nil
+}
+
+// UnmarshalJSON *KoinosdRPCResult
+func (n *KoinosdRPCResult) UnmarshalJSON(data []byte) error {
+	variant := struct {
+		Type  string          `json:"type"`
+		Value json.RawMessage `json:"value"`
+	}{}
+
+	err := json.Unmarshal(data, &variant)
+	if err != nil {
+		return err
+	}
+
+	switch variant.Type {
+		case "koinos::rpc::chain::reserved_rpc_result":
+			v := NewReservedRPCResult()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::chain::rpc_error":
+			v := NewRPCError()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::chain::submit_block_result":
+			v := NewSubmitBlockResult()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::chain::submit_transaction_result":
+			v := NewSubmitTransactionResult()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::chain::get_head_info_result":
+			v := NewGetHeadInfoResult()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::chain::get_chain_id_result":
+			v := NewGetChainIDResult()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		default:
+			return errors.New("unknown variant type: " + variant.Type)
+	}
+
+	return nil
+}
+
+
+// ----------------------------------------
+//  Typedef: ReservedQueryParams
+// ----------------------------------------
+
+// ReservedQueryParams type
+type ReservedQueryParams ReservedRPCParams
+
+// NewReservedQueryParams factory
+func NewReservedQueryParams() *ReservedQueryParams {
+	o := ReservedQueryParams(*NewReservedRPCParams())
+	return &o
+}
+
+// Serialize ReservedQueryParams
+func (n ReservedQueryParams) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := ReservedRPCParams(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeReservedQueryParams function
+func DeserializeReservedQueryParams(vb *VariableBlob) (uint64,*ReservedQueryParams,error) {
+	var ot ReservedQueryParams
+	return 0,&ot,nil}
+
+// MarshalJSON ReservedQueryParams
+func (n ReservedQueryParams) MarshalJSON() ([]byte, error) {
+	v := ReservedRPCParams(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *ReservedQueryParams
+func (n *ReservedQueryParams) UnmarshalJSON(data []byte) error {
+	v := ReservedRPCParams(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = ReservedQueryParams(v)
+	return nil
+}
+
+
+
+
+
+
+
 
 // ----------------------------------------
 //  Variant: QueryParamItem
@@ -2515,150 +3248,99 @@ func (n *QuerySubmission) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
-//  Struct: ReservedQueryResult
+//  Typedef: ReservedQueryResult
 // ----------------------------------------
 
 // ReservedQueryResult type
-type ReservedQueryResult struct {
-}
+type ReservedQueryResult ReservedRPCResult
 
 // NewReservedQueryResult factory
 func NewReservedQueryResult() *ReservedQueryResult {
-	o := ReservedQueryResult{}
+	o := ReservedQueryResult(*NewReservedRPCResult())
 	return &o
 }
 
 // Serialize ReservedQueryResult
 func (n ReservedQueryResult) Serialize(vb *VariableBlob) *VariableBlob {
-	return vb
+	ox := ReservedRPCResult(n)
+	return ox.Serialize(vb)
 }
 
 // DeserializeReservedQueryResult function
 func DeserializeReservedQueryResult(vb *VariableBlob) (uint64,*ReservedQueryResult,error) {
-	var i uint64 = 0
-	s := ReservedQueryResult{}
-	
-	return i, &s, nil
-}
+	var ot ReservedQueryResult
+	return 0,&ot,nil}
 
-// ----------------------------------------
-//  Struct: QueryError
-// ----------------------------------------
-
-// QueryError type
-type QueryError struct {
-    ErrorText VariableBlob `json:"error_text"`
-}
-
-// NewQueryError factory
-func NewQueryError() *QueryError {
-	o := QueryError{}
-	o.ErrorText = *NewVariableBlob()
-	return &o
-}
-
-// Serialize QueryError
-func (n QueryError) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.ErrorText.Serialize(vb)
-	return vb
-}
-
-// DeserializeQueryError function
-func DeserializeQueryError(vb *VariableBlob) (uint64,*QueryError,error) {
-	var i,j uint64 = 0,0
-	s := QueryError{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tErrorText,err := DeserializeVariableBlob(&ovb); i+=j
-	if err != nil {
-		return 0, &QueryError{}, err
-	}
-	s.ErrorText = *tErrorText
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Typedef: GetHeadInfoResult
-// ----------------------------------------
-
-// GetHeadInfoResult type
-type GetHeadInfoResult HeadInfo
-
-// NewGetHeadInfoResult factory
-func NewGetHeadInfoResult() *GetHeadInfoResult {
-	o := GetHeadInfoResult(*NewHeadInfo())
-	return &o
-}
-
-// Serialize GetHeadInfoResult
-func (n GetHeadInfoResult) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := HeadInfo(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeGetHeadInfoResult function
-func DeserializeGetHeadInfoResult(vb *VariableBlob) (uint64,*GetHeadInfoResult,error) {
-	var ot GetHeadInfoResult
-	i,n,err := DeserializeHeadInfo(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = GetHeadInfoResult(*n)
-	return i,&ot,nil}
-
-// MarshalJSON GetHeadInfoResult
-func (n GetHeadInfoResult) MarshalJSON() ([]byte, error) {
-	v := HeadInfo(n)
+// MarshalJSON ReservedQueryResult
+func (n ReservedQueryResult) MarshalJSON() ([]byte, error) {
+	v := ReservedRPCResult(n)
 	return json.Marshal(&v)
 }
 
-// UnmarshalJSON *GetHeadInfoResult
-func (n *GetHeadInfoResult) UnmarshalJSON(data []byte) error {
-	v := HeadInfo(*n);
+// UnmarshalJSON *ReservedQueryResult
+func (n *ReservedQueryResult) UnmarshalJSON(data []byte) error {
+	v := ReservedRPCResult(*n);
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
 
-	*n = GetHeadInfoResult(v)
+	*n = ReservedQueryResult(v)
 	return nil
 }
 
 
 // ----------------------------------------
-//  Struct: GetChainIDResult
+//  Typedef: QueryError
 // ----------------------------------------
 
-// GetChainIDResult type
-type GetChainIDResult struct {
-    ChainID Multihash `json:"chain_id"`
-}
+// QueryError type
+type QueryError RPCError
 
-// NewGetChainIDResult factory
-func NewGetChainIDResult() *GetChainIDResult {
-	o := GetChainIDResult{}
-	o.ChainID = *NewMultihash()
+// NewQueryError factory
+func NewQueryError() *QueryError {
+	o := QueryError(*NewRPCError())
 	return &o
 }
 
-// Serialize GetChainIDResult
-func (n GetChainIDResult) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.ChainID.Serialize(vb)
-	return vb
+// Serialize QueryError
+func (n QueryError) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := RPCError(n)
+	return ox.Serialize(vb)
 }
 
-// DeserializeGetChainIDResult function
-func DeserializeGetChainIDResult(vb *VariableBlob) (uint64,*GetChainIDResult,error) {
-	var i,j uint64 = 0,0
-	s := GetChainIDResult{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tChainID,err := DeserializeMultihash(&ovb); i+=j
+// DeserializeQueryError function
+func DeserializeQueryError(vb *VariableBlob) (uint64,*QueryError,error) {
+	var ot QueryError
+	i,n,err := DeserializeRPCError(vb)
 	if err != nil {
-		return 0, &GetChainIDResult{}, err
+		return 0,&ot,err
 	}
-	s.ChainID = *tChainID
-	return i, &s, nil
+	ot = QueryError(*n)
+	return i,&ot,nil}
+
+// MarshalJSON QueryError
+func (n QueryError) MarshalJSON() ([]byte, error) {
+	v := RPCError(n)
+	return json.Marshal(&v)
 }
+
+// UnmarshalJSON *QueryError
+func (n *QueryError) UnmarshalJSON(data []byte) error {
+	v := RPCError(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = QueryError(v)
+	return nil
+}
+
+
+
+
+
+
+
 
 // ----------------------------------------
 //  Variant: QueryItemResult
@@ -2853,202 +3535,140 @@ func (n *QuerySubmissionResult) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
-//  Struct: BlockTopology
-// ----------------------------------------
-
-// BlockTopology type
-type BlockTopology struct {
-    ID Multihash `json:"id"`
-    Height BlockHeightType `json:"height"`
-    Previous Multihash `json:"previous"`
-}
-
-// NewBlockTopology factory
-func NewBlockTopology() *BlockTopology {
-	o := BlockTopology{}
-	o.ID = *NewMultihash()
-	o.Height = *NewBlockHeightType()
-	o.Previous = *NewMultihash()
-	return &o
-}
-
-// Serialize BlockTopology
-func (n BlockTopology) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.ID.Serialize(vb)
-	vb = n.Height.Serialize(vb)
-	vb = n.Previous.Serialize(vb)
-	return vb
-}
-
-// DeserializeBlockTopology function
-func DeserializeBlockTopology(vb *VariableBlob) (uint64,*BlockTopology,error) {
-	var i,j uint64 = 0,0
-	s := BlockTopology{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tID,err := DeserializeMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &BlockTopology{}, err
-	}
-	s.ID = *tID
-	ovb = (*vb)[i:]
-	j,tHeight,err := DeserializeBlockHeightType(&ovb); i+=j
-	if err != nil {
-		return 0, &BlockTopology{}, err
-	}
-	s.Height = *tHeight
-	ovb = (*vb)[i:]
-	j,tPrevious,err := DeserializeMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &BlockTopology{}, err
-	}
-	s.Previous = *tPrevious
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: ReservedSubmission
+//  Typedef: ReservedSubmission
 // ----------------------------------------
 
 // ReservedSubmission type
-type ReservedSubmission struct {
-}
+type ReservedSubmission ReservedRPCParams
 
 // NewReservedSubmission factory
 func NewReservedSubmission() *ReservedSubmission {
-	o := ReservedSubmission{}
+	o := ReservedSubmission(*NewReservedRPCParams())
 	return &o
 }
 
 // Serialize ReservedSubmission
 func (n ReservedSubmission) Serialize(vb *VariableBlob) *VariableBlob {
-	return vb
+	ox := ReservedRPCParams(n)
+	return ox.Serialize(vb)
 }
 
 // DeserializeReservedSubmission function
 func DeserializeReservedSubmission(vb *VariableBlob) (uint64,*ReservedSubmission,error) {
-	var i uint64 = 0
-	s := ReservedSubmission{}
-	
-	return i, &s, nil
+	var ot ReservedSubmission
+	return 0,&ot,nil}
+
+// MarshalJSON ReservedSubmission
+func (n ReservedSubmission) MarshalJSON() ([]byte, error) {
+	v := ReservedRPCParams(n)
+	return json.Marshal(&v)
 }
 
+// UnmarshalJSON *ReservedSubmission
+func (n *ReservedSubmission) UnmarshalJSON(data []byte) error {
+	v := ReservedRPCParams(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = ReservedSubmission(v)
+	return nil
+}
+
+
 // ----------------------------------------
-//  Struct: BlockSubmission
+//  Typedef: BlockSubmission
 // ----------------------------------------
 
 // BlockSubmission type
-type BlockSubmission struct {
-    Topology BlockTopology `json:"topology"`
-    Block Block `json:"block"`
-    VerifyPassiveData Boolean `json:"verify_passive_data"`
-    VerifyBlockSignature Boolean `json:"verify_block_signature"`
-    VerifyTransactionSignatures Boolean `json:"verify_transaction_signatures"`
-}
+type BlockSubmission SubmitBlockParams
 
 // NewBlockSubmission factory
 func NewBlockSubmission() *BlockSubmission {
-	o := BlockSubmission{}
-	o.Topology = *NewBlockTopology()
-	o.Block = *NewBlock()
-	o.VerifyPassiveData = *NewBoolean()
-	o.VerifyBlockSignature = *NewBoolean()
-	o.VerifyTransactionSignatures = *NewBoolean()
+	o := BlockSubmission(*NewSubmitBlockParams())
 	return &o
 }
 
 // Serialize BlockSubmission
 func (n BlockSubmission) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Topology.Serialize(vb)
-	vb = n.Block.Serialize(vb)
-	vb = n.VerifyPassiveData.Serialize(vb)
-	vb = n.VerifyBlockSignature.Serialize(vb)
-	vb = n.VerifyTransactionSignatures.Serialize(vb)
-	return vb
+	ox := SubmitBlockParams(n)
+	return ox.Serialize(vb)
 }
 
 // DeserializeBlockSubmission function
 func DeserializeBlockSubmission(vb *VariableBlob) (uint64,*BlockSubmission,error) {
-	var i,j uint64 = 0,0
-	s := BlockSubmission{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tTopology,err := DeserializeBlockTopology(&ovb); i+=j
+	var ot BlockSubmission
+	i,n,err := DeserializeSubmitBlockParams(vb)
 	if err != nil {
-		return 0, &BlockSubmission{}, err
+		return 0,&ot,err
 	}
-	s.Topology = *tTopology
-	ovb = (*vb)[i:]
-	j,tBlock,err := DeserializeBlock(&ovb); i+=j
-	if err != nil {
-		return 0, &BlockSubmission{}, err
-	}
-	s.Block = *tBlock
-	ovb = (*vb)[i:]
-	j,tVerifyPassiveData,err := DeserializeBoolean(&ovb); i+=j
-	if err != nil {
-		return 0, &BlockSubmission{}, err
-	}
-	s.VerifyPassiveData = *tVerifyPassiveData
-	ovb = (*vb)[i:]
-	j,tVerifyBlockSignature,err := DeserializeBoolean(&ovb); i+=j
-	if err != nil {
-		return 0, &BlockSubmission{}, err
-	}
-	s.VerifyBlockSignature = *tVerifyBlockSignature
-	ovb = (*vb)[i:]
-	j,tVerifyTransactionSignatures,err := DeserializeBoolean(&ovb); i+=j
-	if err != nil {
-		return 0, &BlockSubmission{}, err
-	}
-	s.VerifyTransactionSignatures = *tVerifyTransactionSignatures
-	return i, &s, nil
+	ot = BlockSubmission(*n)
+	return i,&ot,nil}
+
+// MarshalJSON BlockSubmission
+func (n BlockSubmission) MarshalJSON() ([]byte, error) {
+	v := SubmitBlockParams(n)
+	return json.Marshal(&v)
 }
 
+// UnmarshalJSON *BlockSubmission
+func (n *BlockSubmission) UnmarshalJSON(data []byte) error {
+	v := SubmitBlockParams(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = BlockSubmission(v)
+	return nil
+}
+
+
 // ----------------------------------------
-//  Struct: TransactionSubmission
+//  Typedef: TransactionSubmission
 // ----------------------------------------
 
 // TransactionSubmission type
-type TransactionSubmission struct {
-    ActiveBytes VariableBlob `json:"active_bytes"`
-    PassiveBytes VariableBlob `json:"passive_bytes"`
-}
+type TransactionSubmission SubmitTransactionParams
 
 // NewTransactionSubmission factory
 func NewTransactionSubmission() *TransactionSubmission {
-	o := TransactionSubmission{}
-	o.ActiveBytes = *NewVariableBlob()
-	o.PassiveBytes = *NewVariableBlob()
+	o := TransactionSubmission(*NewSubmitTransactionParams())
 	return &o
 }
 
 // Serialize TransactionSubmission
 func (n TransactionSubmission) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.ActiveBytes.Serialize(vb)
-	vb = n.PassiveBytes.Serialize(vb)
-	return vb
+	ox := SubmitTransactionParams(n)
+	return ox.Serialize(vb)
 }
 
 // DeserializeTransactionSubmission function
 func DeserializeTransactionSubmission(vb *VariableBlob) (uint64,*TransactionSubmission,error) {
-	var i,j uint64 = 0,0
-	s := TransactionSubmission{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tActiveBytes,err := DeserializeVariableBlob(&ovb); i+=j
+	var ot TransactionSubmission
+	i,n,err := DeserializeSubmitTransactionParams(vb)
 	if err != nil {
-		return 0, &TransactionSubmission{}, err
+		return 0,&ot,err
 	}
-	s.ActiveBytes = *tActiveBytes
-	ovb = (*vb)[i:]
-	j,tPassiveBytes,err := DeserializeVariableBlob(&ovb); i+=j
-	if err != nil {
-		return 0, &TransactionSubmission{}, err
-	}
-	s.PassiveBytes = *tPassiveBytes
-	return i, &s, nil
+	ot = TransactionSubmission(*n)
+	return i,&ot,nil}
+
+// MarshalJSON TransactionSubmission
+func (n TransactionSubmission) MarshalJSON() ([]byte, error) {
+	v := SubmitTransactionParams(n)
+	return json.Marshal(&v)
 }
+
+// UnmarshalJSON *TransactionSubmission
+func (n *TransactionSubmission) UnmarshalJSON(data []byte) error {
+	v := SubmitTransactionParams(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = TransactionSubmission(v)
+	return nil
+}
+
 
 // ----------------------------------------
 //  Variant: SubmissionItem
@@ -3196,121 +3816,177 @@ func (n *SubmissionItem) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
-//  Struct: ReservedSubmissionResult
+//  Typedef: ReservedSubmissionResult
 // ----------------------------------------
 
 // ReservedSubmissionResult type
-type ReservedSubmissionResult struct {
-}
+type ReservedSubmissionResult ReservedRPCResult
 
 // NewReservedSubmissionResult factory
 func NewReservedSubmissionResult() *ReservedSubmissionResult {
-	o := ReservedSubmissionResult{}
+	o := ReservedSubmissionResult(*NewReservedRPCResult())
 	return &o
 }
 
 // Serialize ReservedSubmissionResult
 func (n ReservedSubmissionResult) Serialize(vb *VariableBlob) *VariableBlob {
-	return vb
+	ox := ReservedRPCResult(n)
+	return ox.Serialize(vb)
 }
 
 // DeserializeReservedSubmissionResult function
 func DeserializeReservedSubmissionResult(vb *VariableBlob) (uint64,*ReservedSubmissionResult,error) {
-	var i uint64 = 0
-	s := ReservedSubmissionResult{}
-	
-	return i, &s, nil
+	var ot ReservedSubmissionResult
+	return 0,&ot,nil}
+
+// MarshalJSON ReservedSubmissionResult
+func (n ReservedSubmissionResult) MarshalJSON() ([]byte, error) {
+	v := ReservedRPCResult(n)
+	return json.Marshal(&v)
 }
 
+// UnmarshalJSON *ReservedSubmissionResult
+func (n *ReservedSubmissionResult) UnmarshalJSON(data []byte) error {
+	v := ReservedRPCResult(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = ReservedSubmissionResult(v)
+	return nil
+}
+
+
 // ----------------------------------------
-//  Struct: BlockSubmissionResult
+//  Typedef: BlockSubmissionResult
 // ----------------------------------------
 
 // BlockSubmissionResult type
-type BlockSubmissionResult struct {
-}
+type BlockSubmissionResult SubmitBlockResult
 
 // NewBlockSubmissionResult factory
 func NewBlockSubmissionResult() *BlockSubmissionResult {
-	o := BlockSubmissionResult{}
+	o := BlockSubmissionResult(*NewSubmitBlockResult())
 	return &o
 }
 
 // Serialize BlockSubmissionResult
 func (n BlockSubmissionResult) Serialize(vb *VariableBlob) *VariableBlob {
-	return vb
+	ox := SubmitBlockResult(n)
+	return ox.Serialize(vb)
 }
 
 // DeserializeBlockSubmissionResult function
 func DeserializeBlockSubmissionResult(vb *VariableBlob) (uint64,*BlockSubmissionResult,error) {
-	var i uint64 = 0
-	s := BlockSubmissionResult{}
-	
-	return i, &s, nil
+	var ot BlockSubmissionResult
+	return 0,&ot,nil}
+
+// MarshalJSON BlockSubmissionResult
+func (n BlockSubmissionResult) MarshalJSON() ([]byte, error) {
+	v := SubmitBlockResult(n)
+	return json.Marshal(&v)
 }
 
+// UnmarshalJSON *BlockSubmissionResult
+func (n *BlockSubmissionResult) UnmarshalJSON(data []byte) error {
+	v := SubmitBlockResult(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = BlockSubmissionResult(v)
+	return nil
+}
+
+
 // ----------------------------------------
-//  Struct: TransactionSubmissionResult
+//  Typedef: TransactionSubmissionResult
 // ----------------------------------------
 
 // TransactionSubmissionResult type
-type TransactionSubmissionResult struct {
-}
+type TransactionSubmissionResult SubmitTransactionResult
 
 // NewTransactionSubmissionResult factory
 func NewTransactionSubmissionResult() *TransactionSubmissionResult {
-	o := TransactionSubmissionResult{}
+	o := TransactionSubmissionResult(*NewSubmitTransactionResult())
 	return &o
 }
 
 // Serialize TransactionSubmissionResult
 func (n TransactionSubmissionResult) Serialize(vb *VariableBlob) *VariableBlob {
-	return vb
+	ox := SubmitTransactionResult(n)
+	return ox.Serialize(vb)
 }
 
 // DeserializeTransactionSubmissionResult function
 func DeserializeTransactionSubmissionResult(vb *VariableBlob) (uint64,*TransactionSubmissionResult,error) {
-	var i uint64 = 0
-	s := TransactionSubmissionResult{}
-	
-	return i, &s, nil
+	var ot TransactionSubmissionResult
+	return 0,&ot,nil}
+
+// MarshalJSON TransactionSubmissionResult
+func (n TransactionSubmissionResult) MarshalJSON() ([]byte, error) {
+	v := SubmitTransactionResult(n)
+	return json.Marshal(&v)
 }
 
+// UnmarshalJSON *TransactionSubmissionResult
+func (n *TransactionSubmissionResult) UnmarshalJSON(data []byte) error {
+	v := SubmitTransactionResult(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = TransactionSubmissionResult(v)
+	return nil
+}
+
+
 // ----------------------------------------
-//  Struct: SubmissionErrorResult
+//  Typedef: SubmissionErrorResult
 // ----------------------------------------
 
 // SubmissionErrorResult type
-type SubmissionErrorResult struct {
-    ErrorText VariableBlob `json:"error_text"`
-}
+type SubmissionErrorResult RPCError
 
 // NewSubmissionErrorResult factory
 func NewSubmissionErrorResult() *SubmissionErrorResult {
-	o := SubmissionErrorResult{}
-	o.ErrorText = *NewVariableBlob()
+	o := SubmissionErrorResult(*NewRPCError())
 	return &o
 }
 
 // Serialize SubmissionErrorResult
 func (n SubmissionErrorResult) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.ErrorText.Serialize(vb)
-	return vb
+	ox := RPCError(n)
+	return ox.Serialize(vb)
 }
 
 // DeserializeSubmissionErrorResult function
 func DeserializeSubmissionErrorResult(vb *VariableBlob) (uint64,*SubmissionErrorResult,error) {
-	var i,j uint64 = 0,0
-	s := SubmissionErrorResult{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tErrorText,err := DeserializeVariableBlob(&ovb); i+=j
+	var ot SubmissionErrorResult
+	i,n,err := DeserializeRPCError(vb)
 	if err != nil {
-		return 0, &SubmissionErrorResult{}, err
+		return 0,&ot,err
 	}
-	s.ErrorText = *tErrorText
-	return i, &s, nil
+	ot = SubmissionErrorResult(*n)
+	return i,&ot,nil}
+
+// MarshalJSON SubmissionErrorResult
+func (n SubmissionErrorResult) MarshalJSON() ([]byte, error) {
+	v := RPCError(n)
+	return json.Marshal(&v)
 }
+
+// UnmarshalJSON *SubmissionErrorResult
+func (n *SubmissionErrorResult) UnmarshalJSON(data []byte) error {
+	v := RPCError(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = SubmissionErrorResult(v)
+	return nil
+}
+
 
 // ----------------------------------------
 //  Variant: SubmissionResult
