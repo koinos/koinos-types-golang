@@ -6301,6 +6301,12 @@ func (n *OpaqueActiveBlockData) GetBlob() *VariableBlob {
 	return n.blob
 }
 
+// SetBlob *OpaqueActiveBlockData
+func (n *OpaqueActiveBlockData) SetBlob( vb *VariableBlob ) {
+	n.native = nil
+	n.blob = vb
+}
+
 // GetNative *OpaqueActiveBlockData
 func (n *OpaqueActiveBlockData) GetNative() (*ActiveBlockData,error) {
 	if( n.native == nil ) {
@@ -6457,6 +6463,12 @@ func (n *OpaqueActiveTransactionData) GetBlob() *VariableBlob {
 	}
 
 	return n.blob
+}
+
+// SetBlob *OpaqueActiveTransactionData
+func (n *OpaqueActiveTransactionData) SetBlob( vb *VariableBlob ) {
+	n.native = nil
+	n.blob = vb
 }
 
 // GetNative *OpaqueActiveTransactionData
@@ -6617,6 +6629,12 @@ func (n *OpaqueBlock) GetBlob() *VariableBlob {
 	return n.blob
 }
 
+// SetBlob *OpaqueBlock
+func (n *OpaqueBlock) SetBlob( vb *VariableBlob ) {
+	n.native = nil
+	n.blob = vb
+}
+
 // GetNative *OpaqueBlock
 func (n *OpaqueBlock) GetNative() (*Block,error) {
 	if( n.native == nil ) {
@@ -6773,6 +6791,12 @@ func (n *OpaqueBlockReceipt) GetBlob() *VariableBlob {
 	}
 
 	return n.blob
+}
+
+// SetBlob *OpaqueBlockReceipt
+func (n *OpaqueBlockReceipt) SetBlob( vb *VariableBlob ) {
+	n.native = nil
+	n.blob = vb
 }
 
 // GetNative *OpaqueBlockReceipt
@@ -6933,6 +6957,12 @@ func (n *OpaquePassiveBlockData) GetBlob() *VariableBlob {
 	return n.blob
 }
 
+// SetBlob *OpaquePassiveBlockData
+func (n *OpaquePassiveBlockData) SetBlob( vb *VariableBlob ) {
+	n.native = nil
+	n.blob = vb
+}
+
 // GetNative *OpaquePassiveBlockData
 func (n *OpaquePassiveBlockData) GetNative() (*PassiveBlockData,error) {
 	if( n.native == nil ) {
@@ -7089,6 +7119,12 @@ func (n *OpaquePassiveTransactionData) GetBlob() *VariableBlob {
 	}
 
 	return n.blob
+}
+
+// SetBlob *OpaquePassiveTransactionData
+func (n *OpaquePassiveTransactionData) SetBlob( vb *VariableBlob ) {
+	n.native = nil
+	n.blob = vb
 }
 
 // GetNative *OpaquePassiveTransactionData
@@ -7249,6 +7285,12 @@ func (n *OpaqueQueryItemResult) GetBlob() *VariableBlob {
 	return n.blob
 }
 
+// SetBlob *OpaqueQueryItemResult
+func (n *OpaqueQueryItemResult) SetBlob( vb *VariableBlob ) {
+	n.native = nil
+	n.blob = vb
+}
+
 // GetNative *OpaqueQueryItemResult
 func (n *OpaqueQueryItemResult) GetNative() (*QueryItemResult,error) {
 	if( n.native == nil ) {
@@ -7407,6 +7449,12 @@ func (n *OpaqueQueryParamItem) GetBlob() *VariableBlob {
 	return n.blob
 }
 
+// SetBlob *OpaqueQueryParamItem
+func (n *OpaqueQueryParamItem) SetBlob( vb *VariableBlob ) {
+	n.native = nil
+	n.blob = vb
+}
+
 // GetNative *OpaqueQueryParamItem
 func (n *OpaqueQueryParamItem) GetNative() (*QueryParamItem,error) {
 	if( n.native == nil ) {
@@ -7563,6 +7611,12 @@ func (n *OpaqueTransaction) GetBlob() *VariableBlob {
 	}
 
 	return n.blob
+}
+
+// SetBlob *OpaqueTransaction
+func (n *OpaqueTransaction) SetBlob( vb *VariableBlob ) {
+	n.native = nil
+	n.blob = vb
 }
 
 // GetNative *OpaqueTransaction

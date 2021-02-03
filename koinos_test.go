@@ -7014,6 +7014,22 @@ func TestOpaqueActiveBlockData(t *testing.T) {
 	if jerr == nil {
 		t.Errorf("jerr == nil")
 	}
+
+	o.MakeMutable()
+	native, _ := o.GetNative()
+
+	vb = koinos.NewVariableBlob()
+	vb = native.Serialize(vb)
+	o.SetBlob(vb)
+	if o.IsUnboxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("SetBlob failed.")
+	}
+
+	slice := append([]byte(*vb), 0)
+	vb = (*koinos.VariableBlob)(&slice)
+	if bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("Opaque blob pointer leaked")
+	}
 }
 
 // ----------------------------------------
@@ -7174,6 +7190,22 @@ func TestOpaqueActiveTransactionData(t *testing.T) {
 		t.Errorf("jerr == nil")
 	}
 
+
+	o.MakeMutable()
+	native, _ := o.GetNative()
+
+	vb = koinos.NewVariableBlob()
+	vb = native.Serialize(vb)
+	o.SetBlob(vb)
+	if o.IsUnboxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("SetBlob failed.")
+	}
+
+	slice := append([]byte(*vb), 0)
+	vb = (*koinos.VariableBlob)(&slice)
+	if bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("Opaque blob pointer leaked")
+	}
 }
 
 // ----------------------------------------
@@ -7338,6 +7370,22 @@ func TestOpaqueBlock(t *testing.T) {
 	if jerr == nil {
 		t.Errorf("jerr == nil")
 	}
+
+	o.MakeMutable()
+	native, _ := o.GetNative()
+
+	vb = koinos.NewVariableBlob()
+	vb = native.Serialize(vb)
+	o.SetBlob(vb)
+	if o.IsUnboxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("SetBlob failed.")
+	}
+
+	slice := append([]byte(*vb), 0)
+	vb = (*koinos.VariableBlob)(&slice)
+	if bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("Opaque blob pointer leaked")
+	}
 }
 
 // ----------------------------------------
@@ -7498,6 +7546,22 @@ func TestOpaqueBlockReceipt(t *testing.T) {
 		t.Errorf("jerr == nil")
 	}
 
+
+	o.MakeMutable()
+	native, _ := o.GetNative()
+
+	vb = koinos.NewVariableBlob()
+	vb = native.Serialize(vb)
+	o.SetBlob(vb)
+	if o.IsUnboxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("SetBlob failed.")
+	}
+
+	slice := append([]byte(*vb), 0)
+	vb = (*koinos.VariableBlob)(&slice)
+	if bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("Opaque blob pointer leaked")
+	}
 }
 
 // ----------------------------------------
@@ -7658,6 +7722,22 @@ func TestOpaquePassiveBlockData(t *testing.T) {
 		t.Errorf("jerr == nil")
 	}
 
+
+	o.MakeMutable()
+	native, _ := o.GetNative()
+
+	vb = koinos.NewVariableBlob()
+	vb = native.Serialize(vb)
+	o.SetBlob(vb)
+	if o.IsUnboxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("SetBlob failed.")
+	}
+
+	slice := append([]byte(*vb), 0)
+	vb = (*koinos.VariableBlob)(&slice)
+	if bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("Opaque blob pointer leaked")
+	}
 }
 
 // ----------------------------------------
@@ -7818,6 +7898,22 @@ func TestOpaquePassiveTransactionData(t *testing.T) {
 		t.Errorf("jerr == nil")
 	}
 
+
+	o.MakeMutable()
+	native, _ := o.GetNative()
+
+	vb = koinos.NewVariableBlob()
+	vb = native.Serialize(vb)
+	o.SetBlob(vb)
+	if o.IsUnboxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("SetBlob failed.")
+	}
+
+	slice := append([]byte(*vb), 0)
+	vb = (*koinos.VariableBlob)(&slice)
+	if bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("Opaque blob pointer leaked")
+	}
 }
 
 // ----------------------------------------
@@ -7981,6 +8077,22 @@ func TestOpaqueQueryItemResult(t *testing.T) {
 	jerr = json.Unmarshal([]byte("{}"), jo)
 	if jerr == nil {
 		t.Errorf("jerr == nil")
+	}
+
+	o.MakeMutable()
+	native, _ := o.GetNative()
+
+	vb = koinos.NewVariableBlob()
+	vb = native.Serialize(vb)
+	o.SetBlob(vb)
+	if o.IsUnboxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("SetBlob failed.")
+	}
+
+	slice := append([]byte(*vb), 0)
+	vb = (*koinos.VariableBlob)(&slice)
+	if bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("Opaque blob pointer leaked")
 	}
 }
 
@@ -8146,6 +8258,22 @@ func TestOpaqueQueryParamItem(t *testing.T) {
 	if jerr == nil {
 		t.Errorf("jerr == nil")
 	}
+
+	o.MakeMutable()
+	native, _ := o.GetNative()
+
+	vb = koinos.NewVariableBlob()
+	vb = native.Serialize(vb)
+	o.SetBlob(vb)
+	if o.IsUnboxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("SetBlob failed.")
+	}
+
+	slice := append([]byte(*vb), 0)
+	vb = (*koinos.VariableBlob)(&slice)
+	if bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("Opaque blob pointer leaked")
+	}
 }
 
 // ----------------------------------------
@@ -8309,6 +8437,22 @@ func TestOpaqueTransaction(t *testing.T) {
 	jerr = json.Unmarshal([]byte("{\"active_data\":0,\"passive_data\":0,\"signature_data\":0,\"operations\":0}"), jo)
 	if jerr == nil {
 		t.Errorf("jerr == nil")
+	}
+
+	o.MakeMutable()
+	native, _ := o.GetNative()
+
+	vb = koinos.NewVariableBlob()
+	vb = native.Serialize(vb)
+	o.SetBlob(vb)
+	if o.IsUnboxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("SetBlob failed.")
+	}
+
+	slice := append([]byte(*vb), 0)
+	vb = (*koinos.VariableBlob)(&slice)
+	if bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("Opaque blob pointer leaked")
 	}
 }
 
