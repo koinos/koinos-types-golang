@@ -6860,7 +6860,7 @@ func TestOpaqueActiveBlockData(t *testing.T) {
 	o := koinos.NewOpaqueActiveBlockData()
 
 	o.Box()
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Opaque is unboxed but should not be.")
 	}
 
@@ -6871,81 +6871,42 @@ func TestOpaqueActiveBlockData(t *testing.T) {
 	}
 
 	o.Box() // Call Box() on Boxed
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Boxed -> Boxed failed.")
 	}
 
-	o.MakeImmutable() // Call MakeImmutable() on Boxed
-	if o.IsUnboxed() {
-		t.Errorf("Unboxed -> MakeImmutable failed.")
-	}
-
 	o.Unbox() // Call Unbox() on Boxed
-	if !o.IsUnboxed() {
+	if o.IsBoxed() {
 		t.Errorf("Boxed -> Uboxed failed.")
 	}
 
 	// Test getting native on Unboxed
 	_, err = o.GetNative()
-	if err == nil {
-		t.Errorf("Getting native on Unboxed should fail.")
-	}
-
-	o.Unbox() // Call Unbox() on Unboxed
-	if !o.IsUnboxed() {
-		t.Errorf("Unboxed -> Unboxed failed.")
-	}
-
-	o.MakeImmutable() // Call MakeImmutable() on Unboxed
-	if !o.IsUnboxed() {
-		t.Errorf("Unboxed -> MakeImmutable failed.")
-	}
-
-	o.MakeMutable() // Call MakeMutable() on Unboxed
-	if !o.IsMutable() {
-		t.Errorf("Unboxed -> Mutable failed.")
-	}
-
-	o.MakeMutable() // Call MakeMutable() on Mutable
-	if !o.IsMutable() {
-		t.Errorf("Mutable -> Mutable failed.")
-	}
-
-	// Test getting native on Mutable
-	_, err = o.GetNative()
 	if err != nil {
 		t.Errorf("Getting native on boxed should not fail.")
 	}
 
-	o.Unbox() // Call Unbox() on Mutable
-	if !o.IsMutable() {
-		t.Errorf("Mutable -> Unboxed failed.")
-	}
-
-	o.Box() // Call Box() on Mutable
-	if o.IsUnboxed() {
-		t.Errorf("Mutable -> Boxed failed.")
-	}
-
-	o.MakeMutable()
-	o.MakeImmutable() // Call MakeImmutable() on Mutable
-	if !o.IsUnboxed() {
-		t.Errorf("Mutable -> Immutable failed.")
+	o.Unbox() // Call Unbox() on Unboxed
+	if o.IsBoxed() {
+		t.Errorf("Unboxed -> Unboxed failed.")
 	}
 
 	o.Box() // Call Box() on Unboxed
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Unboxed -> Boxed failed.")
 	}
 
-	o.MakeMutable() // Call MakeMutable() on Boxed
-	if !o.IsMutable() {
-		t.Errorf("Boxed -> Mutable failed.")
+	o.Unbox()
+	vb := o.GetBlob() // Implicit Box() on Unboxed
+	if !o.IsBoxed() {
+		t.Errorf("GetBlob did not cause boxing.")
 	}
+
+	o.Box()
 
 	// Test serialization
 
-	vb := koinos.NewVariableBlob()
+	vb = koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 	b := o.GetBlob()
 
@@ -6987,7 +6948,7 @@ func TestOpaqueActiveBlockData(t *testing.T) {
 	}
 
 	jo.Unbox()
-	if jo.IsUnboxed() {
+	if !jo.IsBoxed() {
 		t.Errorf("Unboxed incompatible serialization")
 	}
 
@@ -7015,20 +6976,26 @@ func TestOpaqueActiveBlockData(t *testing.T) {
 		t.Errorf("jerr == nil")
 	}
 
-	o.MakeMutable()
-	native, _ := o.GetNative()
-
+	// Test alternative constructors
 	vb = koinos.NewVariableBlob()
-	vb = native.Serialize(vb)
-	o.SetBlob(vb)
-	if o.IsUnboxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
-		t.Errorf("SetBlob failed.")
+	o = koinos.NewOpaqueActiveBlockDataFromBlob(vb)
+
+	if !o.IsBoxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("Create opaque from blob failed.")
 	}
 
 	slice := append([]byte(*vb), 0)
 	vb = (*koinos.VariableBlob)(&slice)
 	if bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
 		t.Errorf("Opaque blob pointer leaked")
+	}
+
+	n := koinos.NewActiveBlockData()
+	o = koinos.NewOpaqueActiveBlockDataFromNative(*n)
+	nativePtr, _ := o.GetNative()
+
+	if o.IsBoxed() || nativePtr == n {
+		t.Errorf("Create opaque from native failed.")
 	}
 }
 
@@ -7040,7 +7007,7 @@ func TestOpaqueActiveTransactionData(t *testing.T) {
 	o := koinos.NewOpaqueActiveTransactionData()
 
 	o.Box()
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Opaque is unboxed but should not be.")
 	}
 
@@ -7051,81 +7018,42 @@ func TestOpaqueActiveTransactionData(t *testing.T) {
 	}
 
 	o.Box() // Call Box() on Boxed
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Boxed -> Boxed failed.")
 	}
 
-	o.MakeImmutable() // Call MakeImmutable() on Boxed
-	if o.IsUnboxed() {
-		t.Errorf("Unboxed -> MakeImmutable failed.")
-	}
-
 	o.Unbox() // Call Unbox() on Boxed
-	if !o.IsUnboxed() {
+	if o.IsBoxed() {
 		t.Errorf("Boxed -> Uboxed failed.")
 	}
 
 	// Test getting native on Unboxed
 	_, err = o.GetNative()
-	if err == nil {
-		t.Errorf("Getting native on Unboxed should fail.")
-	}
-
-	o.Unbox() // Call Unbox() on Unboxed
-	if !o.IsUnboxed() {
-		t.Errorf("Unboxed -> Unboxed failed.")
-	}
-
-	o.MakeImmutable() // Call MakeImmutable() on Unboxed
-	if !o.IsUnboxed() {
-		t.Errorf("Unboxed -> MakeImmutable failed.")
-	}
-
-	o.MakeMutable() // Call MakeMutable() on Unboxed
-	if !o.IsMutable() {
-		t.Errorf("Unboxed -> Mutable failed.")
-	}
-
-	o.MakeMutable() // Call MakeMutable() on Mutable
-	if !o.IsMutable() {
-		t.Errorf("Mutable -> Mutable failed.")
-	}
-
-	// Test getting native on Mutable
-	_, err = o.GetNative()
 	if err != nil {
 		t.Errorf("Getting native on boxed should not fail.")
 	}
 
-	o.Unbox() // Call Unbox() on Mutable
-	if !o.IsMutable() {
-		t.Errorf("Mutable -> Unboxed failed.")
-	}
-
-	o.Box() // Call Box() on Mutable
-	if o.IsUnboxed() {
-		t.Errorf("Mutable -> Boxed failed.")
-	}
-
-	o.MakeMutable()
-	o.MakeImmutable() // Call MakeImmutable() on Mutable
-	if !o.IsUnboxed() {
-		t.Errorf("Mutable -> Immutable failed.")
+	o.Unbox() // Call Unbox() on Unboxed
+	if o.IsBoxed() {
+		t.Errorf("Unboxed -> Unboxed failed.")
 	}
 
 	o.Box() // Call Box() on Unboxed
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Unboxed -> Boxed failed.")
 	}
 
-	o.MakeMutable() // Call MakeMutable() on Boxed
-	if !o.IsMutable() {
-		t.Errorf("Boxed -> Mutable failed.")
+	o.Unbox()
+	vb := o.GetBlob() // Implicit Box() on Unboxed
+	if !o.IsBoxed() {
+		t.Errorf("GetBlob did not cause boxing.")
 	}
+
+	o.Box()
 
 	// Test serialization
 
-	vb := koinos.NewVariableBlob()
+	vb = koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 	b := o.GetBlob()
 
@@ -7167,7 +7095,7 @@ func TestOpaqueActiveTransactionData(t *testing.T) {
 	}
 
 	jo.Unbox()
-	if jo.IsUnboxed() {
+	if !jo.IsBoxed() {
 		t.Errorf("Unboxed incompatible serialization")
 	}
 
@@ -7191,20 +7119,26 @@ func TestOpaqueActiveTransactionData(t *testing.T) {
 	}
 
 
-	o.MakeMutable()
-	native, _ := o.GetNative()
-
+	// Test alternative constructors
 	vb = koinos.NewVariableBlob()
-	vb = native.Serialize(vb)
-	o.SetBlob(vb)
-	if o.IsUnboxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
-		t.Errorf("SetBlob failed.")
+	o = koinos.NewOpaqueActiveTransactionDataFromBlob(vb)
+
+	if !o.IsBoxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("Create opaque from blob failed.")
 	}
 
 	slice := append([]byte(*vb), 0)
 	vb = (*koinos.VariableBlob)(&slice)
 	if bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
 		t.Errorf("Opaque blob pointer leaked")
+	}
+
+	n := koinos.NewActiveTransactionData()
+	o = koinos.NewOpaqueActiveTransactionDataFromNative(*n)
+	nativePtr, _ := o.GetNative()
+
+	if o.IsBoxed() || nativePtr == n {
+		t.Errorf("Create opaque from native failed.")
 	}
 }
 
@@ -7216,7 +7150,7 @@ func TestOpaqueBlock(t *testing.T) {
 	o := koinos.NewOpaqueBlock()
 
 	o.Box()
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Opaque is unboxed but should not be.")
 	}
 
@@ -7227,81 +7161,42 @@ func TestOpaqueBlock(t *testing.T) {
 	}
 
 	o.Box() // Call Box() on Boxed
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Boxed -> Boxed failed.")
 	}
 
-	o.MakeImmutable() // Call MakeImmutable() on Boxed
-	if o.IsUnboxed() {
-		t.Errorf("Unboxed -> MakeImmutable failed.")
-	}
-
 	o.Unbox() // Call Unbox() on Boxed
-	if !o.IsUnboxed() {
+	if o.IsBoxed() {
 		t.Errorf("Boxed -> Uboxed failed.")
 	}
 
 	// Test getting native on Unboxed
 	_, err = o.GetNative()
-	if err == nil {
-		t.Errorf("Getting native on Unboxed should fail.")
-	}
-
-	o.Unbox() // Call Unbox() on Unboxed
-	if !o.IsUnboxed() {
-		t.Errorf("Unboxed -> Unboxed failed.")
-	}
-
-	o.MakeImmutable() // Call MakeImmutable() on Unboxed
-	if !o.IsUnboxed() {
-		t.Errorf("Unboxed -> MakeImmutable failed.")
-	}
-
-	o.MakeMutable() // Call MakeMutable() on Unboxed
-	if !o.IsMutable() {
-		t.Errorf("Unboxed -> Mutable failed.")
-	}
-
-	o.MakeMutable() // Call MakeMutable() on Mutable
-	if !o.IsMutable() {
-		t.Errorf("Mutable -> Mutable failed.")
-	}
-
-	// Test getting native on Mutable
-	_, err = o.GetNative()
 	if err != nil {
 		t.Errorf("Getting native on boxed should not fail.")
 	}
 
-	o.Unbox() // Call Unbox() on Mutable
-	if !o.IsMutable() {
-		t.Errorf("Mutable -> Unboxed failed.")
-	}
-
-	o.Box() // Call Box() on Mutable
-	if o.IsUnboxed() {
-		t.Errorf("Mutable -> Boxed failed.")
-	}
-
-	o.MakeMutable()
-	o.MakeImmutable() // Call MakeImmutable() on Mutable
-	if !o.IsUnboxed() {
-		t.Errorf("Mutable -> Immutable failed.")
+	o.Unbox() // Call Unbox() on Unboxed
+	if o.IsBoxed() {
+		t.Errorf("Unboxed -> Unboxed failed.")
 	}
 
 	o.Box() // Call Box() on Unboxed
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Unboxed -> Boxed failed.")
 	}
 
-	o.MakeMutable() // Call MakeMutable() on Boxed
-	if !o.IsMutable() {
-		t.Errorf("Boxed -> Mutable failed.")
+	o.Unbox()
+	vb := o.GetBlob() // Implicit Box() on Unboxed
+	if !o.IsBoxed() {
+		t.Errorf("GetBlob did not cause boxing.")
 	}
+
+	o.Box()
 
 	// Test serialization
 
-	vb := koinos.NewVariableBlob()
+	vb = koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 	b := o.GetBlob()
 
@@ -7343,7 +7238,7 @@ func TestOpaqueBlock(t *testing.T) {
 	}
 
 	jo.Unbox()
-	if jo.IsUnboxed() {
+	if !jo.IsBoxed() {
 		t.Errorf("Unboxed incompatible serialization")
 	}
 
@@ -7371,20 +7266,26 @@ func TestOpaqueBlock(t *testing.T) {
 		t.Errorf("jerr == nil")
 	}
 
-	o.MakeMutable()
-	native, _ := o.GetNative()
-
+	// Test alternative constructors
 	vb = koinos.NewVariableBlob()
-	vb = native.Serialize(vb)
-	o.SetBlob(vb)
-	if o.IsUnboxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
-		t.Errorf("SetBlob failed.")
+	o = koinos.NewOpaqueBlockFromBlob(vb)
+
+	if !o.IsBoxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("Create opaque from blob failed.")
 	}
 
 	slice := append([]byte(*vb), 0)
 	vb = (*koinos.VariableBlob)(&slice)
 	if bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
 		t.Errorf("Opaque blob pointer leaked")
+	}
+
+	n := koinos.NewBlock()
+	o = koinos.NewOpaqueBlockFromNative(*n)
+	nativePtr, _ := o.GetNative()
+
+	if o.IsBoxed() || nativePtr == n {
+		t.Errorf("Create opaque from native failed.")
 	}
 }
 
@@ -7396,7 +7297,7 @@ func TestOpaqueBlockReceipt(t *testing.T) {
 	o := koinos.NewOpaqueBlockReceipt()
 
 	o.Box()
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Opaque is unboxed but should not be.")
 	}
 
@@ -7407,81 +7308,42 @@ func TestOpaqueBlockReceipt(t *testing.T) {
 	}
 
 	o.Box() // Call Box() on Boxed
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Boxed -> Boxed failed.")
 	}
 
-	o.MakeImmutable() // Call MakeImmutable() on Boxed
-	if o.IsUnboxed() {
-		t.Errorf("Unboxed -> MakeImmutable failed.")
-	}
-
 	o.Unbox() // Call Unbox() on Boxed
-	if !o.IsUnboxed() {
+	if o.IsBoxed() {
 		t.Errorf("Boxed -> Uboxed failed.")
 	}
 
 	// Test getting native on Unboxed
 	_, err = o.GetNative()
-	if err == nil {
-		t.Errorf("Getting native on Unboxed should fail.")
-	}
-
-	o.Unbox() // Call Unbox() on Unboxed
-	if !o.IsUnboxed() {
-		t.Errorf("Unboxed -> Unboxed failed.")
-	}
-
-	o.MakeImmutable() // Call MakeImmutable() on Unboxed
-	if !o.IsUnboxed() {
-		t.Errorf("Unboxed -> MakeImmutable failed.")
-	}
-
-	o.MakeMutable() // Call MakeMutable() on Unboxed
-	if !o.IsMutable() {
-		t.Errorf("Unboxed -> Mutable failed.")
-	}
-
-	o.MakeMutable() // Call MakeMutable() on Mutable
-	if !o.IsMutable() {
-		t.Errorf("Mutable -> Mutable failed.")
-	}
-
-	// Test getting native on Mutable
-	_, err = o.GetNative()
 	if err != nil {
 		t.Errorf("Getting native on boxed should not fail.")
 	}
 
-	o.Unbox() // Call Unbox() on Mutable
-	if !o.IsMutable() {
-		t.Errorf("Mutable -> Unboxed failed.")
-	}
-
-	o.Box() // Call Box() on Mutable
-	if o.IsUnboxed() {
-		t.Errorf("Mutable -> Boxed failed.")
-	}
-
-	o.MakeMutable()
-	o.MakeImmutable() // Call MakeImmutable() on Mutable
-	if !o.IsUnboxed() {
-		t.Errorf("Mutable -> Immutable failed.")
+	o.Unbox() // Call Unbox() on Unboxed
+	if o.IsBoxed() {
+		t.Errorf("Unboxed -> Unboxed failed.")
 	}
 
 	o.Box() // Call Box() on Unboxed
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Unboxed -> Boxed failed.")
 	}
 
-	o.MakeMutable() // Call MakeMutable() on Boxed
-	if !o.IsMutable() {
-		t.Errorf("Boxed -> Mutable failed.")
+	o.Unbox()
+	vb := o.GetBlob() // Implicit Box() on Unboxed
+	if !o.IsBoxed() {
+		t.Errorf("GetBlob did not cause boxing.")
 	}
+
+	o.Box()
 
 	// Test serialization
 
-	vb := koinos.NewVariableBlob()
+	vb = koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 	b := o.GetBlob()
 
@@ -7523,7 +7385,7 @@ func TestOpaqueBlockReceipt(t *testing.T) {
 	}
 
 	jo.Unbox()
-	if jo.IsUnboxed() {
+	if !jo.IsBoxed() {
 		t.Errorf("Unboxed incompatible serialization")
 	}
 
@@ -7547,20 +7409,26 @@ func TestOpaqueBlockReceipt(t *testing.T) {
 	}
 
 
-	o.MakeMutable()
-	native, _ := o.GetNative()
-
+	// Test alternative constructors
 	vb = koinos.NewVariableBlob()
-	vb = native.Serialize(vb)
-	o.SetBlob(vb)
-	if o.IsUnboxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
-		t.Errorf("SetBlob failed.")
+	o = koinos.NewOpaqueBlockReceiptFromBlob(vb)
+
+	if !o.IsBoxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("Create opaque from blob failed.")
 	}
 
 	slice := append([]byte(*vb), 0)
 	vb = (*koinos.VariableBlob)(&slice)
 	if bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
 		t.Errorf("Opaque blob pointer leaked")
+	}
+
+	n := koinos.NewBlockReceipt()
+	o = koinos.NewOpaqueBlockReceiptFromNative(*n)
+	nativePtr, _ := o.GetNative()
+
+	if o.IsBoxed() || nativePtr == n {
+		t.Errorf("Create opaque from native failed.")
 	}
 }
 
@@ -7572,7 +7440,7 @@ func TestOpaquePassiveBlockData(t *testing.T) {
 	o := koinos.NewOpaquePassiveBlockData()
 
 	o.Box()
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Opaque is unboxed but should not be.")
 	}
 
@@ -7583,81 +7451,42 @@ func TestOpaquePassiveBlockData(t *testing.T) {
 	}
 
 	o.Box() // Call Box() on Boxed
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Boxed -> Boxed failed.")
 	}
 
-	o.MakeImmutable() // Call MakeImmutable() on Boxed
-	if o.IsUnboxed() {
-		t.Errorf("Unboxed -> MakeImmutable failed.")
-	}
-
 	o.Unbox() // Call Unbox() on Boxed
-	if !o.IsUnboxed() {
+	if o.IsBoxed() {
 		t.Errorf("Boxed -> Uboxed failed.")
 	}
 
 	// Test getting native on Unboxed
 	_, err = o.GetNative()
-	if err == nil {
-		t.Errorf("Getting native on Unboxed should fail.")
-	}
-
-	o.Unbox() // Call Unbox() on Unboxed
-	if !o.IsUnboxed() {
-		t.Errorf("Unboxed -> Unboxed failed.")
-	}
-
-	o.MakeImmutable() // Call MakeImmutable() on Unboxed
-	if !o.IsUnboxed() {
-		t.Errorf("Unboxed -> MakeImmutable failed.")
-	}
-
-	o.MakeMutable() // Call MakeMutable() on Unboxed
-	if !o.IsMutable() {
-		t.Errorf("Unboxed -> Mutable failed.")
-	}
-
-	o.MakeMutable() // Call MakeMutable() on Mutable
-	if !o.IsMutable() {
-		t.Errorf("Mutable -> Mutable failed.")
-	}
-
-	// Test getting native on Mutable
-	_, err = o.GetNative()
 	if err != nil {
 		t.Errorf("Getting native on boxed should not fail.")
 	}
 
-	o.Unbox() // Call Unbox() on Mutable
-	if !o.IsMutable() {
-		t.Errorf("Mutable -> Unboxed failed.")
-	}
-
-	o.Box() // Call Box() on Mutable
-	if o.IsUnboxed() {
-		t.Errorf("Mutable -> Boxed failed.")
-	}
-
-	o.MakeMutable()
-	o.MakeImmutable() // Call MakeImmutable() on Mutable
-	if !o.IsUnboxed() {
-		t.Errorf("Mutable -> Immutable failed.")
+	o.Unbox() // Call Unbox() on Unboxed
+	if o.IsBoxed() {
+		t.Errorf("Unboxed -> Unboxed failed.")
 	}
 
 	o.Box() // Call Box() on Unboxed
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Unboxed -> Boxed failed.")
 	}
 
-	o.MakeMutable() // Call MakeMutable() on Boxed
-	if !o.IsMutable() {
-		t.Errorf("Boxed -> Mutable failed.")
+	o.Unbox()
+	vb := o.GetBlob() // Implicit Box() on Unboxed
+	if !o.IsBoxed() {
+		t.Errorf("GetBlob did not cause boxing.")
 	}
+
+	o.Box()
 
 	// Test serialization
 
-	vb := koinos.NewVariableBlob()
+	vb = koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 	b := o.GetBlob()
 
@@ -7699,7 +7528,7 @@ func TestOpaquePassiveBlockData(t *testing.T) {
 	}
 
 	jo.Unbox()
-	if jo.IsUnboxed() {
+	if !jo.IsBoxed() {
 		t.Errorf("Unboxed incompatible serialization")
 	}
 
@@ -7723,20 +7552,26 @@ func TestOpaquePassiveBlockData(t *testing.T) {
 	}
 
 
-	o.MakeMutable()
-	native, _ := o.GetNative()
-
+	// Test alternative constructors
 	vb = koinos.NewVariableBlob()
-	vb = native.Serialize(vb)
-	o.SetBlob(vb)
-	if o.IsUnboxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
-		t.Errorf("SetBlob failed.")
+	o = koinos.NewOpaquePassiveBlockDataFromBlob(vb)
+
+	if !o.IsBoxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("Create opaque from blob failed.")
 	}
 
 	slice := append([]byte(*vb), 0)
 	vb = (*koinos.VariableBlob)(&slice)
 	if bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
 		t.Errorf("Opaque blob pointer leaked")
+	}
+
+	n := koinos.NewPassiveBlockData()
+	o = koinos.NewOpaquePassiveBlockDataFromNative(*n)
+	nativePtr, _ := o.GetNative()
+
+	if o.IsBoxed() || nativePtr == n {
+		t.Errorf("Create opaque from native failed.")
 	}
 }
 
@@ -7748,7 +7583,7 @@ func TestOpaquePassiveTransactionData(t *testing.T) {
 	o := koinos.NewOpaquePassiveTransactionData()
 
 	o.Box()
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Opaque is unboxed but should not be.")
 	}
 
@@ -7759,81 +7594,42 @@ func TestOpaquePassiveTransactionData(t *testing.T) {
 	}
 
 	o.Box() // Call Box() on Boxed
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Boxed -> Boxed failed.")
 	}
 
-	o.MakeImmutable() // Call MakeImmutable() on Boxed
-	if o.IsUnboxed() {
-		t.Errorf("Unboxed -> MakeImmutable failed.")
-	}
-
 	o.Unbox() // Call Unbox() on Boxed
-	if !o.IsUnboxed() {
+	if o.IsBoxed() {
 		t.Errorf("Boxed -> Uboxed failed.")
 	}
 
 	// Test getting native on Unboxed
 	_, err = o.GetNative()
-	if err == nil {
-		t.Errorf("Getting native on Unboxed should fail.")
-	}
-
-	o.Unbox() // Call Unbox() on Unboxed
-	if !o.IsUnboxed() {
-		t.Errorf("Unboxed -> Unboxed failed.")
-	}
-
-	o.MakeImmutable() // Call MakeImmutable() on Unboxed
-	if !o.IsUnboxed() {
-		t.Errorf("Unboxed -> MakeImmutable failed.")
-	}
-
-	o.MakeMutable() // Call MakeMutable() on Unboxed
-	if !o.IsMutable() {
-		t.Errorf("Unboxed -> Mutable failed.")
-	}
-
-	o.MakeMutable() // Call MakeMutable() on Mutable
-	if !o.IsMutable() {
-		t.Errorf("Mutable -> Mutable failed.")
-	}
-
-	// Test getting native on Mutable
-	_, err = o.GetNative()
 	if err != nil {
 		t.Errorf("Getting native on boxed should not fail.")
 	}
 
-	o.Unbox() // Call Unbox() on Mutable
-	if !o.IsMutable() {
-		t.Errorf("Mutable -> Unboxed failed.")
-	}
-
-	o.Box() // Call Box() on Mutable
-	if o.IsUnboxed() {
-		t.Errorf("Mutable -> Boxed failed.")
-	}
-
-	o.MakeMutable()
-	o.MakeImmutable() // Call MakeImmutable() on Mutable
-	if !o.IsUnboxed() {
-		t.Errorf("Mutable -> Immutable failed.")
+	o.Unbox() // Call Unbox() on Unboxed
+	if o.IsBoxed() {
+		t.Errorf("Unboxed -> Unboxed failed.")
 	}
 
 	o.Box() // Call Box() on Unboxed
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Unboxed -> Boxed failed.")
 	}
 
-	o.MakeMutable() // Call MakeMutable() on Boxed
-	if !o.IsMutable() {
-		t.Errorf("Boxed -> Mutable failed.")
+	o.Unbox()
+	vb := o.GetBlob() // Implicit Box() on Unboxed
+	if !o.IsBoxed() {
+		t.Errorf("GetBlob did not cause boxing.")
 	}
+
+	o.Box()
 
 	// Test serialization
 
-	vb := koinos.NewVariableBlob()
+	vb = koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 	b := o.GetBlob()
 
@@ -7875,7 +7671,7 @@ func TestOpaquePassiveTransactionData(t *testing.T) {
 	}
 
 	jo.Unbox()
-	if jo.IsUnboxed() {
+	if !jo.IsBoxed() {
 		t.Errorf("Unboxed incompatible serialization")
 	}
 
@@ -7899,20 +7695,26 @@ func TestOpaquePassiveTransactionData(t *testing.T) {
 	}
 
 
-	o.MakeMutable()
-	native, _ := o.GetNative()
-
+	// Test alternative constructors
 	vb = koinos.NewVariableBlob()
-	vb = native.Serialize(vb)
-	o.SetBlob(vb)
-	if o.IsUnboxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
-		t.Errorf("SetBlob failed.")
+	o = koinos.NewOpaquePassiveTransactionDataFromBlob(vb)
+
+	if !o.IsBoxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("Create opaque from blob failed.")
 	}
 
 	slice := append([]byte(*vb), 0)
 	vb = (*koinos.VariableBlob)(&slice)
 	if bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
 		t.Errorf("Opaque blob pointer leaked")
+	}
+
+	n := koinos.NewPassiveTransactionData()
+	o = koinos.NewOpaquePassiveTransactionDataFromNative(*n)
+	nativePtr, _ := o.GetNative()
+
+	if o.IsBoxed() || nativePtr == n {
+		t.Errorf("Create opaque from native failed.")
 	}
 }
 
@@ -7924,7 +7726,7 @@ func TestOpaqueQueryItemResult(t *testing.T) {
 	o := koinos.NewOpaqueQueryItemResult()
 
 	o.Box()
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Opaque is unboxed but should not be.")
 	}
 
@@ -7935,81 +7737,42 @@ func TestOpaqueQueryItemResult(t *testing.T) {
 	}
 
 	o.Box() // Call Box() on Boxed
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Boxed -> Boxed failed.")
 	}
 
-	o.MakeImmutable() // Call MakeImmutable() on Boxed
-	if o.IsUnboxed() {
-		t.Errorf("Unboxed -> MakeImmutable failed.")
-	}
-
 	o.Unbox() // Call Unbox() on Boxed
-	if !o.IsUnboxed() {
+	if o.IsBoxed() {
 		t.Errorf("Boxed -> Uboxed failed.")
 	}
 
 	// Test getting native on Unboxed
 	_, err = o.GetNative()
-	if err == nil {
-		t.Errorf("Getting native on Unboxed should fail.")
-	}
-
-	o.Unbox() // Call Unbox() on Unboxed
-	if !o.IsUnboxed() {
-		t.Errorf("Unboxed -> Unboxed failed.")
-	}
-
-	o.MakeImmutable() // Call MakeImmutable() on Unboxed
-	if !o.IsUnboxed() {
-		t.Errorf("Unboxed -> MakeImmutable failed.")
-	}
-
-	o.MakeMutable() // Call MakeMutable() on Unboxed
-	if !o.IsMutable() {
-		t.Errorf("Unboxed -> Mutable failed.")
-	}
-
-	o.MakeMutable() // Call MakeMutable() on Mutable
-	if !o.IsMutable() {
-		t.Errorf("Mutable -> Mutable failed.")
-	}
-
-	// Test getting native on Mutable
-	_, err = o.GetNative()
 	if err != nil {
 		t.Errorf("Getting native on boxed should not fail.")
 	}
 
-	o.Unbox() // Call Unbox() on Mutable
-	if !o.IsMutable() {
-		t.Errorf("Mutable -> Unboxed failed.")
-	}
-
-	o.Box() // Call Box() on Mutable
-	if o.IsUnboxed() {
-		t.Errorf("Mutable -> Boxed failed.")
-	}
-
-	o.MakeMutable()
-	o.MakeImmutable() // Call MakeImmutable() on Mutable
-	if !o.IsUnboxed() {
-		t.Errorf("Mutable -> Immutable failed.")
+	o.Unbox() // Call Unbox() on Unboxed
+	if o.IsBoxed() {
+		t.Errorf("Unboxed -> Unboxed failed.")
 	}
 
 	o.Box() // Call Box() on Unboxed
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Unboxed -> Boxed failed.")
 	}
 
-	o.MakeMutable() // Call MakeMutable() on Boxed
-	if !o.IsMutable() {
-		t.Errorf("Boxed -> Mutable failed.")
+	o.Unbox()
+	vb := o.GetBlob() // Implicit Box() on Unboxed
+	if !o.IsBoxed() {
+		t.Errorf("GetBlob did not cause boxing.")
 	}
+
+	o.Box()
 
 	// Test serialization
 
-	vb := koinos.NewVariableBlob()
+	vb = koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 	b := o.GetBlob()
 
@@ -8051,7 +7814,7 @@ func TestOpaqueQueryItemResult(t *testing.T) {
 	}
 
 	jo.Unbox()
-	if jo.IsUnboxed() {
+	if !jo.IsBoxed() {
 		t.Errorf("Unboxed incompatible serialization")
 	}
 
@@ -8079,20 +7842,26 @@ func TestOpaqueQueryItemResult(t *testing.T) {
 		t.Errorf("jerr == nil")
 	}
 
-	o.MakeMutable()
-	native, _ := o.GetNative()
-
+	// Test alternative constructors
 	vb = koinos.NewVariableBlob()
-	vb = native.Serialize(vb)
-	o.SetBlob(vb)
-	if o.IsUnboxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
-		t.Errorf("SetBlob failed.")
+	o = koinos.NewOpaqueQueryItemResultFromBlob(vb)
+
+	if !o.IsBoxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("Create opaque from blob failed.")
 	}
 
 	slice := append([]byte(*vb), 0)
 	vb = (*koinos.VariableBlob)(&slice)
 	if bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
 		t.Errorf("Opaque blob pointer leaked")
+	}
+
+	n := koinos.NewQueryItemResult()
+	o = koinos.NewOpaqueQueryItemResultFromNative(*n)
+	nativePtr, _ := o.GetNative()
+
+	if o.IsBoxed() || nativePtr == n {
+		t.Errorf("Create opaque from native failed.")
 	}
 }
 
@@ -8104,7 +7873,7 @@ func TestOpaqueQueryParamItem(t *testing.T) {
 	o := koinos.NewOpaqueQueryParamItem()
 
 	o.Box()
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Opaque is unboxed but should not be.")
 	}
 
@@ -8115,81 +7884,42 @@ func TestOpaqueQueryParamItem(t *testing.T) {
 	}
 
 	o.Box() // Call Box() on Boxed
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Boxed -> Boxed failed.")
 	}
 
-	o.MakeImmutable() // Call MakeImmutable() on Boxed
-	if o.IsUnboxed() {
-		t.Errorf("Unboxed -> MakeImmutable failed.")
-	}
-
 	o.Unbox() // Call Unbox() on Boxed
-	if !o.IsUnboxed() {
+	if o.IsBoxed() {
 		t.Errorf("Boxed -> Uboxed failed.")
 	}
 
 	// Test getting native on Unboxed
 	_, err = o.GetNative()
-	if err == nil {
-		t.Errorf("Getting native on Unboxed should fail.")
-	}
-
-	o.Unbox() // Call Unbox() on Unboxed
-	if !o.IsUnboxed() {
-		t.Errorf("Unboxed -> Unboxed failed.")
-	}
-
-	o.MakeImmutable() // Call MakeImmutable() on Unboxed
-	if !o.IsUnboxed() {
-		t.Errorf("Unboxed -> MakeImmutable failed.")
-	}
-
-	o.MakeMutable() // Call MakeMutable() on Unboxed
-	if !o.IsMutable() {
-		t.Errorf("Unboxed -> Mutable failed.")
-	}
-
-	o.MakeMutable() // Call MakeMutable() on Mutable
-	if !o.IsMutable() {
-		t.Errorf("Mutable -> Mutable failed.")
-	}
-
-	// Test getting native on Mutable
-	_, err = o.GetNative()
 	if err != nil {
 		t.Errorf("Getting native on boxed should not fail.")
 	}
 
-	o.Unbox() // Call Unbox() on Mutable
-	if !o.IsMutable() {
-		t.Errorf("Mutable -> Unboxed failed.")
-	}
-
-	o.Box() // Call Box() on Mutable
-	if o.IsUnboxed() {
-		t.Errorf("Mutable -> Boxed failed.")
-	}
-
-	o.MakeMutable()
-	o.MakeImmutable() // Call MakeImmutable() on Mutable
-	if !o.IsUnboxed() {
-		t.Errorf("Mutable -> Immutable failed.")
+	o.Unbox() // Call Unbox() on Unboxed
+	if o.IsBoxed() {
+		t.Errorf("Unboxed -> Unboxed failed.")
 	}
 
 	o.Box() // Call Box() on Unboxed
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Unboxed -> Boxed failed.")
 	}
 
-	o.MakeMutable() // Call MakeMutable() on Boxed
-	if !o.IsMutable() {
-		t.Errorf("Boxed -> Mutable failed.")
+	o.Unbox()
+	vb := o.GetBlob() // Implicit Box() on Unboxed
+	if !o.IsBoxed() {
+		t.Errorf("GetBlob did not cause boxing.")
 	}
+
+	o.Box()
 
 	// Test serialization
 
-	vb := koinos.NewVariableBlob()
+	vb = koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 	b := o.GetBlob()
 
@@ -8231,7 +7961,7 @@ func TestOpaqueQueryParamItem(t *testing.T) {
 	}
 
 	jo.Unbox()
-	if jo.IsUnboxed() {
+	if !jo.IsBoxed() {
 		t.Errorf("Unboxed incompatible serialization")
 	}
 
@@ -8259,20 +7989,26 @@ func TestOpaqueQueryParamItem(t *testing.T) {
 		t.Errorf("jerr == nil")
 	}
 
-	o.MakeMutable()
-	native, _ := o.GetNative()
-
+	// Test alternative constructors
 	vb = koinos.NewVariableBlob()
-	vb = native.Serialize(vb)
-	o.SetBlob(vb)
-	if o.IsUnboxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
-		t.Errorf("SetBlob failed.")
+	o = koinos.NewOpaqueQueryParamItemFromBlob(vb)
+
+	if !o.IsBoxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("Create opaque from blob failed.")
 	}
 
 	slice := append([]byte(*vb), 0)
 	vb = (*koinos.VariableBlob)(&slice)
 	if bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
 		t.Errorf("Opaque blob pointer leaked")
+	}
+
+	n := koinos.NewQueryParamItem()
+	o = koinos.NewOpaqueQueryParamItemFromNative(*n)
+	nativePtr, _ := o.GetNative()
+
+	if o.IsBoxed() || nativePtr == n {
+		t.Errorf("Create opaque from native failed.")
 	}
 }
 
@@ -8284,7 +8020,7 @@ func TestOpaqueTransaction(t *testing.T) {
 	o := koinos.NewOpaqueTransaction()
 
 	o.Box()
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Opaque is unboxed but should not be.")
 	}
 
@@ -8295,81 +8031,42 @@ func TestOpaqueTransaction(t *testing.T) {
 	}
 
 	o.Box() // Call Box() on Boxed
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Boxed -> Boxed failed.")
 	}
 
-	o.MakeImmutable() // Call MakeImmutable() on Boxed
-	if o.IsUnboxed() {
-		t.Errorf("Unboxed -> MakeImmutable failed.")
-	}
-
 	o.Unbox() // Call Unbox() on Boxed
-	if !o.IsUnboxed() {
+	if o.IsBoxed() {
 		t.Errorf("Boxed -> Uboxed failed.")
 	}
 
 	// Test getting native on Unboxed
 	_, err = o.GetNative()
-	if err == nil {
-		t.Errorf("Getting native on Unboxed should fail.")
-	}
-
-	o.Unbox() // Call Unbox() on Unboxed
-	if !o.IsUnboxed() {
-		t.Errorf("Unboxed -> Unboxed failed.")
-	}
-
-	o.MakeImmutable() // Call MakeImmutable() on Unboxed
-	if !o.IsUnboxed() {
-		t.Errorf("Unboxed -> MakeImmutable failed.")
-	}
-
-	o.MakeMutable() // Call MakeMutable() on Unboxed
-	if !o.IsMutable() {
-		t.Errorf("Unboxed -> Mutable failed.")
-	}
-
-	o.MakeMutable() // Call MakeMutable() on Mutable
-	if !o.IsMutable() {
-		t.Errorf("Mutable -> Mutable failed.")
-	}
-
-	// Test getting native on Mutable
-	_, err = o.GetNative()
 	if err != nil {
 		t.Errorf("Getting native on boxed should not fail.")
 	}
 
-	o.Unbox() // Call Unbox() on Mutable
-	if !o.IsMutable() {
-		t.Errorf("Mutable -> Unboxed failed.")
-	}
-
-	o.Box() // Call Box() on Mutable
-	if o.IsUnboxed() {
-		t.Errorf("Mutable -> Boxed failed.")
-	}
-
-	o.MakeMutable()
-	o.MakeImmutable() // Call MakeImmutable() on Mutable
-	if !o.IsUnboxed() {
-		t.Errorf("Mutable -> Immutable failed.")
+	o.Unbox() // Call Unbox() on Unboxed
+	if o.IsBoxed() {
+		t.Errorf("Unboxed -> Unboxed failed.")
 	}
 
 	o.Box() // Call Box() on Unboxed
-	if o.IsUnboxed() {
+	if !o.IsBoxed() {
 		t.Errorf("Unboxed -> Boxed failed.")
 	}
 
-	o.MakeMutable() // Call MakeMutable() on Boxed
-	if !o.IsMutable() {
-		t.Errorf("Boxed -> Mutable failed.")
+	o.Unbox()
+	vb := o.GetBlob() // Implicit Box() on Unboxed
+	if !o.IsBoxed() {
+		t.Errorf("GetBlob did not cause boxing.")
 	}
+
+	o.Box()
 
 	// Test serialization
 
-	vb := koinos.NewVariableBlob()
+	vb = koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 	b := o.GetBlob()
 
@@ -8411,7 +8108,7 @@ func TestOpaqueTransaction(t *testing.T) {
 	}
 
 	jo.Unbox()
-	if jo.IsUnboxed() {
+	if !jo.IsBoxed() {
 		t.Errorf("Unboxed incompatible serialization")
 	}
 
@@ -8439,20 +8136,26 @@ func TestOpaqueTransaction(t *testing.T) {
 		t.Errorf("jerr == nil")
 	}
 
-	o.MakeMutable()
-	native, _ := o.GetNative()
-
+	// Test alternative constructors
 	vb = koinos.NewVariableBlob()
-	vb = native.Serialize(vb)
-	o.SetBlob(vb)
-	if o.IsUnboxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
-		t.Errorf("SetBlob failed.")
+	o = koinos.NewOpaqueTransactionFromBlob(vb)
+
+	if !o.IsBoxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("Create opaque from blob failed.")
 	}
 
 	slice := append([]byte(*vb), 0)
 	vb = (*koinos.VariableBlob)(&slice)
 	if bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
 		t.Errorf("Opaque blob pointer leaked")
+	}
+
+	n := koinos.NewTransaction()
+	o = koinos.NewOpaqueTransactionFromNative(*n)
+	nativePtr, _ := o.GetNative()
+
+	if o.IsBoxed() || nativePtr == n {
+		t.Errorf("Create opaque from native failed.")
 	}
 }
 

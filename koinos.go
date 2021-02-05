@@ -6292,28 +6292,33 @@ func NewOpaqueActiveBlockData() *OpaqueActiveBlockData {
 	return &o
 }
 
+// NewOpaqueActiveBlockDataFromBlob factory
+func NewOpaqueActiveBlockDataFromBlob(vb *VariableBlob) *OpaqueActiveBlockData {
+	o := OpaqueActiveBlockData{}
+	o.blob = vb
+	return &o
+}
+
+// NewOpaqueActiveBlockDataFromNative factory
+func NewOpaqueActiveBlockDataFromNative(n ActiveBlockData) *OpaqueActiveBlockData {
+	o := OpaqueActiveBlockData{}
+	o.native = &n
+	return &o
+}
+
 // GetBlob *OpaqueActiveBlockData
 func (n *OpaqueActiveBlockData) GetBlob() *VariableBlob {
-	if (n.native != nil && n.blob == nil) {
-		n.serializeNative()
+	if !n.IsBoxed() {
+		n.Box()
 	}
 
 	return n.blob
-}
-
-// SetBlob *OpaqueActiveBlockData
-func (n *OpaqueActiveBlockData) SetBlob( vb *VariableBlob ) {
-	n.native = nil
-	n.blob = vb
 }
 
 // GetNative *OpaqueActiveBlockData
 func (n *OpaqueActiveBlockData) GetNative() (*ActiveBlockData,error) {
 	if( n.native == nil ) {
 		return nil,errors.New("opaque type not unboxed")
-	}
-	if( n.blob != nil ) {
-		return nil,errors.New("opaque type is not mutable")
 	}
 
 	return n.native,nil;
@@ -6322,12 +6327,7 @@ func (n *OpaqueActiveBlockData) GetNative() (*ActiveBlockData,error) {
 // Box *OpaqueActiveBlockData
 func (n *OpaqueActiveBlockData) Box() {
 	if (n.native != nil) {
-		// Mutable -> Unboxed
-		if (n.blob == nil) {
-			n.serializeNative()
-		}
-
-		// Unboxed -> Boxed
+		n.serializeNative()
 		n.native = nil
 	}
 }
@@ -6345,33 +6345,9 @@ func (n *OpaqueActiveBlockData) Unbox() {
 	}
 }
 
-// MakeMutable *OpaqueActiveBlockData
-func (n *OpaqueActiveBlockData) MakeMutable() {
-	if (n.native == nil) {
-		n.Unbox()
-	}
-
-	// Unboxed -> Mutable
-	if (n.native != nil && n.blob != nil) {
-		n.blob = nil
-	}
-}
-
-// MakeImmutable *OpaqueActiveBlockData
-func (n *OpaqueActiveBlockData) MakeImmutable() {
-	if (n.native != nil && n.blob == nil) {
-		n.serializeNative()
-	}
-}
-
-// IsUnboxed *OpaqueActiveBlockData
-func (n *OpaqueActiveBlockData) IsUnboxed() bool {
-	return n.native != nil;
-}
-
-// IsMutable *OpaqueActiveBlockData
-func (n *OpaqueActiveBlockData) IsMutable() bool {
-	return n.native != nil && n.blob == nil;
+// IsBoxed *OpaqueActiveBlockData
+func (n *OpaqueActiveBlockData) IsBoxed() bool {
+	return n.native == nil;
 }
 
 func (n *OpaqueActiveBlockData) serializeNative() {
@@ -6400,7 +6376,7 @@ func DeserializeOpaqueActiveBlockData(vb *VariableBlob) (uint64,*OpaqueActiveBlo
 func (n OpaqueActiveBlockData) MarshalJSON() ([]byte, error) {
 	n.Unbox()
 
-	if n.IsUnboxed() {
+	if !n.IsBoxed() {
 		return json.Marshal(&n.native)
 	}
 
@@ -6456,28 +6432,33 @@ func NewOpaqueActiveTransactionData() *OpaqueActiveTransactionData {
 	return &o
 }
 
+// NewOpaqueActiveTransactionDataFromBlob factory
+func NewOpaqueActiveTransactionDataFromBlob(vb *VariableBlob) *OpaqueActiveTransactionData {
+	o := OpaqueActiveTransactionData{}
+	o.blob = vb
+	return &o
+}
+
+// NewOpaqueActiveTransactionDataFromNative factory
+func NewOpaqueActiveTransactionDataFromNative(n ActiveTransactionData) *OpaqueActiveTransactionData {
+	o := OpaqueActiveTransactionData{}
+	o.native = &n
+	return &o
+}
+
 // GetBlob *OpaqueActiveTransactionData
 func (n *OpaqueActiveTransactionData) GetBlob() *VariableBlob {
-	if (n.native != nil && n.blob == nil) {
-		n.serializeNative()
+	if !n.IsBoxed() {
+		n.Box()
 	}
 
 	return n.blob
-}
-
-// SetBlob *OpaqueActiveTransactionData
-func (n *OpaqueActiveTransactionData) SetBlob( vb *VariableBlob ) {
-	n.native = nil
-	n.blob = vb
 }
 
 // GetNative *OpaqueActiveTransactionData
 func (n *OpaqueActiveTransactionData) GetNative() (*ActiveTransactionData,error) {
 	if( n.native == nil ) {
 		return nil,errors.New("opaque type not unboxed")
-	}
-	if( n.blob != nil ) {
-		return nil,errors.New("opaque type is not mutable")
 	}
 
 	return n.native,nil;
@@ -6486,12 +6467,7 @@ func (n *OpaqueActiveTransactionData) GetNative() (*ActiveTransactionData,error)
 // Box *OpaqueActiveTransactionData
 func (n *OpaqueActiveTransactionData) Box() {
 	if (n.native != nil) {
-		// Mutable -> Unboxed
-		if (n.blob == nil) {
-			n.serializeNative()
-		}
-
-		// Unboxed -> Boxed
+		n.serializeNative()
 		n.native = nil
 	}
 }
@@ -6509,33 +6485,9 @@ func (n *OpaqueActiveTransactionData) Unbox() {
 	}
 }
 
-// MakeMutable *OpaqueActiveTransactionData
-func (n *OpaqueActiveTransactionData) MakeMutable() {
-	if (n.native == nil) {
-		n.Unbox()
-	}
-
-	// Unboxed -> Mutable
-	if (n.native != nil && n.blob != nil) {
-		n.blob = nil
-	}
-}
-
-// MakeImmutable *OpaqueActiveTransactionData
-func (n *OpaqueActiveTransactionData) MakeImmutable() {
-	if (n.native != nil && n.blob == nil) {
-		n.serializeNative()
-	}
-}
-
-// IsUnboxed *OpaqueActiveTransactionData
-func (n *OpaqueActiveTransactionData) IsUnboxed() bool {
-	return n.native != nil;
-}
-
-// IsMutable *OpaqueActiveTransactionData
-func (n *OpaqueActiveTransactionData) IsMutable() bool {
-	return n.native != nil && n.blob == nil;
+// IsBoxed *OpaqueActiveTransactionData
+func (n *OpaqueActiveTransactionData) IsBoxed() bool {
+	return n.native == nil;
 }
 
 func (n *OpaqueActiveTransactionData) serializeNative() {
@@ -6564,7 +6516,7 @@ func DeserializeOpaqueActiveTransactionData(vb *VariableBlob) (uint64,*OpaqueAct
 func (n OpaqueActiveTransactionData) MarshalJSON() ([]byte, error) {
 	n.Unbox()
 
-	if n.IsUnboxed() {
+	if !n.IsBoxed() {
 		return json.Marshal(&n.native)
 	}
 
@@ -6620,28 +6572,33 @@ func NewOpaqueBlock() *OpaqueBlock {
 	return &o
 }
 
+// NewOpaqueBlockFromBlob factory
+func NewOpaqueBlockFromBlob(vb *VariableBlob) *OpaqueBlock {
+	o := OpaqueBlock{}
+	o.blob = vb
+	return &o
+}
+
+// NewOpaqueBlockFromNative factory
+func NewOpaqueBlockFromNative(n Block) *OpaqueBlock {
+	o := OpaqueBlock{}
+	o.native = &n
+	return &o
+}
+
 // GetBlob *OpaqueBlock
 func (n *OpaqueBlock) GetBlob() *VariableBlob {
-	if (n.native != nil && n.blob == nil) {
-		n.serializeNative()
+	if !n.IsBoxed() {
+		n.Box()
 	}
 
 	return n.blob
-}
-
-// SetBlob *OpaqueBlock
-func (n *OpaqueBlock) SetBlob( vb *VariableBlob ) {
-	n.native = nil
-	n.blob = vb
 }
 
 // GetNative *OpaqueBlock
 func (n *OpaqueBlock) GetNative() (*Block,error) {
 	if( n.native == nil ) {
 		return nil,errors.New("opaque type not unboxed")
-	}
-	if( n.blob != nil ) {
-		return nil,errors.New("opaque type is not mutable")
 	}
 
 	return n.native,nil;
@@ -6650,12 +6607,7 @@ func (n *OpaqueBlock) GetNative() (*Block,error) {
 // Box *OpaqueBlock
 func (n *OpaqueBlock) Box() {
 	if (n.native != nil) {
-		// Mutable -> Unboxed
-		if (n.blob == nil) {
-			n.serializeNative()
-		}
-
-		// Unboxed -> Boxed
+		n.serializeNative()
 		n.native = nil
 	}
 }
@@ -6673,33 +6625,9 @@ func (n *OpaqueBlock) Unbox() {
 	}
 }
 
-// MakeMutable *OpaqueBlock
-func (n *OpaqueBlock) MakeMutable() {
-	if (n.native == nil) {
-		n.Unbox()
-	}
-
-	// Unboxed -> Mutable
-	if (n.native != nil && n.blob != nil) {
-		n.blob = nil
-	}
-}
-
-// MakeImmutable *OpaqueBlock
-func (n *OpaqueBlock) MakeImmutable() {
-	if (n.native != nil && n.blob == nil) {
-		n.serializeNative()
-	}
-}
-
-// IsUnboxed *OpaqueBlock
-func (n *OpaqueBlock) IsUnboxed() bool {
-	return n.native != nil;
-}
-
-// IsMutable *OpaqueBlock
-func (n *OpaqueBlock) IsMutable() bool {
-	return n.native != nil && n.blob == nil;
+// IsBoxed *OpaqueBlock
+func (n *OpaqueBlock) IsBoxed() bool {
+	return n.native == nil;
 }
 
 func (n *OpaqueBlock) serializeNative() {
@@ -6728,7 +6656,7 @@ func DeserializeOpaqueBlock(vb *VariableBlob) (uint64,*OpaqueBlock,error) {
 func (n OpaqueBlock) MarshalJSON() ([]byte, error) {
 	n.Unbox()
 
-	if n.IsUnboxed() {
+	if !n.IsBoxed() {
 		return json.Marshal(&n.native)
 	}
 
@@ -6784,28 +6712,33 @@ func NewOpaqueBlockReceipt() *OpaqueBlockReceipt {
 	return &o
 }
 
+// NewOpaqueBlockReceiptFromBlob factory
+func NewOpaqueBlockReceiptFromBlob(vb *VariableBlob) *OpaqueBlockReceipt {
+	o := OpaqueBlockReceipt{}
+	o.blob = vb
+	return &o
+}
+
+// NewOpaqueBlockReceiptFromNative factory
+func NewOpaqueBlockReceiptFromNative(n BlockReceipt) *OpaqueBlockReceipt {
+	o := OpaqueBlockReceipt{}
+	o.native = &n
+	return &o
+}
+
 // GetBlob *OpaqueBlockReceipt
 func (n *OpaqueBlockReceipt) GetBlob() *VariableBlob {
-	if (n.native != nil && n.blob == nil) {
-		n.serializeNative()
+	if !n.IsBoxed() {
+		n.Box()
 	}
 
 	return n.blob
-}
-
-// SetBlob *OpaqueBlockReceipt
-func (n *OpaqueBlockReceipt) SetBlob( vb *VariableBlob ) {
-	n.native = nil
-	n.blob = vb
 }
 
 // GetNative *OpaqueBlockReceipt
 func (n *OpaqueBlockReceipt) GetNative() (*BlockReceipt,error) {
 	if( n.native == nil ) {
 		return nil,errors.New("opaque type not unboxed")
-	}
-	if( n.blob != nil ) {
-		return nil,errors.New("opaque type is not mutable")
 	}
 
 	return n.native,nil;
@@ -6814,12 +6747,7 @@ func (n *OpaqueBlockReceipt) GetNative() (*BlockReceipt,error) {
 // Box *OpaqueBlockReceipt
 func (n *OpaqueBlockReceipt) Box() {
 	if (n.native != nil) {
-		// Mutable -> Unboxed
-		if (n.blob == nil) {
-			n.serializeNative()
-		}
-
-		// Unboxed -> Boxed
+		n.serializeNative()
 		n.native = nil
 	}
 }
@@ -6837,33 +6765,9 @@ func (n *OpaqueBlockReceipt) Unbox() {
 	}
 }
 
-// MakeMutable *OpaqueBlockReceipt
-func (n *OpaqueBlockReceipt) MakeMutable() {
-	if (n.native == nil) {
-		n.Unbox()
-	}
-
-	// Unboxed -> Mutable
-	if (n.native != nil && n.blob != nil) {
-		n.blob = nil
-	}
-}
-
-// MakeImmutable *OpaqueBlockReceipt
-func (n *OpaqueBlockReceipt) MakeImmutable() {
-	if (n.native != nil && n.blob == nil) {
-		n.serializeNative()
-	}
-}
-
-// IsUnboxed *OpaqueBlockReceipt
-func (n *OpaqueBlockReceipt) IsUnboxed() bool {
-	return n.native != nil;
-}
-
-// IsMutable *OpaqueBlockReceipt
-func (n *OpaqueBlockReceipt) IsMutable() bool {
-	return n.native != nil && n.blob == nil;
+// IsBoxed *OpaqueBlockReceipt
+func (n *OpaqueBlockReceipt) IsBoxed() bool {
+	return n.native == nil;
 }
 
 func (n *OpaqueBlockReceipt) serializeNative() {
@@ -6892,7 +6796,7 @@ func DeserializeOpaqueBlockReceipt(vb *VariableBlob) (uint64,*OpaqueBlockReceipt
 func (n OpaqueBlockReceipt) MarshalJSON() ([]byte, error) {
 	n.Unbox()
 
-	if n.IsUnboxed() {
+	if !n.IsBoxed() {
 		return json.Marshal(&n.native)
 	}
 
@@ -6948,28 +6852,33 @@ func NewOpaquePassiveBlockData() *OpaquePassiveBlockData {
 	return &o
 }
 
+// NewOpaquePassiveBlockDataFromBlob factory
+func NewOpaquePassiveBlockDataFromBlob(vb *VariableBlob) *OpaquePassiveBlockData {
+	o := OpaquePassiveBlockData{}
+	o.blob = vb
+	return &o
+}
+
+// NewOpaquePassiveBlockDataFromNative factory
+func NewOpaquePassiveBlockDataFromNative(n PassiveBlockData) *OpaquePassiveBlockData {
+	o := OpaquePassiveBlockData{}
+	o.native = &n
+	return &o
+}
+
 // GetBlob *OpaquePassiveBlockData
 func (n *OpaquePassiveBlockData) GetBlob() *VariableBlob {
-	if (n.native != nil && n.blob == nil) {
-		n.serializeNative()
+	if !n.IsBoxed() {
+		n.Box()
 	}
 
 	return n.blob
-}
-
-// SetBlob *OpaquePassiveBlockData
-func (n *OpaquePassiveBlockData) SetBlob( vb *VariableBlob ) {
-	n.native = nil
-	n.blob = vb
 }
 
 // GetNative *OpaquePassiveBlockData
 func (n *OpaquePassiveBlockData) GetNative() (*PassiveBlockData,error) {
 	if( n.native == nil ) {
 		return nil,errors.New("opaque type not unboxed")
-	}
-	if( n.blob != nil ) {
-		return nil,errors.New("opaque type is not mutable")
 	}
 
 	return n.native,nil;
@@ -6978,12 +6887,7 @@ func (n *OpaquePassiveBlockData) GetNative() (*PassiveBlockData,error) {
 // Box *OpaquePassiveBlockData
 func (n *OpaquePassiveBlockData) Box() {
 	if (n.native != nil) {
-		// Mutable -> Unboxed
-		if (n.blob == nil) {
-			n.serializeNative()
-		}
-
-		// Unboxed -> Boxed
+		n.serializeNative()
 		n.native = nil
 	}
 }
@@ -7001,33 +6905,9 @@ func (n *OpaquePassiveBlockData) Unbox() {
 	}
 }
 
-// MakeMutable *OpaquePassiveBlockData
-func (n *OpaquePassiveBlockData) MakeMutable() {
-	if (n.native == nil) {
-		n.Unbox()
-	}
-
-	// Unboxed -> Mutable
-	if (n.native != nil && n.blob != nil) {
-		n.blob = nil
-	}
-}
-
-// MakeImmutable *OpaquePassiveBlockData
-func (n *OpaquePassiveBlockData) MakeImmutable() {
-	if (n.native != nil && n.blob == nil) {
-		n.serializeNative()
-	}
-}
-
-// IsUnboxed *OpaquePassiveBlockData
-func (n *OpaquePassiveBlockData) IsUnboxed() bool {
-	return n.native != nil;
-}
-
-// IsMutable *OpaquePassiveBlockData
-func (n *OpaquePassiveBlockData) IsMutable() bool {
-	return n.native != nil && n.blob == nil;
+// IsBoxed *OpaquePassiveBlockData
+func (n *OpaquePassiveBlockData) IsBoxed() bool {
+	return n.native == nil;
 }
 
 func (n *OpaquePassiveBlockData) serializeNative() {
@@ -7056,7 +6936,7 @@ func DeserializeOpaquePassiveBlockData(vb *VariableBlob) (uint64,*OpaquePassiveB
 func (n OpaquePassiveBlockData) MarshalJSON() ([]byte, error) {
 	n.Unbox()
 
-	if n.IsUnboxed() {
+	if !n.IsBoxed() {
 		return json.Marshal(&n.native)
 	}
 
@@ -7112,28 +6992,33 @@ func NewOpaquePassiveTransactionData() *OpaquePassiveTransactionData {
 	return &o
 }
 
+// NewOpaquePassiveTransactionDataFromBlob factory
+func NewOpaquePassiveTransactionDataFromBlob(vb *VariableBlob) *OpaquePassiveTransactionData {
+	o := OpaquePassiveTransactionData{}
+	o.blob = vb
+	return &o
+}
+
+// NewOpaquePassiveTransactionDataFromNative factory
+func NewOpaquePassiveTransactionDataFromNative(n PassiveTransactionData) *OpaquePassiveTransactionData {
+	o := OpaquePassiveTransactionData{}
+	o.native = &n
+	return &o
+}
+
 // GetBlob *OpaquePassiveTransactionData
 func (n *OpaquePassiveTransactionData) GetBlob() *VariableBlob {
-	if (n.native != nil && n.blob == nil) {
-		n.serializeNative()
+	if !n.IsBoxed() {
+		n.Box()
 	}
 
 	return n.blob
-}
-
-// SetBlob *OpaquePassiveTransactionData
-func (n *OpaquePassiveTransactionData) SetBlob( vb *VariableBlob ) {
-	n.native = nil
-	n.blob = vb
 }
 
 // GetNative *OpaquePassiveTransactionData
 func (n *OpaquePassiveTransactionData) GetNative() (*PassiveTransactionData,error) {
 	if( n.native == nil ) {
 		return nil,errors.New("opaque type not unboxed")
-	}
-	if( n.blob != nil ) {
-		return nil,errors.New("opaque type is not mutable")
 	}
 
 	return n.native,nil;
@@ -7142,12 +7027,7 @@ func (n *OpaquePassiveTransactionData) GetNative() (*PassiveTransactionData,erro
 // Box *OpaquePassiveTransactionData
 func (n *OpaquePassiveTransactionData) Box() {
 	if (n.native != nil) {
-		// Mutable -> Unboxed
-		if (n.blob == nil) {
-			n.serializeNative()
-		}
-
-		// Unboxed -> Boxed
+		n.serializeNative()
 		n.native = nil
 	}
 }
@@ -7165,33 +7045,9 @@ func (n *OpaquePassiveTransactionData) Unbox() {
 	}
 }
 
-// MakeMutable *OpaquePassiveTransactionData
-func (n *OpaquePassiveTransactionData) MakeMutable() {
-	if (n.native == nil) {
-		n.Unbox()
-	}
-
-	// Unboxed -> Mutable
-	if (n.native != nil && n.blob != nil) {
-		n.blob = nil
-	}
-}
-
-// MakeImmutable *OpaquePassiveTransactionData
-func (n *OpaquePassiveTransactionData) MakeImmutable() {
-	if (n.native != nil && n.blob == nil) {
-		n.serializeNative()
-	}
-}
-
-// IsUnboxed *OpaquePassiveTransactionData
-func (n *OpaquePassiveTransactionData) IsUnboxed() bool {
-	return n.native != nil;
-}
-
-// IsMutable *OpaquePassiveTransactionData
-func (n *OpaquePassiveTransactionData) IsMutable() bool {
-	return n.native != nil && n.blob == nil;
+// IsBoxed *OpaquePassiveTransactionData
+func (n *OpaquePassiveTransactionData) IsBoxed() bool {
+	return n.native == nil;
 }
 
 func (n *OpaquePassiveTransactionData) serializeNative() {
@@ -7220,7 +7076,7 @@ func DeserializeOpaquePassiveTransactionData(vb *VariableBlob) (uint64,*OpaquePa
 func (n OpaquePassiveTransactionData) MarshalJSON() ([]byte, error) {
 	n.Unbox()
 
-	if n.IsUnboxed() {
+	if !n.IsBoxed() {
 		return json.Marshal(&n.native)
 	}
 
@@ -7276,28 +7132,33 @@ func NewOpaqueQueryItemResult() *OpaqueQueryItemResult {
 	return &o
 }
 
+// NewOpaqueQueryItemResultFromBlob factory
+func NewOpaqueQueryItemResultFromBlob(vb *VariableBlob) *OpaqueQueryItemResult {
+	o := OpaqueQueryItemResult{}
+	o.blob = vb
+	return &o
+}
+
+// NewOpaqueQueryItemResultFromNative factory
+func NewOpaqueQueryItemResultFromNative(n QueryItemResult) *OpaqueQueryItemResult {
+	o := OpaqueQueryItemResult{}
+	o.native = &n
+	return &o
+}
+
 // GetBlob *OpaqueQueryItemResult
 func (n *OpaqueQueryItemResult) GetBlob() *VariableBlob {
-	if (n.native != nil && n.blob == nil) {
-		n.serializeNative()
+	if !n.IsBoxed() {
+		n.Box()
 	}
 
 	return n.blob
-}
-
-// SetBlob *OpaqueQueryItemResult
-func (n *OpaqueQueryItemResult) SetBlob( vb *VariableBlob ) {
-	n.native = nil
-	n.blob = vb
 }
 
 // GetNative *OpaqueQueryItemResult
 func (n *OpaqueQueryItemResult) GetNative() (*QueryItemResult,error) {
 	if( n.native == nil ) {
 		return nil,errors.New("opaque type not unboxed")
-	}
-	if( n.blob != nil ) {
-		return nil,errors.New("opaque type is not mutable")
 	}
 
 	return n.native,nil;
@@ -7306,12 +7167,7 @@ func (n *OpaqueQueryItemResult) GetNative() (*QueryItemResult,error) {
 // Box *OpaqueQueryItemResult
 func (n *OpaqueQueryItemResult) Box() {
 	if (n.native != nil) {
-		// Mutable -> Unboxed
-		if (n.blob == nil) {
-			n.serializeNative()
-		}
-
-		// Unboxed -> Boxed
+		n.serializeNative()
 		n.native = nil
 	}
 }
@@ -7329,33 +7185,9 @@ func (n *OpaqueQueryItemResult) Unbox() {
 	}
 }
 
-// MakeMutable *OpaqueQueryItemResult
-func (n *OpaqueQueryItemResult) MakeMutable() {
-	if (n.native == nil) {
-		n.Unbox()
-	}
-
-	// Unboxed -> Mutable
-	if (n.native != nil && n.blob != nil) {
-		n.blob = nil
-	}
-}
-
-// MakeImmutable *OpaqueQueryItemResult
-func (n *OpaqueQueryItemResult) MakeImmutable() {
-	if (n.native != nil && n.blob == nil) {
-		n.serializeNative()
-	}
-}
-
-// IsUnboxed *OpaqueQueryItemResult
-func (n *OpaqueQueryItemResult) IsUnboxed() bool {
-	return n.native != nil;
-}
-
-// IsMutable *OpaqueQueryItemResult
-func (n *OpaqueQueryItemResult) IsMutable() bool {
-	return n.native != nil && n.blob == nil;
+// IsBoxed *OpaqueQueryItemResult
+func (n *OpaqueQueryItemResult) IsBoxed() bool {
+	return n.native == nil;
 }
 
 func (n *OpaqueQueryItemResult) serializeNative() {
@@ -7384,7 +7216,7 @@ func DeserializeOpaqueQueryItemResult(vb *VariableBlob) (uint64,*OpaqueQueryItem
 func (n OpaqueQueryItemResult) MarshalJSON() ([]byte, error) {
 	n.Unbox()
 
-	if n.IsUnboxed() {
+	if !n.IsBoxed() {
 		return json.Marshal(&n.native)
 	}
 
@@ -7440,28 +7272,33 @@ func NewOpaqueQueryParamItem() *OpaqueQueryParamItem {
 	return &o
 }
 
+// NewOpaqueQueryParamItemFromBlob factory
+func NewOpaqueQueryParamItemFromBlob(vb *VariableBlob) *OpaqueQueryParamItem {
+	o := OpaqueQueryParamItem{}
+	o.blob = vb
+	return &o
+}
+
+// NewOpaqueQueryParamItemFromNative factory
+func NewOpaqueQueryParamItemFromNative(n QueryParamItem) *OpaqueQueryParamItem {
+	o := OpaqueQueryParamItem{}
+	o.native = &n
+	return &o
+}
+
 // GetBlob *OpaqueQueryParamItem
 func (n *OpaqueQueryParamItem) GetBlob() *VariableBlob {
-	if (n.native != nil && n.blob == nil) {
-		n.serializeNative()
+	if !n.IsBoxed() {
+		n.Box()
 	}
 
 	return n.blob
-}
-
-// SetBlob *OpaqueQueryParamItem
-func (n *OpaqueQueryParamItem) SetBlob( vb *VariableBlob ) {
-	n.native = nil
-	n.blob = vb
 }
 
 // GetNative *OpaqueQueryParamItem
 func (n *OpaqueQueryParamItem) GetNative() (*QueryParamItem,error) {
 	if( n.native == nil ) {
 		return nil,errors.New("opaque type not unboxed")
-	}
-	if( n.blob != nil ) {
-		return nil,errors.New("opaque type is not mutable")
 	}
 
 	return n.native,nil;
@@ -7470,12 +7307,7 @@ func (n *OpaqueQueryParamItem) GetNative() (*QueryParamItem,error) {
 // Box *OpaqueQueryParamItem
 func (n *OpaqueQueryParamItem) Box() {
 	if (n.native != nil) {
-		// Mutable -> Unboxed
-		if (n.blob == nil) {
-			n.serializeNative()
-		}
-
-		// Unboxed -> Boxed
+		n.serializeNative()
 		n.native = nil
 	}
 }
@@ -7493,33 +7325,9 @@ func (n *OpaqueQueryParamItem) Unbox() {
 	}
 }
 
-// MakeMutable *OpaqueQueryParamItem
-func (n *OpaqueQueryParamItem) MakeMutable() {
-	if (n.native == nil) {
-		n.Unbox()
-	}
-
-	// Unboxed -> Mutable
-	if (n.native != nil && n.blob != nil) {
-		n.blob = nil
-	}
-}
-
-// MakeImmutable *OpaqueQueryParamItem
-func (n *OpaqueQueryParamItem) MakeImmutable() {
-	if (n.native != nil && n.blob == nil) {
-		n.serializeNative()
-	}
-}
-
-// IsUnboxed *OpaqueQueryParamItem
-func (n *OpaqueQueryParamItem) IsUnboxed() bool {
-	return n.native != nil;
-}
-
-// IsMutable *OpaqueQueryParamItem
-func (n *OpaqueQueryParamItem) IsMutable() bool {
-	return n.native != nil && n.blob == nil;
+// IsBoxed *OpaqueQueryParamItem
+func (n *OpaqueQueryParamItem) IsBoxed() bool {
+	return n.native == nil;
 }
 
 func (n *OpaqueQueryParamItem) serializeNative() {
@@ -7548,7 +7356,7 @@ func DeserializeOpaqueQueryParamItem(vb *VariableBlob) (uint64,*OpaqueQueryParam
 func (n OpaqueQueryParamItem) MarshalJSON() ([]byte, error) {
 	n.Unbox()
 
-	if n.IsUnboxed() {
+	if !n.IsBoxed() {
 		return json.Marshal(&n.native)
 	}
 
@@ -7604,28 +7412,33 @@ func NewOpaqueTransaction() *OpaqueTransaction {
 	return &o
 }
 
+// NewOpaqueTransactionFromBlob factory
+func NewOpaqueTransactionFromBlob(vb *VariableBlob) *OpaqueTransaction {
+	o := OpaqueTransaction{}
+	o.blob = vb
+	return &o
+}
+
+// NewOpaqueTransactionFromNative factory
+func NewOpaqueTransactionFromNative(n Transaction) *OpaqueTransaction {
+	o := OpaqueTransaction{}
+	o.native = &n
+	return &o
+}
+
 // GetBlob *OpaqueTransaction
 func (n *OpaqueTransaction) GetBlob() *VariableBlob {
-	if (n.native != nil && n.blob == nil) {
-		n.serializeNative()
+	if !n.IsBoxed() {
+		n.Box()
 	}
 
 	return n.blob
-}
-
-// SetBlob *OpaqueTransaction
-func (n *OpaqueTransaction) SetBlob( vb *VariableBlob ) {
-	n.native = nil
-	n.blob = vb
 }
 
 // GetNative *OpaqueTransaction
 func (n *OpaqueTransaction) GetNative() (*Transaction,error) {
 	if( n.native == nil ) {
 		return nil,errors.New("opaque type not unboxed")
-	}
-	if( n.blob != nil ) {
-		return nil,errors.New("opaque type is not mutable")
 	}
 
 	return n.native,nil;
@@ -7634,12 +7447,7 @@ func (n *OpaqueTransaction) GetNative() (*Transaction,error) {
 // Box *OpaqueTransaction
 func (n *OpaqueTransaction) Box() {
 	if (n.native != nil) {
-		// Mutable -> Unboxed
-		if (n.blob == nil) {
-			n.serializeNative()
-		}
-
-		// Unboxed -> Boxed
+		n.serializeNative()
 		n.native = nil
 	}
 }
@@ -7657,33 +7465,9 @@ func (n *OpaqueTransaction) Unbox() {
 	}
 }
 
-// MakeMutable *OpaqueTransaction
-func (n *OpaqueTransaction) MakeMutable() {
-	if (n.native == nil) {
-		n.Unbox()
-	}
-
-	// Unboxed -> Mutable
-	if (n.native != nil && n.blob != nil) {
-		n.blob = nil
-	}
-}
-
-// MakeImmutable *OpaqueTransaction
-func (n *OpaqueTransaction) MakeImmutable() {
-	if (n.native != nil && n.blob == nil) {
-		n.serializeNative()
-	}
-}
-
-// IsUnboxed *OpaqueTransaction
-func (n *OpaqueTransaction) IsUnboxed() bool {
-	return n.native != nil;
-}
-
-// IsMutable *OpaqueTransaction
-func (n *OpaqueTransaction) IsMutable() bool {
-	return n.native != nil && n.blob == nil;
+// IsBoxed *OpaqueTransaction
+func (n *OpaqueTransaction) IsBoxed() bool {
+	return n.native == nil;
 }
 
 func (n *OpaqueTransaction) serializeNative() {
@@ -7712,7 +7496,7 @@ func DeserializeOpaqueTransaction(vb *VariableBlob) (uint64,*OpaqueTransaction,e
 func (n OpaqueTransaction) MarshalJSON() ([]byte, error) {
 	n.Unbox()
 
-	if n.IsUnboxed() {
+	if !n.IsBoxed() {
 		return json.Marshal(&n.native)
 	}
 
