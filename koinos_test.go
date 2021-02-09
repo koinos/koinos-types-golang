@@ -2349,6 +2349,59 @@ func TestGetTransactionsByIDResp(t *testing.T) {
 }
 
 // ----------------------------------------
+//  Struct: BlockStoreError
+// ----------------------------------------
+
+func TestBlockStoreError(t *testing.T) {
+	o := koinos.NewBlockStoreError()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeBlockStoreError(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	var n uint64
+	// Test error_text
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeBlockStoreError(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewBlockStoreError()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
 //  Variant: BlockStoreReq
 // ----------------------------------------
 
@@ -2524,7 +2577,7 @@ func TestBlockStoreResp(t *testing.T) {
 	}
 	{
 		v := koinos.NewBlockStoreResp()
-		v.Value = koinos.NewGetBlocksByIDResp()
+		v.Value = koinos.NewBlockStoreError()
 		exerciseBlockStoreRespSerialization(v, t)
 
 		vb := koinos.VariableBlob{1}
@@ -2538,10 +2591,24 @@ func TestBlockStoreResp(t *testing.T) {
 	}
 	{
 		v := koinos.NewBlockStoreResp()
-		v.Value = koinos.NewGetBlocksByHeightResp()
+		v.Value = koinos.NewGetBlocksByIDResp()
 		exerciseBlockStoreRespSerialization(v, t)
 
 		vb := koinos.VariableBlob{2}
+		n, _, err := koinos.DeserializeBlockStoreResp(&vb)
+		if err == nil {
+			t.Errorf("err == nil")
+		}
+		if n != 0 {
+			t.Errorf("Bytes were consumed on error")
+		}
+	}
+	{
+		v := koinos.NewBlockStoreResp()
+		v.Value = koinos.NewGetBlocksByHeightResp()
+		exerciseBlockStoreRespSerialization(v, t)
+
+		vb := koinos.VariableBlob{3}
 		n, _, err := koinos.DeserializeBlockStoreResp(&vb)
 		if err == nil {
 			t.Errorf("err == nil")
@@ -2567,7 +2634,7 @@ func TestBlockStoreResp(t *testing.T) {
 		v.Value = koinos.NewGetTransactionsByIDResp()
 		exerciseBlockStoreRespSerialization(v, t)
 
-		vb := koinos.VariableBlob{5}
+		vb := koinos.VariableBlob{6}
 		n, _, err := koinos.DeserializeBlockStoreResp(&vb)
 		if err == nil {
 			t.Errorf("err == nil")
@@ -2588,7 +2655,7 @@ func TestBlockStoreResp(t *testing.T) {
 	}
 
 	// Test unknown tag
-	vb = koinos.VariableBlob{6}
+	vb = koinos.VariableBlob{7}
 	n, _, err = koinos.DeserializeBlockStoreResp(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
@@ -3450,7 +3517,7 @@ func TestSubmitTransactionResult(t *testing.T) {
 }
 
 // ----------------------------------------
-//  Typedef: GetHeadInfoResult
+//  Struct: GetHeadInfoResult
 // ----------------------------------------
 
 func TestGetHeadInfoResult(t *testing.T) {
@@ -3464,12 +3531,24 @@ func TestGetHeadInfoResult(t *testing.T) {
 		t.Error(err)
 	}
 
-	vb = koinos.NewVariableBlob()
-	size, _, err := koinos.DeserializeGetHeadInfoResult(vb)
+	var n uint64
+	// Test id
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeGetHeadInfoResult(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
-	if size != 0 {
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	// Test height
+	vb = &koinos.VariableBlob{0x00, 0x00}
+	n, _, err = koinos.DeserializeGetHeadInfoResult(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
 		t.Errorf("Bytes were consumed on error")
 	}
 
@@ -3485,6 +3564,16 @@ func TestGetHeadInfoResult(t *testing.T) {
 	}
 
 	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
 	if jerr == nil {
 		t.Errorf("Unmarshaling nonsense JSON did not give error.")
 	}

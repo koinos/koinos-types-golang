@@ -1856,6 +1856,42 @@ func DeserializeGetTransactionsByIDResp(vb *VariableBlob) (uint64,*GetTransactio
 }
 
 // ----------------------------------------
+//  Struct: BlockStoreError
+// ----------------------------------------
+
+// BlockStoreError type
+type BlockStoreError struct {
+    ErrorText String `json:"error_text"`
+}
+
+// NewBlockStoreError factory
+func NewBlockStoreError() *BlockStoreError {
+	o := BlockStoreError{}
+	o.ErrorText = *NewString()
+	return &o
+}
+
+// Serialize BlockStoreError
+func (n BlockStoreError) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ErrorText.Serialize(vb)
+	return vb
+}
+
+// DeserializeBlockStoreError function
+func DeserializeBlockStoreError(vb *VariableBlob) (uint64,*BlockStoreError,error) {
+	var i,j uint64 = 0,0
+	s := BlockStoreError{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tErrorText,err := DeserializeString(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockStoreError{}, err
+	}
+	s.ErrorText = *tErrorText
+	return i, &s, nil
+}
+
+// ----------------------------------------
 //  Variant: BlockStoreReq
 // ----------------------------------------
 
@@ -2054,16 +2090,18 @@ func (n BlockStoreResp) Serialize(vb *VariableBlob) *VariableBlob {
 	switch n.Value.(type) {
 		case *ReservedResp:
 			i = 0
-		case *GetBlocksByIDResp:
+		case *BlockStoreError:
 			i = 1
-		case *GetBlocksByHeightResp:
+		case *GetBlocksByIDResp:
 			i = 2
-		case *AddBlockResp:
+		case *GetBlocksByHeightResp:
 			i = 3
-		case *AddTransactionResp:
+		case *AddBlockResp:
 			i = 4
-		case *GetTransactionsByIDResp:
+		case *AddTransactionResp:
 			i = 5
+		case *GetTransactionsByIDResp:
+			i = 6
 		default:
 			panic("Unknown variant type")
 	}
@@ -2078,6 +2116,8 @@ func (n BlockStoreResp) TypeToName() (string) {
 	switch n.Value.(type) {
 		case *ReservedResp:
 			return "koinos::types::block_store::reserved_resp"
+		case *BlockStoreError:
+			return "koinos::types::block_store::block_store_error"
 		case *GetBlocksByIDResp:
 			return "koinos::types::block_store::get_blocks_by_id_resp"
 		case *GetBlocksByHeightResp:
@@ -2120,7 +2160,7 @@ func DeserializeBlockStoreResp(vb *VariableBlob) (uint64,*BlockStoreResp,error) 
 			v.Value = NewReservedResp()
 		case 1:
 			ovb := (*vb)[i:]
-			k,x,err := DeserializeGetBlocksByIDResp(&ovb)
+			k,x,err := DeserializeBlockStoreError(&ovb)
 			if err != nil {
 				return 0, &v, err
 			}
@@ -2128,17 +2168,25 @@ func DeserializeBlockStoreResp(vb *VariableBlob) (uint64,*BlockStoreResp,error) 
 			v.Value = x
 		case 2:
 			ovb := (*vb)[i:]
-			k,x,err := DeserializeGetBlocksByHeightResp(&ovb)
+			k,x,err := DeserializeGetBlocksByIDResp(&ovb)
 			if err != nil {
 				return 0, &v, err
 			}
 			j = k
 			v.Value = x
 		case 3:
-			v.Value = NewAddBlockResp()
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetBlocksByHeightResp(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
 		case 4:
-			v.Value = NewAddTransactionResp()
+			v.Value = NewAddBlockResp()
 		case 5:
+			v.Value = NewAddTransactionResp()
+		case 6:
 			ovb := (*vb)[i:]
 			k,x,err := DeserializeGetTransactionsByIDResp(&ovb)
 			if err != nil {
@@ -2167,6 +2215,10 @@ func (n *BlockStoreResp) UnmarshalJSON(data []byte) error {
 	switch variant.Type {
 		case "koinos::types::block_store::reserved_resp":
 			v := NewReservedResp()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::types::block_store::block_store_error":
+			v := NewBlockStoreError()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::types::block_store::get_blocks_by_id_resp":
@@ -2815,51 +2867,49 @@ func DeserializeSubmitTransactionResult(vb *VariableBlob) (uint64,*SubmitTransac
 }
 
 // ----------------------------------------
-//  Typedef: GetHeadInfoResult
+//  Struct: GetHeadInfoResult
 // ----------------------------------------
 
 // GetHeadInfoResult type
-type GetHeadInfoResult HeadInfo
+type GetHeadInfoResult struct {
+    ID Multihash `json:"id"`
+    Height BlockHeightType `json:"height"`
+}
 
 // NewGetHeadInfoResult factory
 func NewGetHeadInfoResult() *GetHeadInfoResult {
-	o := GetHeadInfoResult(*NewHeadInfo())
+	o := GetHeadInfoResult{}
+	o.ID = *NewMultihash()
+	o.Height = *NewBlockHeightType()
 	return &o
 }
 
 // Serialize GetHeadInfoResult
 func (n GetHeadInfoResult) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := HeadInfo(n)
-	return ox.Serialize(vb)
+	vb = n.ID.Serialize(vb)
+	vb = n.Height.Serialize(vb)
+	return vb
 }
 
 // DeserializeGetHeadInfoResult function
 func DeserializeGetHeadInfoResult(vb *VariableBlob) (uint64,*GetHeadInfoResult,error) {
-	var ot GetHeadInfoResult
-	i,n,err := DeserializeHeadInfo(vb)
+	var i,j uint64 = 0,0
+	s := GetHeadInfoResult{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tID,err := DeserializeMultihash(&ovb); i+=j
 	if err != nil {
-		return 0,&ot,err
+		return 0, &GetHeadInfoResult{}, err
 	}
-	ot = GetHeadInfoResult(*n)
-	return i,&ot,nil}
-
-// MarshalJSON GetHeadInfoResult
-func (n GetHeadInfoResult) MarshalJSON() ([]byte, error) {
-	v := HeadInfo(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *GetHeadInfoResult
-func (n *GetHeadInfoResult) UnmarshalJSON(data []byte) error {
-	v := HeadInfo(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
+	s.ID = *tID
+	ovb = (*vb)[i:]
+	j,tHeight,err := DeserializeBlockHeightType(&ovb); i+=j
+	if err != nil {
+		return 0, &GetHeadInfoResult{}, err
 	}
-
-	*n = GetHeadInfoResult(v)
-	return nil
+	s.Height = *tHeight
+	return i, &s, nil
 }
-
 
 // ----------------------------------------
 //  Struct: GetChainIDResult
