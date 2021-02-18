@@ -16,6 +16,159 @@ import (
 )
 
 // ----------------------------------------
+//  Struct: ActiveBlockData
+// ----------------------------------------
+
+// ActiveBlockData type
+type ActiveBlockData struct {
+    PreviousBlock Multihash `json:"previous_block"`
+    TransactionMerkleRoot Multihash `json:"transaction_merkle_root"`
+    PassiveDataMerkleRoot Multihash `json:"passive_data_merkle_root"`
+    Height BlockHeightType `json:"height"`
+    Timestamp TimestampType `json:"timestamp"`
+}
+
+// NewActiveBlockData factory
+func NewActiveBlockData() *ActiveBlockData {
+	o := ActiveBlockData{}
+	o.PreviousBlock = *NewMultihash()
+	o.TransactionMerkleRoot = *NewMultihash()
+	o.PassiveDataMerkleRoot = *NewMultihash()
+	o.Height = *NewBlockHeightType()
+	o.Timestamp = *NewTimestampType()
+	return &o
+}
+
+// Serialize ActiveBlockData
+func (n ActiveBlockData) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.PreviousBlock.Serialize(vb)
+	vb = n.TransactionMerkleRoot.Serialize(vb)
+	vb = n.PassiveDataMerkleRoot.Serialize(vb)
+	vb = n.Height.Serialize(vb)
+	vb = n.Timestamp.Serialize(vb)
+	return vb
+}
+
+// DeserializeActiveBlockData function
+func DeserializeActiveBlockData(vb *VariableBlob) (uint64,*ActiveBlockData,error) {
+	var i,j uint64 = 0,0
+	s := ActiveBlockData{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tPreviousBlock,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &ActiveBlockData{}, err
+	}
+	s.PreviousBlock = *tPreviousBlock
+	ovb = (*vb)[i:]
+	j,tTransactionMerkleRoot,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &ActiveBlockData{}, err
+	}
+	s.TransactionMerkleRoot = *tTransactionMerkleRoot
+	ovb = (*vb)[i:]
+	j,tPassiveDataMerkleRoot,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &ActiveBlockData{}, err
+	}
+	s.PassiveDataMerkleRoot = *tPassiveDataMerkleRoot
+	ovb = (*vb)[i:]
+	j,tHeight,err := DeserializeBlockHeightType(&ovb); i+=j
+	if err != nil {
+		return 0, &ActiveBlockData{}, err
+	}
+	s.Height = *tHeight
+	ovb = (*vb)[i:]
+	j,tTimestamp,err := DeserializeTimestampType(&ovb); i+=j
+	if err != nil {
+		return 0, &ActiveBlockData{}, err
+	}
+	s.Timestamp = *tTimestamp
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: PassiveBlockData
+// ----------------------------------------
+
+// PassiveBlockData type
+type PassiveBlockData struct {
+}
+
+// NewPassiveBlockData factory
+func NewPassiveBlockData() *PassiveBlockData {
+	o := PassiveBlockData{}
+	return &o
+}
+
+// Serialize PassiveBlockData
+func (n PassiveBlockData) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializePassiveBlockData function
+func DeserializePassiveBlockData(vb *VariableBlob) (uint64,*PassiveBlockData,error) {
+	var i uint64 = 0
+	s := PassiveBlockData{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: ActiveTransactionData
+// ----------------------------------------
+
+// ActiveTransactionData type
+type ActiveTransactionData struct {
+}
+
+// NewActiveTransactionData factory
+func NewActiveTransactionData() *ActiveTransactionData {
+	o := ActiveTransactionData{}
+	return &o
+}
+
+// Serialize ActiveTransactionData
+func (n ActiveTransactionData) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeActiveTransactionData function
+func DeserializeActiveTransactionData(vb *VariableBlob) (uint64,*ActiveTransactionData,error) {
+	var i uint64 = 0
+	s := ActiveTransactionData{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: PassiveTransactionData
+// ----------------------------------------
+
+// PassiveTransactionData type
+type PassiveTransactionData struct {
+}
+
+// NewPassiveTransactionData factory
+func NewPassiveTransactionData() *PassiveTransactionData {
+	o := PassiveTransactionData{}
+	return &o
+}
+
+// Serialize PassiveTransactionData
+func (n PassiveTransactionData) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializePassiveTransactionData function
+func DeserializePassiveTransactionData(vb *VariableBlob) (uint64,*PassiveTransactionData,error) {
+	var i uint64 = 0
+	s := PassiveTransactionData{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
 //  Struct: UnusedExtensionsType
 // ----------------------------------------
 
@@ -198,6 +351,63 @@ func DeserializeCreateSystemContractOperation(vb *VariableBlob) (uint64,*CreateS
 }
 
 // ----------------------------------------
+//  Struct: ContractCallOperation
+// ----------------------------------------
+
+// ContractCallOperation type
+type ContractCallOperation struct {
+    ContractID ContractIDType `json:"contract_id"`
+    EntryPoint UInt32 `json:"entry_point"`
+    Args VariableBlob `json:"args"`
+    Extensions UnusedExtensionsType `json:"extensions"`
+}
+
+// NewContractCallOperation factory
+func NewContractCallOperation() *ContractCallOperation {
+	o := ContractCallOperation{}
+	o.ContractID = *NewContractIDType()
+	o.EntryPoint = *NewUInt32()
+	o.Args = *NewVariableBlob()
+	o.Extensions = *NewUnusedExtensionsType()
+	return &o
+}
+
+// Serialize ContractCallOperation
+func (n ContractCallOperation) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ContractID.Serialize(vb)
+	vb = n.EntryPoint.Serialize(vb)
+	vb = n.Args.Serialize(vb)
+	vb = n.Extensions.Serialize(vb)
+	return vb
+}
+
+// DeserializeContractCallOperation function
+func DeserializeContractCallOperation(vb *VariableBlob) (uint64,*ContractCallOperation,error) {
+	var i,j uint64 = 0,0
+	s := ContractCallOperation{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tContractID,err := DeserializeContractIDType(&ovb); i+=j
+	if err != nil {
+		return 0, &ContractCallOperation{}, err
+	}
+	s.ContractID = *tContractID
+	ovb = (*vb)[i:]
+	j,tEntryPoint,err := DeserializeUInt32(&ovb); i+=j
+	if err != nil {
+		return 0, &ContractCallOperation{}, err
+	}
+	s.EntryPoint = *tEntryPoint
+	ovb = (*vb)[i:]
+	j,tArgs,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &ContractCallOperation{}, err
+	}
+	s.Args = *tArgs
+	return i, &s, nil
+}
+
+// ----------------------------------------
 //  Struct: SystemCallTargetReserved
 // ----------------------------------------
 
@@ -228,7 +438,7 @@ func DeserializeSystemCallTargetReserved(vb *VariableBlob) (uint64,*SystemCallTa
 //  Enum: ThunkID
 // ----------------------------------------
 
-// {'name': 'thunk_id', 'entries': [{'name': 'prints', 'value': 2406348109, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_header', 'value': 2369936044, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_block', 'value': 2372743592, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_transaction', 'value': 2306978015, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_reserved_operation', 'value': 2335970550, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_upload_contract_operation', 'value': 2290263390, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_execute_contract_operation', 'value': 2246607595, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_set_system_call_operation', 'value': 2264476812, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_put_object', 'value': 2181271013, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_object', 'value': 2288165080, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_next_object', 'value': 2263109703, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_prev_object', 'value': 2371348733, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'execute_contract', 'value': 2319711875, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args_size', 'value': 2201456262, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args', 'value': 2383977862, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'set_contract_return', 'value': 2260230773, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'exit_contract', 'value': 2180390815, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_head_info', 'value': 2313106628, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'hash', 'value': 2326459719, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_sig', 'value': 2300919863, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_merkle_root', 'value': 2396642763, 'doc': '', 'info': {'type': 'EnumEntry'}}], 'tref': {'name': ['koinos', 'types', 'uint32'], 'targs': None, 'info': {'type': 'Typeref'}}, 'doc': '', 'info': {'type': 'EnumClass'}}
+// {'name': 'thunk_id', 'entries': [{'name': 'prints', 'value': 2406348109, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_header', 'value': 2369936044, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_block', 'value': 2372743592, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_transaction', 'value': 2306978015, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_reserved_operation', 'value': 2335970550, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_upload_contract_operation', 'value': 2290263390, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_execute_contract_operation', 'value': 2246607595, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_set_system_call_operation', 'value': 2264476812, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_put_object', 'value': 2181271013, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_object', 'value': 2288165080, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_next_object', 'value': 2263109703, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_prev_object', 'value': 2371348733, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'execute_contract', 'value': 2319711875, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args_size', 'value': 2201456262, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args', 'value': 2383977862, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'set_contract_return', 'value': 2260230773, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'exit_contract', 'value': 2180390815, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_head_info', 'value': 2313106628, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'hash', 'value': 2326459719, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_signature', 'value': 2635873417, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_merkle_root', 'value': 2396642763, 'doc': '', 'info': {'type': 'EnumEntry'}}], 'tref': {'name': ['koinos', 'uint32'], 'targs': None, 'info': {'type': 'Typeref'}}, 'doc': '', 'info': {'type': 'EnumClass'}}
 
 // ThunkID type
 type ThunkID UInt32
@@ -260,7 +470,7 @@ const (
 	ThunkIDExitContract ThunkID = 2180390815
 	ThunkIDGetHeadInfo ThunkID = 2313106628
 	ThunkIDHash ThunkID = 2326459719
-	ThunkIDVerifyBlockSig ThunkID = 2300919863
+	ThunkIDVerifyBlockSignature ThunkID = 2635873417
 	ThunkIDVerifyMerkleRoot ThunkID = 2396642763
 )
 
@@ -355,7 +565,7 @@ func IsValidThunkID(v ThunkID) bool {
 			return true
 		case ThunkIDHash:
 			return true
-		case ThunkIDVerifyBlockSig:
+		case ThunkIDVerifyBlockSignature:
 			return true
 		case ThunkIDVerifyMerkleRoot:
 			return true
@@ -449,11 +659,11 @@ func (n SystemCallTarget) Serialize(vb *VariableBlob) *VariableBlob {
 func (n SystemCallTarget) TypeToName() (string) {
 	switch n.Value.(type) {
 		case *SystemCallTargetReserved:
-			return "koinos::types::system::system_call_target_reserved"
+			return "koinos::chain::system_call_target_reserved"
 		case *ThunkID:
-			return "koinos::types::thunks::thunk_id"
+			return "koinos::chain::thunk_id"
 		case *ContractCallBundle:
-			return "koinos::types::system::contract_call_bundle"
+			return "koinos::chain::contract_call_bundle"
 		default:
 			panic("Variant type is not serializeable.")
 	}
@@ -519,15 +729,15 @@ func (n *SystemCallTarget) UnmarshalJSON(data []byte) error {
 	}
 
 	switch variant.Type {
-		case "koinos::types::system::system_call_target_reserved":
+		case "koinos::chain::system_call_target_reserved":
 			v := NewSystemCallTargetReserved()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::types::thunks::thunk_id":
+		case "koinos::chain::thunk_id":
 			v := NewThunkID()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::types::system::contract_call_bundle":
+		case "koinos::chain::contract_call_bundle":
 			v := NewContractCallBundle()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
@@ -588,63 +798,6 @@ func DeserializeSetSystemCallOperation(vb *VariableBlob) (uint64,*SetSystemCallO
 }
 
 // ----------------------------------------
-//  Struct: ContractCallOperation
-// ----------------------------------------
-
-// ContractCallOperation type
-type ContractCallOperation struct {
-    ContractID ContractIDType `json:"contract_id"`
-    EntryPoint UInt32 `json:"entry_point"`
-    Args VariableBlob `json:"args"`
-    Extensions UnusedExtensionsType `json:"extensions"`
-}
-
-// NewContractCallOperation factory
-func NewContractCallOperation() *ContractCallOperation {
-	o := ContractCallOperation{}
-	o.ContractID = *NewContractIDType()
-	o.EntryPoint = *NewUInt32()
-	o.Args = *NewVariableBlob()
-	o.Extensions = *NewUnusedExtensionsType()
-	return &o
-}
-
-// Serialize ContractCallOperation
-func (n ContractCallOperation) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.ContractID.Serialize(vb)
-	vb = n.EntryPoint.Serialize(vb)
-	vb = n.Args.Serialize(vb)
-	vb = n.Extensions.Serialize(vb)
-	return vb
-}
-
-// DeserializeContractCallOperation function
-func DeserializeContractCallOperation(vb *VariableBlob) (uint64,*ContractCallOperation,error) {
-	var i,j uint64 = 0,0
-	s := ContractCallOperation{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tContractID,err := DeserializeContractIDType(&ovb); i+=j
-	if err != nil {
-		return 0, &ContractCallOperation{}, err
-	}
-	s.ContractID = *tContractID
-	ovb = (*vb)[i:]
-	j,tEntryPoint,err := DeserializeUInt32(&ovb); i+=j
-	if err != nil {
-		return 0, &ContractCallOperation{}, err
-	}
-	s.EntryPoint = *tEntryPoint
-	ovb = (*vb)[i:]
-	j,tArgs,err := DeserializeVariableBlob(&ovb); i+=j
-	if err != nil {
-		return 0, &ContractCallOperation{}, err
-	}
-	s.Args = *tArgs
-	return i, &s, nil
-}
-
-// ----------------------------------------
 //  Variant: Operation
 // ----------------------------------------
 
@@ -687,15 +840,15 @@ func (n Operation) Serialize(vb *VariableBlob) *VariableBlob {
 func (n Operation) TypeToName() (string) {
 	switch n.Value.(type) {
 		case *ReservedOperation:
-			return "koinos::types::protocol::reserved_operation"
+			return "koinos::protocol::reserved_operation"
 		case *NopOperation:
-			return "koinos::types::protocol::nop_operation"
+			return "koinos::protocol::nop_operation"
 		case *CreateSystemContractOperation:
-			return "koinos::types::protocol::create_system_contract_operation"
+			return "koinos::protocol::create_system_contract_operation"
 		case *ContractCallOperation:
-			return "koinos::types::protocol::contract_call_operation"
+			return "koinos::protocol::contract_call_operation"
 		case *SetSystemCallOperation:
-			return "koinos::types::protocol::set_system_call_operation"
+			return "koinos::protocol::set_system_call_operation"
 		default:
 			panic("Variant type is not serializeable.")
 	}
@@ -771,23 +924,23 @@ func (n *Operation) UnmarshalJSON(data []byte) error {
 	}
 
 	switch variant.Type {
-		case "koinos::types::protocol::reserved_operation":
+		case "koinos::protocol::reserved_operation":
 			v := NewReservedOperation()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::types::protocol::nop_operation":
+		case "koinos::protocol::nop_operation":
 			v := NewNopOperation()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::types::protocol::create_system_contract_operation":
+		case "koinos::protocol::create_system_contract_operation":
 			v := NewCreateSystemContractOperation()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::types::protocol::contract_call_operation":
+		case "koinos::protocol::contract_call_operation":
 			v := NewContractCallOperation()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::types::protocol::set_system_call_operation":
+		case "koinos::protocol::set_system_call_operation":
 			v := NewSetSystemCallOperation()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
@@ -798,60 +951,6 @@ func (n *Operation) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-
-// ----------------------------------------
-//  Struct: ActiveTransactionData
-// ----------------------------------------
-
-// ActiveTransactionData type
-type ActiveTransactionData struct {
-}
-
-// NewActiveTransactionData factory
-func NewActiveTransactionData() *ActiveTransactionData {
-	o := ActiveTransactionData{}
-	return &o
-}
-
-// Serialize ActiveTransactionData
-func (n ActiveTransactionData) Serialize(vb *VariableBlob) *VariableBlob {
-	return vb
-}
-
-// DeserializeActiveTransactionData function
-func DeserializeActiveTransactionData(vb *VariableBlob) (uint64,*ActiveTransactionData,error) {
-	var i uint64 = 0
-	s := ActiveTransactionData{}
-	
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: PassiveTransactionData
-// ----------------------------------------
-
-// PassiveTransactionData type
-type PassiveTransactionData struct {
-}
-
-// NewPassiveTransactionData factory
-func NewPassiveTransactionData() *PassiveTransactionData {
-	o := PassiveTransactionData{}
-	return &o
-}
-
-// Serialize PassiveTransactionData
-func (n PassiveTransactionData) Serialize(vb *VariableBlob) *VariableBlob {
-	return vb
-}
-
-// DeserializePassiveTransactionData function
-func DeserializePassiveTransactionData(vb *VariableBlob) (uint64,*PassiveTransactionData,error) {
-	var i uint64 = 0
-	s := PassiveTransactionData{}
-	
-	return i, &s, nil
-}
 
 // ----------------------------------------
 //  Struct: Transaction
@@ -913,177 +1012,6 @@ func DeserializeTransaction(vb *VariableBlob) (uint64,*Transaction,error) {
 		return 0, &Transaction{}, err
 	}
 	s.Operations = *tOperations
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Enum: HeaderHashIndex
-// ----------------------------------------
-
-// {'name': 'header_hash_index', 'entries': [{'name': 'previous_block_hash_index', 'value': 0, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'transaction_merkle_root_hash_index', 'value': 1, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'passive_data_merkle_root_hash_index', 'value': 2, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'NUM_HEADER_HASHES', 'value': 3, 'doc': '', 'info': {'type': 'EnumEntry'}}], 'tref': {'name': ['koinos', 'types', 'uint32'], 'targs': None, 'info': {'type': 'Typeref'}}, 'doc': '/**\n    * Number of header hashes.\n    */', 'info': {'type': 'EnumClass'}}
-
-// HeaderHashIndex type
-type HeaderHashIndex UInt32
-
-// NewHeaderHashIndex factory
-func NewHeaderHashIndex() *HeaderHashIndex {
-	o := HeaderHashIndex(0)
-	return &o
-}
-
-// HeaderHashIndex values
-const (
-	HeaderHashIndexPreviousBlockHashIndex HeaderHashIndex = 0
-	HeaderHashIndexTransactionMerkleRootHashIndex HeaderHashIndex = 1
-	HeaderHashIndexPassiveDataMerkleRootHashIndex HeaderHashIndex = 2
-	HeaderHashIndexNumHeaderHashes HeaderHashIndex = 3
-)
-
-// Serialize HeaderHashIndex
-func (n HeaderHashIndex) Serialize(vb *VariableBlob) *VariableBlob {
-	if !IsValidHeaderHashIndex(n) {
-		panic("Attempting to serialize an invalid value")
-	}
-	x := UInt32(n)
-	return x.Serialize(vb)
-}
-
-// DeserializeHeaderHashIndex function
-func DeserializeHeaderHashIndex(vb *VariableBlob) (uint64,*HeaderHashIndex,error) {
-	i,item,err := DeserializeUInt32(vb)
-	var x HeaderHashIndex
-	if err != nil {
-		return 0,&x,err
-	}
-
-	x = HeaderHashIndex(*item)
-	if !IsValidHeaderHashIndex(x) {
-		return i,&x,fmt.Errorf("invalid HeaderHashIndex: %d", x)
-	}
-	return i,&x,nil
-}
-
-// MarshalJSON HeaderHashIndex
-func (n HeaderHashIndex) MarshalJSON() ([]byte, error) {
-	if !IsValidHeaderHashIndex(n) {
-		panic("Attempting to serialize an invalid value")
-	}
-
-	return json.Marshal(UInt32(n))
-}
-
-// UnmarshalJSON *HeaderHashIndex
-func (n *HeaderHashIndex) UnmarshalJSON(b []byte) error {
-	var o UInt32
-	if err := json.Unmarshal(b, &o); err != nil {
-		return err
-	}
-
-	ov := HeaderHashIndex(o)
-
-	if !IsValidHeaderHashIndex(ov) {
-		return fmt.Errorf("invalid HeaderHashIndex: %d", o)
-	}
-
-	*n = ov
-	return nil
-}
-
-// IsValidHeaderHashIndex validator
-func IsValidHeaderHashIndex(v HeaderHashIndex) bool {
-	switch v {
-		case HeaderHashIndexPreviousBlockHashIndex:
-			return true
-		case HeaderHashIndexTransactionMerkleRootHashIndex:
-			return true
-		case HeaderHashIndexPassiveDataMerkleRootHashIndex:
-			return true
-		case HeaderHashIndexNumHeaderHashes:
-			return true
-		default:
-			return false
-	}
-}
-
-
-// ----------------------------------------
-//  Struct: ActiveBlockData
-// ----------------------------------------
-
-// ActiveBlockData type
-type ActiveBlockData struct {
-    HeaderHashes MultihashVector `json:"header_hashes"`
-    Height BlockHeightType `json:"height"`
-    Timestamp TimestampType `json:"timestamp"`
-}
-
-// NewActiveBlockData factory
-func NewActiveBlockData() *ActiveBlockData {
-	o := ActiveBlockData{}
-	o.HeaderHashes = *NewMultihashVector()
-	o.Height = *NewBlockHeightType()
-	o.Timestamp = *NewTimestampType()
-	return &o
-}
-
-// Serialize ActiveBlockData
-func (n ActiveBlockData) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.HeaderHashes.Serialize(vb)
-	vb = n.Height.Serialize(vb)
-	vb = n.Timestamp.Serialize(vb)
-	return vb
-}
-
-// DeserializeActiveBlockData function
-func DeserializeActiveBlockData(vb *VariableBlob) (uint64,*ActiveBlockData,error) {
-	var i,j uint64 = 0,0
-	s := ActiveBlockData{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tHeaderHashes,err := DeserializeMultihashVector(&ovb); i+=j
-	if err != nil {
-		return 0, &ActiveBlockData{}, err
-	}
-	s.HeaderHashes = *tHeaderHashes
-	ovb = (*vb)[i:]
-	j,tHeight,err := DeserializeBlockHeightType(&ovb); i+=j
-	if err != nil {
-		return 0, &ActiveBlockData{}, err
-	}
-	s.Height = *tHeight
-	ovb = (*vb)[i:]
-	j,tTimestamp,err := DeserializeTimestampType(&ovb); i+=j
-	if err != nil {
-		return 0, &ActiveBlockData{}, err
-	}
-	s.Timestamp = *tTimestamp
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: PassiveBlockData
-// ----------------------------------------
-
-// PassiveBlockData type
-type PassiveBlockData struct {
-}
-
-// NewPassiveBlockData factory
-func NewPassiveBlockData() *PassiveBlockData {
-	o := PassiveBlockData{}
-	return &o
-}
-
-// Serialize PassiveBlockData
-func (n PassiveBlockData) Serialize(vb *VariableBlob) *VariableBlob {
-	return vb
-}
-
-// DeserializePassiveBlockData function
-func DeserializePassiveBlockData(vb *VariableBlob) (uint64,*PassiveBlockData,error) {
-	var i uint64 = 0
-	s := PassiveBlockData{}
-	
 	return i, &s, nil
 }
 
@@ -1181,114 +1109,6 @@ func DeserializeBlockReceipt(vb *VariableBlob) (uint64,*BlockReceipt,error) {
 }
 
 // ----------------------------------------
-//  Struct: ReservedReq
-// ----------------------------------------
-
-// ReservedReq type
-type ReservedReq struct {
-}
-
-// NewReservedReq factory
-func NewReservedReq() *ReservedReq {
-	o := ReservedReq{}
-	return &o
-}
-
-// Serialize ReservedReq
-func (n ReservedReq) Serialize(vb *VariableBlob) *VariableBlob {
-	return vb
-}
-
-// DeserializeReservedReq function
-func DeserializeReservedReq(vb *VariableBlob) (uint64,*ReservedReq,error) {
-	var i uint64 = 0
-	s := ReservedReq{}
-	
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: ReservedResp
-// ----------------------------------------
-
-// ReservedResp type
-type ReservedResp struct {
-}
-
-// NewReservedResp factory
-func NewReservedResp() *ReservedResp {
-	o := ReservedResp{}
-	return &o
-}
-
-// Serialize ReservedResp
-func (n ReservedResp) Serialize(vb *VariableBlob) *VariableBlob {
-	return vb
-}
-
-// DeserializeReservedResp function
-func DeserializeReservedResp(vb *VariableBlob) (uint64,*ReservedResp,error) {
-	var i uint64 = 0
-	s := ReservedResp{}
-	
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: GetBlocksByIDReq
-// ----------------------------------------
-
-// GetBlocksByIDReq type
-type GetBlocksByIDReq struct {
-    BlockID VectorMultihash `json:"block_id"`
-    ReturnBlockBlob Boolean `json:"return_block_blob"`
-    ReturnReceiptBlob Boolean `json:"return_receipt_blob"`
-}
-
-// NewGetBlocksByIDReq factory
-func NewGetBlocksByIDReq() *GetBlocksByIDReq {
-	o := GetBlocksByIDReq{}
-	o.BlockID = *NewVectorMultihash()
-	o.ReturnBlockBlob = *NewBoolean()
-	o.ReturnReceiptBlob = *NewBoolean()
-	return &o
-}
-
-// Serialize GetBlocksByIDReq
-func (n GetBlocksByIDReq) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.BlockID.Serialize(vb)
-	vb = n.ReturnBlockBlob.Serialize(vb)
-	vb = n.ReturnReceiptBlob.Serialize(vb)
-	return vb
-}
-
-// DeserializeGetBlocksByIDReq function
-func DeserializeGetBlocksByIDReq(vb *VariableBlob) (uint64,*GetBlocksByIDReq,error) {
-	var i,j uint64 = 0,0
-	s := GetBlocksByIDReq{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tBlockID,err := DeserializeVectorMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &GetBlocksByIDReq{}, err
-	}
-	s.BlockID = *tBlockID
-	ovb = (*vb)[i:]
-	j,tReturnBlockBlob,err := DeserializeBoolean(&ovb); i+=j
-	if err != nil {
-		return 0, &GetBlocksByIDReq{}, err
-	}
-	s.ReturnBlockBlob = *tReturnBlockBlob
-	ovb = (*vb)[i:]
-	j,tReturnReceiptBlob,err := DeserializeBoolean(&ovb); i+=j
-	if err != nil {
-		return 0, &GetBlocksByIDReq{}, err
-	}
-	s.ReturnReceiptBlob = *tReturnReceiptBlob
-	return i, &s, nil
-}
-
-// ----------------------------------------
 //  Struct: BlockItem
 // ----------------------------------------
 
@@ -1348,222 +1168,6 @@ func DeserializeBlockItem(vb *VariableBlob) (uint64,*BlockItem,error) {
 		return 0, &BlockItem{}, err
 	}
 	s.BlockReceipt = *tBlockReceipt
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: GetBlocksByIDResp
-// ----------------------------------------
-
-// GetBlocksByIDResp type
-type GetBlocksByIDResp struct {
-    BlockItems VectorBlockItem `json:"block_items"`
-}
-
-// NewGetBlocksByIDResp factory
-func NewGetBlocksByIDResp() *GetBlocksByIDResp {
-	o := GetBlocksByIDResp{}
-	o.BlockItems = *NewVectorBlockItem()
-	return &o
-}
-
-// Serialize GetBlocksByIDResp
-func (n GetBlocksByIDResp) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.BlockItems.Serialize(vb)
-	return vb
-}
-
-// DeserializeGetBlocksByIDResp function
-func DeserializeGetBlocksByIDResp(vb *VariableBlob) (uint64,*GetBlocksByIDResp,error) {
-	var i,j uint64 = 0,0
-	s := GetBlocksByIDResp{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tBlockItems,err := DeserializeVectorBlockItem(&ovb); i+=j
-	if err != nil {
-		return 0, &GetBlocksByIDResp{}, err
-	}
-	s.BlockItems = *tBlockItems
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: GetBlocksByHeightReq
-// ----------------------------------------
-
-// GetBlocksByHeightReq type
-type GetBlocksByHeightReq struct {
-    HeadBlockID Multihash `json:"head_block_id"`
-    AncestorStartHeight BlockHeightType `json:"ancestor_start_height"`
-    NumBlocks UInt32 `json:"num_blocks"`
-    ReturnBlock Boolean `json:"return_block"`
-    ReturnReceipt Boolean `json:"return_receipt"`
-}
-
-// NewGetBlocksByHeightReq factory
-func NewGetBlocksByHeightReq() *GetBlocksByHeightReq {
-	o := GetBlocksByHeightReq{}
-	o.HeadBlockID = *NewMultihash()
-	o.AncestorStartHeight = *NewBlockHeightType()
-	o.NumBlocks = *NewUInt32()
-	o.ReturnBlock = *NewBoolean()
-	o.ReturnReceipt = *NewBoolean()
-	return &o
-}
-
-// Serialize GetBlocksByHeightReq
-func (n GetBlocksByHeightReq) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.HeadBlockID.Serialize(vb)
-	vb = n.AncestorStartHeight.Serialize(vb)
-	vb = n.NumBlocks.Serialize(vb)
-	vb = n.ReturnBlock.Serialize(vb)
-	vb = n.ReturnReceipt.Serialize(vb)
-	return vb
-}
-
-// DeserializeGetBlocksByHeightReq function
-func DeserializeGetBlocksByHeightReq(vb *VariableBlob) (uint64,*GetBlocksByHeightReq,error) {
-	var i,j uint64 = 0,0
-	s := GetBlocksByHeightReq{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tHeadBlockID,err := DeserializeMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &GetBlocksByHeightReq{}, err
-	}
-	s.HeadBlockID = *tHeadBlockID
-	ovb = (*vb)[i:]
-	j,tAncestorStartHeight,err := DeserializeBlockHeightType(&ovb); i+=j
-	if err != nil {
-		return 0, &GetBlocksByHeightReq{}, err
-	}
-	s.AncestorStartHeight = *tAncestorStartHeight
-	ovb = (*vb)[i:]
-	j,tNumBlocks,err := DeserializeUInt32(&ovb); i+=j
-	if err != nil {
-		return 0, &GetBlocksByHeightReq{}, err
-	}
-	s.NumBlocks = *tNumBlocks
-	ovb = (*vb)[i:]
-	j,tReturnBlock,err := DeserializeBoolean(&ovb); i+=j
-	if err != nil {
-		return 0, &GetBlocksByHeightReq{}, err
-	}
-	s.ReturnBlock = *tReturnBlock
-	ovb = (*vb)[i:]
-	j,tReturnReceipt,err := DeserializeBoolean(&ovb); i+=j
-	if err != nil {
-		return 0, &GetBlocksByHeightReq{}, err
-	}
-	s.ReturnReceipt = *tReturnReceipt
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: GetBlocksByHeightResp
-// ----------------------------------------
-
-// GetBlocksByHeightResp type
-type GetBlocksByHeightResp struct {
-    BlockItems VectorBlockItem `json:"block_items"`
-}
-
-// NewGetBlocksByHeightResp factory
-func NewGetBlocksByHeightResp() *GetBlocksByHeightResp {
-	o := GetBlocksByHeightResp{}
-	o.BlockItems = *NewVectorBlockItem()
-	return &o
-}
-
-// Serialize GetBlocksByHeightResp
-func (n GetBlocksByHeightResp) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.BlockItems.Serialize(vb)
-	return vb
-}
-
-// DeserializeGetBlocksByHeightResp function
-func DeserializeGetBlocksByHeightResp(vb *VariableBlob) (uint64,*GetBlocksByHeightResp,error) {
-	var i,j uint64 = 0,0
-	s := GetBlocksByHeightResp{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tBlockItems,err := DeserializeVectorBlockItem(&ovb); i+=j
-	if err != nil {
-		return 0, &GetBlocksByHeightResp{}, err
-	}
-	s.BlockItems = *tBlockItems
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: AddBlockReq
-// ----------------------------------------
-
-// AddBlockReq type
-type AddBlockReq struct {
-    BlockToAdd BlockItem `json:"block_to_add"`
-    PreviousBlockID Multihash `json:"previous_block_id"`
-}
-
-// NewAddBlockReq factory
-func NewAddBlockReq() *AddBlockReq {
-	o := AddBlockReq{}
-	o.BlockToAdd = *NewBlockItem()
-	o.PreviousBlockID = *NewMultihash()
-	return &o
-}
-
-// Serialize AddBlockReq
-func (n AddBlockReq) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.BlockToAdd.Serialize(vb)
-	vb = n.PreviousBlockID.Serialize(vb)
-	return vb
-}
-
-// DeserializeAddBlockReq function
-func DeserializeAddBlockReq(vb *VariableBlob) (uint64,*AddBlockReq,error) {
-	var i,j uint64 = 0,0
-	s := AddBlockReq{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tBlockToAdd,err := DeserializeBlockItem(&ovb); i+=j
-	if err != nil {
-		return 0, &AddBlockReq{}, err
-	}
-	s.BlockToAdd = *tBlockToAdd
-	ovb = (*vb)[i:]
-	j,tPreviousBlockID,err := DeserializeMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &AddBlockReq{}, err
-	}
-	s.PreviousBlockID = *tPreviousBlockID
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: AddBlockResp
-// ----------------------------------------
-
-// AddBlockResp type
-type AddBlockResp struct {
-}
-
-// NewAddBlockResp factory
-func NewAddBlockResp() *AddBlockResp {
-	o := AddBlockResp{}
-	return &o
-}
-
-// Serialize AddBlockResp
-func (n AddBlockResp) Serialize(vb *VariableBlob) *VariableBlob {
-	return vb
-}
-
-// DeserializeAddBlockResp function
-func DeserializeAddBlockResp(vb *VariableBlob) (uint64,*AddBlockResp,error) {
-	var i uint64 = 0
-	s := AddBlockResp{}
-	
 	return i, &s, nil
 }
 
@@ -1640,74 +1244,38 @@ func DeserializeBlockRecord(vb *VariableBlob) (uint64,*BlockRecord,error) {
 }
 
 // ----------------------------------------
-//  Struct: AddTransactionReq
+//  Struct: TransactionItem
 // ----------------------------------------
 
-// AddTransactionReq type
-type AddTransactionReq struct {
-    TransactionID Multihash `json:"transaction_id"`
+// TransactionItem type
+type TransactionItem struct {
     Transaction OpaqueTransaction `json:"transaction"`
 }
 
-// NewAddTransactionReq factory
-func NewAddTransactionReq() *AddTransactionReq {
-	o := AddTransactionReq{}
-	o.TransactionID = *NewMultihash()
+// NewTransactionItem factory
+func NewTransactionItem() *TransactionItem {
+	o := TransactionItem{}
 	o.Transaction = *NewOpaqueTransaction()
 	return &o
 }
 
-// Serialize AddTransactionReq
-func (n AddTransactionReq) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.TransactionID.Serialize(vb)
+// Serialize TransactionItem
+func (n TransactionItem) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.Transaction.Serialize(vb)
 	return vb
 }
 
-// DeserializeAddTransactionReq function
-func DeserializeAddTransactionReq(vb *VariableBlob) (uint64,*AddTransactionReq,error) {
+// DeserializeTransactionItem function
+func DeserializeTransactionItem(vb *VariableBlob) (uint64,*TransactionItem,error) {
 	var i,j uint64 = 0,0
-	s := AddTransactionReq{}
+	s := TransactionItem{}
 	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tTransactionID,err := DeserializeMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &AddTransactionReq{}, err
-	}
-	s.TransactionID = *tTransactionID
 	ovb = (*vb)[i:]
 	j,tTransaction,err := DeserializeOpaqueTransaction(&ovb); i+=j
 	if err != nil {
-		return 0, &AddTransactionReq{}, err
+		return 0, &TransactionItem{}, err
 	}
 	s.Transaction = *tTransaction
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: AddTransactionResp
-// ----------------------------------------
-
-// AddTransactionResp type
-type AddTransactionResp struct {
-}
-
-// NewAddTransactionResp factory
-func NewAddTransactionResp() *AddTransactionResp {
-	o := AddTransactionResp{}
-	return &o
-}
-
-// Serialize AddTransactionResp
-func (n AddTransactionResp) Serialize(vb *VariableBlob) *VariableBlob {
-	return vb
-}
-
-// DeserializeAddTransactionResp function
-func DeserializeAddTransactionResp(vb *VariableBlob) (uint64,*AddTransactionResp,error) {
-	var i uint64 = 0
-	s := AddTransactionResp{}
-	
 	return i, &s, nil
 }
 
@@ -1748,180 +1316,540 @@ func DeserializeTransactionRecord(vb *VariableBlob) (uint64,*TransactionRecord,e
 }
 
 // ----------------------------------------
-//  Struct: GetTransactionsByIDReq
+//  Struct: BlockStoreReservedRequest
 // ----------------------------------------
 
-// GetTransactionsByIDReq type
-type GetTransactionsByIDReq struct {
-    TransactionIds VectorMultihash `json:"transaction_ids"`
+// BlockStoreReservedRequest type
+type BlockStoreReservedRequest struct {
 }
 
-// NewGetTransactionsByIDReq factory
-func NewGetTransactionsByIDReq() *GetTransactionsByIDReq {
-	o := GetTransactionsByIDReq{}
-	o.TransactionIds = *NewVectorMultihash()
+// NewBlockStoreReservedRequest factory
+func NewBlockStoreReservedRequest() *BlockStoreReservedRequest {
+	o := BlockStoreReservedRequest{}
 	return &o
 }
 
-// Serialize GetTransactionsByIDReq
-func (n GetTransactionsByIDReq) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.TransactionIds.Serialize(vb)
+// Serialize BlockStoreReservedRequest
+func (n BlockStoreReservedRequest) Serialize(vb *VariableBlob) *VariableBlob {
 	return vb
 }
 
-// DeserializeGetTransactionsByIDReq function
-func DeserializeGetTransactionsByIDReq(vb *VariableBlob) (uint64,*GetTransactionsByIDReq,error) {
-	var i,j uint64 = 0,0
-	s := GetTransactionsByIDReq{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tTransactionIds,err := DeserializeVectorMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &GetTransactionsByIDReq{}, err
-	}
-	s.TransactionIds = *tTransactionIds
+// DeserializeBlockStoreReservedRequest function
+func DeserializeBlockStoreReservedRequest(vb *VariableBlob) (uint64,*BlockStoreReservedRequest,error) {
+	var i uint64 = 0
+	s := BlockStoreReservedRequest{}
+	
 	return i, &s, nil
 }
 
 // ----------------------------------------
-//  Struct: TransactionItem
+//  Struct: BlockStoreReservedResponse
 // ----------------------------------------
 
-// TransactionItem type
-type TransactionItem struct {
+// BlockStoreReservedResponse type
+type BlockStoreReservedResponse struct {
+}
+
+// NewBlockStoreReservedResponse factory
+func NewBlockStoreReservedResponse() *BlockStoreReservedResponse {
+	o := BlockStoreReservedResponse{}
+	return &o
+}
+
+// Serialize BlockStoreReservedResponse
+func (n BlockStoreReservedResponse) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeBlockStoreReservedResponse function
+func DeserializeBlockStoreReservedResponse(vb *VariableBlob) (uint64,*BlockStoreReservedResponse,error) {
+	var i uint64 = 0
+	s := BlockStoreReservedResponse{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: GetBlocksByIDRequest
+// ----------------------------------------
+
+// GetBlocksByIDRequest type
+type GetBlocksByIDRequest struct {
+    BlockID VectorMultihash `json:"block_id"`
+    ReturnBlockBlob Boolean `json:"return_block_blob"`
+    ReturnReceiptBlob Boolean `json:"return_receipt_blob"`
+}
+
+// NewGetBlocksByIDRequest factory
+func NewGetBlocksByIDRequest() *GetBlocksByIDRequest {
+	o := GetBlocksByIDRequest{}
+	o.BlockID = *NewVectorMultihash()
+	o.ReturnBlockBlob = *NewBoolean()
+	o.ReturnReceiptBlob = *NewBoolean()
+	return &o
+}
+
+// Serialize GetBlocksByIDRequest
+func (n GetBlocksByIDRequest) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.BlockID.Serialize(vb)
+	vb = n.ReturnBlockBlob.Serialize(vb)
+	vb = n.ReturnReceiptBlob.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetBlocksByIDRequest function
+func DeserializeGetBlocksByIDRequest(vb *VariableBlob) (uint64,*GetBlocksByIDRequest,error) {
+	var i,j uint64 = 0,0
+	s := GetBlocksByIDRequest{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tBlockID,err := DeserializeVectorMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &GetBlocksByIDRequest{}, err
+	}
+	s.BlockID = *tBlockID
+	ovb = (*vb)[i:]
+	j,tReturnBlockBlob,err := DeserializeBoolean(&ovb); i+=j
+	if err != nil {
+		return 0, &GetBlocksByIDRequest{}, err
+	}
+	s.ReturnBlockBlob = *tReturnBlockBlob
+	ovb = (*vb)[i:]
+	j,tReturnReceiptBlob,err := DeserializeBoolean(&ovb); i+=j
+	if err != nil {
+		return 0, &GetBlocksByIDRequest{}, err
+	}
+	s.ReturnReceiptBlob = *tReturnReceiptBlob
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: GetBlocksByIDResponse
+// ----------------------------------------
+
+// GetBlocksByIDResponse type
+type GetBlocksByIDResponse struct {
+    BlockItems VectorBlockItem `json:"block_items"`
+}
+
+// NewGetBlocksByIDResponse factory
+func NewGetBlocksByIDResponse() *GetBlocksByIDResponse {
+	o := GetBlocksByIDResponse{}
+	o.BlockItems = *NewVectorBlockItem()
+	return &o
+}
+
+// Serialize GetBlocksByIDResponse
+func (n GetBlocksByIDResponse) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.BlockItems.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetBlocksByIDResponse function
+func DeserializeGetBlocksByIDResponse(vb *VariableBlob) (uint64,*GetBlocksByIDResponse,error) {
+	var i,j uint64 = 0,0
+	s := GetBlocksByIDResponse{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tBlockItems,err := DeserializeVectorBlockItem(&ovb); i+=j
+	if err != nil {
+		return 0, &GetBlocksByIDResponse{}, err
+	}
+	s.BlockItems = *tBlockItems
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: GetBlocksByHeightRequest
+// ----------------------------------------
+
+// GetBlocksByHeightRequest type
+type GetBlocksByHeightRequest struct {
+    HeadBlockID Multihash `json:"head_block_id"`
+    AncestorStartHeight BlockHeightType `json:"ancestor_start_height"`
+    NumBlocks UInt32 `json:"num_blocks"`
+    ReturnBlock Boolean `json:"return_block"`
+    ReturnReceipt Boolean `json:"return_receipt"`
+}
+
+// NewGetBlocksByHeightRequest factory
+func NewGetBlocksByHeightRequest() *GetBlocksByHeightRequest {
+	o := GetBlocksByHeightRequest{}
+	o.HeadBlockID = *NewMultihash()
+	o.AncestorStartHeight = *NewBlockHeightType()
+	o.NumBlocks = *NewUInt32()
+	o.ReturnBlock = *NewBoolean()
+	o.ReturnReceipt = *NewBoolean()
+	return &o
+}
+
+// Serialize GetBlocksByHeightRequest
+func (n GetBlocksByHeightRequest) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.HeadBlockID.Serialize(vb)
+	vb = n.AncestorStartHeight.Serialize(vb)
+	vb = n.NumBlocks.Serialize(vb)
+	vb = n.ReturnBlock.Serialize(vb)
+	vb = n.ReturnReceipt.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetBlocksByHeightRequest function
+func DeserializeGetBlocksByHeightRequest(vb *VariableBlob) (uint64,*GetBlocksByHeightRequest,error) {
+	var i,j uint64 = 0,0
+	s := GetBlocksByHeightRequest{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tHeadBlockID,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &GetBlocksByHeightRequest{}, err
+	}
+	s.HeadBlockID = *tHeadBlockID
+	ovb = (*vb)[i:]
+	j,tAncestorStartHeight,err := DeserializeBlockHeightType(&ovb); i+=j
+	if err != nil {
+		return 0, &GetBlocksByHeightRequest{}, err
+	}
+	s.AncestorStartHeight = *tAncestorStartHeight
+	ovb = (*vb)[i:]
+	j,tNumBlocks,err := DeserializeUInt32(&ovb); i+=j
+	if err != nil {
+		return 0, &GetBlocksByHeightRequest{}, err
+	}
+	s.NumBlocks = *tNumBlocks
+	ovb = (*vb)[i:]
+	j,tReturnBlock,err := DeserializeBoolean(&ovb); i+=j
+	if err != nil {
+		return 0, &GetBlocksByHeightRequest{}, err
+	}
+	s.ReturnBlock = *tReturnBlock
+	ovb = (*vb)[i:]
+	j,tReturnReceipt,err := DeserializeBoolean(&ovb); i+=j
+	if err != nil {
+		return 0, &GetBlocksByHeightRequest{}, err
+	}
+	s.ReturnReceipt = *tReturnReceipt
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: GetBlocksByHeightResponse
+// ----------------------------------------
+
+// GetBlocksByHeightResponse type
+type GetBlocksByHeightResponse struct {
+    BlockItems VectorBlockItem `json:"block_items"`
+}
+
+// NewGetBlocksByHeightResponse factory
+func NewGetBlocksByHeightResponse() *GetBlocksByHeightResponse {
+	o := GetBlocksByHeightResponse{}
+	o.BlockItems = *NewVectorBlockItem()
+	return &o
+}
+
+// Serialize GetBlocksByHeightResponse
+func (n GetBlocksByHeightResponse) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.BlockItems.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetBlocksByHeightResponse function
+func DeserializeGetBlocksByHeightResponse(vb *VariableBlob) (uint64,*GetBlocksByHeightResponse,error) {
+	var i,j uint64 = 0,0
+	s := GetBlocksByHeightResponse{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tBlockItems,err := DeserializeVectorBlockItem(&ovb); i+=j
+	if err != nil {
+		return 0, &GetBlocksByHeightResponse{}, err
+	}
+	s.BlockItems = *tBlockItems
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: AddBlockRequest
+// ----------------------------------------
+
+// AddBlockRequest type
+type AddBlockRequest struct {
+    BlockToAdd BlockItem `json:"block_to_add"`
+    PreviousBlockID Multihash `json:"previous_block_id"`
+}
+
+// NewAddBlockRequest factory
+func NewAddBlockRequest() *AddBlockRequest {
+	o := AddBlockRequest{}
+	o.BlockToAdd = *NewBlockItem()
+	o.PreviousBlockID = *NewMultihash()
+	return &o
+}
+
+// Serialize AddBlockRequest
+func (n AddBlockRequest) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.BlockToAdd.Serialize(vb)
+	vb = n.PreviousBlockID.Serialize(vb)
+	return vb
+}
+
+// DeserializeAddBlockRequest function
+func DeserializeAddBlockRequest(vb *VariableBlob) (uint64,*AddBlockRequest,error) {
+	var i,j uint64 = 0,0
+	s := AddBlockRequest{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tBlockToAdd,err := DeserializeBlockItem(&ovb); i+=j
+	if err != nil {
+		return 0, &AddBlockRequest{}, err
+	}
+	s.BlockToAdd = *tBlockToAdd
+	ovb = (*vb)[i:]
+	j,tPreviousBlockID,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &AddBlockRequest{}, err
+	}
+	s.PreviousBlockID = *tPreviousBlockID
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: AddBlockResponse
+// ----------------------------------------
+
+// AddBlockResponse type
+type AddBlockResponse struct {
+}
+
+// NewAddBlockResponse factory
+func NewAddBlockResponse() *AddBlockResponse {
+	o := AddBlockResponse{}
+	return &o
+}
+
+// Serialize AddBlockResponse
+func (n AddBlockResponse) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeAddBlockResponse function
+func DeserializeAddBlockResponse(vb *VariableBlob) (uint64,*AddBlockResponse,error) {
+	var i uint64 = 0
+	s := AddBlockResponse{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: AddTransactionRequest
+// ----------------------------------------
+
+// AddTransactionRequest type
+type AddTransactionRequest struct {
+    TransactionID Multihash `json:"transaction_id"`
     Transaction OpaqueTransaction `json:"transaction"`
 }
 
-// NewTransactionItem factory
-func NewTransactionItem() *TransactionItem {
-	o := TransactionItem{}
+// NewAddTransactionRequest factory
+func NewAddTransactionRequest() *AddTransactionRequest {
+	o := AddTransactionRequest{}
+	o.TransactionID = *NewMultihash()
 	o.Transaction = *NewOpaqueTransaction()
 	return &o
 }
 
-// Serialize TransactionItem
-func (n TransactionItem) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize AddTransactionRequest
+func (n AddTransactionRequest) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.TransactionID.Serialize(vb)
 	vb = n.Transaction.Serialize(vb)
 	return vb
 }
 
-// DeserializeTransactionItem function
-func DeserializeTransactionItem(vb *VariableBlob) (uint64,*TransactionItem,error) {
+// DeserializeAddTransactionRequest function
+func DeserializeAddTransactionRequest(vb *VariableBlob) (uint64,*AddTransactionRequest,error) {
 	var i,j uint64 = 0,0
-	s := TransactionItem{}
+	s := AddTransactionRequest{}
 	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tTransactionID,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &AddTransactionRequest{}, err
+	}
+	s.TransactionID = *tTransactionID
 	ovb = (*vb)[i:]
 	j,tTransaction,err := DeserializeOpaqueTransaction(&ovb); i+=j
 	if err != nil {
-		return 0, &TransactionItem{}, err
+		return 0, &AddTransactionRequest{}, err
 	}
 	s.Transaction = *tTransaction
 	return i, &s, nil
 }
 
 // ----------------------------------------
-//  Struct: GetTransactionsByIDResp
+//  Struct: AddTransactionResponse
 // ----------------------------------------
 
-// GetTransactionsByIDResp type
-type GetTransactionsByIDResp struct {
+// AddTransactionResponse type
+type AddTransactionResponse struct {
+}
+
+// NewAddTransactionResponse factory
+func NewAddTransactionResponse() *AddTransactionResponse {
+	o := AddTransactionResponse{}
+	return &o
+}
+
+// Serialize AddTransactionResponse
+func (n AddTransactionResponse) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeAddTransactionResponse function
+func DeserializeAddTransactionResponse(vb *VariableBlob) (uint64,*AddTransactionResponse,error) {
+	var i uint64 = 0
+	s := AddTransactionResponse{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: GetTransactionsByIDRequest
+// ----------------------------------------
+
+// GetTransactionsByIDRequest type
+type GetTransactionsByIDRequest struct {
+    TransactionIds VectorMultihash `json:"transaction_ids"`
+}
+
+// NewGetTransactionsByIDRequest factory
+func NewGetTransactionsByIDRequest() *GetTransactionsByIDRequest {
+	o := GetTransactionsByIDRequest{}
+	o.TransactionIds = *NewVectorMultihash()
+	return &o
+}
+
+// Serialize GetTransactionsByIDRequest
+func (n GetTransactionsByIDRequest) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.TransactionIds.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetTransactionsByIDRequest function
+func DeserializeGetTransactionsByIDRequest(vb *VariableBlob) (uint64,*GetTransactionsByIDRequest,error) {
+	var i,j uint64 = 0,0
+	s := GetTransactionsByIDRequest{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tTransactionIds,err := DeserializeVectorMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &GetTransactionsByIDRequest{}, err
+	}
+	s.TransactionIds = *tTransactionIds
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: GetTransactionsByIDResponse
+// ----------------------------------------
+
+// GetTransactionsByIDResponse type
+type GetTransactionsByIDResponse struct {
     TransactionItems VectorTransactionItem `json:"transaction_items"`
 }
 
-// NewGetTransactionsByIDResp factory
-func NewGetTransactionsByIDResp() *GetTransactionsByIDResp {
-	o := GetTransactionsByIDResp{}
+// NewGetTransactionsByIDResponse factory
+func NewGetTransactionsByIDResponse() *GetTransactionsByIDResponse {
+	o := GetTransactionsByIDResponse{}
 	o.TransactionItems = *NewVectorTransactionItem()
 	return &o
 }
 
-// Serialize GetTransactionsByIDResp
-func (n GetTransactionsByIDResp) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize GetTransactionsByIDResponse
+func (n GetTransactionsByIDResponse) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.TransactionItems.Serialize(vb)
 	return vb
 }
 
-// DeserializeGetTransactionsByIDResp function
-func DeserializeGetTransactionsByIDResp(vb *VariableBlob) (uint64,*GetTransactionsByIDResp,error) {
+// DeserializeGetTransactionsByIDResponse function
+func DeserializeGetTransactionsByIDResponse(vb *VariableBlob) (uint64,*GetTransactionsByIDResponse,error) {
 	var i,j uint64 = 0,0
-	s := GetTransactionsByIDResp{}
+	s := GetTransactionsByIDResponse{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
 	j,tTransactionItems,err := DeserializeVectorTransactionItem(&ovb); i+=j
 	if err != nil {
-		return 0, &GetTransactionsByIDResp{}, err
+		return 0, &GetTransactionsByIDResponse{}, err
 	}
 	s.TransactionItems = *tTransactionItems
 	return i, &s, nil
 }
 
 // ----------------------------------------
-//  Struct: BlockStoreError
+//  Struct: BlockStoreErrorResponse
 // ----------------------------------------
 
-// BlockStoreError type
-type BlockStoreError struct {
+// BlockStoreErrorResponse type
+type BlockStoreErrorResponse struct {
     ErrorText String `json:"error_text"`
 }
 
-// NewBlockStoreError factory
-func NewBlockStoreError() *BlockStoreError {
-	o := BlockStoreError{}
+// NewBlockStoreErrorResponse factory
+func NewBlockStoreErrorResponse() *BlockStoreErrorResponse {
+	o := BlockStoreErrorResponse{}
 	o.ErrorText = *NewString()
 	return &o
 }
 
-// Serialize BlockStoreError
-func (n BlockStoreError) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize BlockStoreErrorResponse
+func (n BlockStoreErrorResponse) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.ErrorText.Serialize(vb)
 	return vb
 }
 
-// DeserializeBlockStoreError function
-func DeserializeBlockStoreError(vb *VariableBlob) (uint64,*BlockStoreError,error) {
+// DeserializeBlockStoreErrorResponse function
+func DeserializeBlockStoreErrorResponse(vb *VariableBlob) (uint64,*BlockStoreErrorResponse,error) {
 	var i,j uint64 = 0,0
-	s := BlockStoreError{}
+	s := BlockStoreErrorResponse{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
 	j,tErrorText,err := DeserializeString(&ovb); i+=j
 	if err != nil {
-		return 0, &BlockStoreError{}, err
+		return 0, &BlockStoreErrorResponse{}, err
 	}
 	s.ErrorText = *tErrorText
 	return i, &s, nil
 }
 
 // ----------------------------------------
-//  Variant: BlockStoreReq
+//  Variant: BlockStoreRequest
 // ----------------------------------------
 
-// BlockStoreReq type
-type BlockStoreReq struct {
+// BlockStoreRequest type
+type BlockStoreRequest struct {
 	Value interface{}
 }
 
-// NewBlockStoreReq factory
-func NewBlockStoreReq() *BlockStoreReq {
-	v := BlockStoreReq{}
-	v.Value = NewReservedReq()
+// NewBlockStoreRequest factory
+func NewBlockStoreRequest() *BlockStoreRequest {
+	v := BlockStoreRequest{}
+	v.Value = NewBlockStoreReservedRequest()
 	return &v
 }
 
-// Serialize BlockStoreReq
-func (n BlockStoreReq) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize BlockStoreRequest
+func (n BlockStoreRequest) Serialize(vb *VariableBlob) *VariableBlob {
 	var i uint64
 	switch n.Value.(type) {
-		case *ReservedReq:
+		case *BlockStoreReservedRequest:
 			i = 0
-		case *GetBlocksByIDReq:
+		case *GetBlocksByIDRequest:
 			i = 1
-		case *GetBlocksByHeightReq:
+		case *GetBlocksByHeightRequest:
 			i = 2
-		case *AddBlockReq:
+		case *AddBlockRequest:
 			i = 3
-		case *AddTransactionReq:
+		case *AddTransactionRequest:
 			i = 4
-		case *GetTransactionsByIDReq:
+		case *GetTransactionsByIDRequest:
 			i = 5
 		default:
 			panic("Unknown variant type")
@@ -1932,28 +1860,28 @@ func (n BlockStoreReq) Serialize(vb *VariableBlob) *VariableBlob {
 	return ser.Serialize(vb)
 }
 
-// TypeToName BlockStoreReq
-func (n BlockStoreReq) TypeToName() (string) {
+// TypeToName BlockStoreRequest
+func (n BlockStoreRequest) TypeToName() (string) {
 	switch n.Value.(type) {
-		case *ReservedReq:
-			return "koinos::types::block_store::reserved_req"
-		case *GetBlocksByIDReq:
-			return "koinos::types::block_store::get_blocks_by_id_req"
-		case *GetBlocksByHeightReq:
-			return "koinos::types::block_store::get_blocks_by_height_req"
-		case *AddBlockReq:
-			return "koinos::types::block_store::add_block_req"
-		case *AddTransactionReq:
-			return "koinos::types::block_store::add_transaction_req"
-		case *GetTransactionsByIDReq:
-			return "koinos::types::block_store::get_transactions_by_id_req"
+		case *BlockStoreReservedRequest:
+			return "koinos::rpc::block_store::block_store_reserved_request"
+		case *GetBlocksByIDRequest:
+			return "koinos::rpc::block_store::get_blocks_by_id_request"
+		case *GetBlocksByHeightRequest:
+			return "koinos::rpc::block_store::get_blocks_by_height_request"
+		case *AddBlockRequest:
+			return "koinos::rpc::block_store::add_block_request"
+		case *AddTransactionRequest:
+			return "koinos::rpc::block_store::add_transaction_request"
+		case *GetTransactionsByIDRequest:
+			return "koinos::rpc::block_store::get_transactions_by_id_request"
 		default:
 			panic("Variant type is not serializeable.")
 	}
 }
 
-// MarshalJSON BlockStoreReq
-func (n BlockStoreReq) MarshalJSON() ([]byte, error) {
+// MarshalJSON BlockStoreRequest
+func (n BlockStoreRequest) MarshalJSON() ([]byte, error) {
 	variant := struct {
 		Type string `json:"type"`
 		Value *interface{} `json:"value"`
@@ -1965,9 +1893,9 @@ func (n BlockStoreReq) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&variant)
 }
 
-// DeserializeBlockStoreReq function
-func DeserializeBlockStoreReq(vb *VariableBlob) (uint64,*BlockStoreReq,error) {
-	var v BlockStoreReq
+// DeserializeBlockStoreRequest function
+func DeserializeBlockStoreRequest(vb *VariableBlob) (uint64,*BlockStoreRequest,error) {
+	var v BlockStoreRequest
 	typeID,i := binary.Uvarint(*vb)
 	if i <= 0 {
 		return 0, &v, errors.New("could not deserialize variant tag")
@@ -1976,10 +1904,10 @@ func DeserializeBlockStoreReq(vb *VariableBlob) (uint64,*BlockStoreReq,error) {
 
 	switch( typeID ) {
 		case 0:
-			v.Value = NewReservedReq()
+			v.Value = NewBlockStoreReservedRequest()
 		case 1:
 			ovb := (*vb)[i:]
-			k,x,err := DeserializeGetBlocksByIDReq(&ovb)
+			k,x,err := DeserializeGetBlocksByIDRequest(&ovb)
 			if err != nil {
 				return 0, &v, err
 			}
@@ -1987,7 +1915,7 @@ func DeserializeBlockStoreReq(vb *VariableBlob) (uint64,*BlockStoreReq,error) {
 			v.Value = x
 		case 2:
 			ovb := (*vb)[i:]
-			k,x,err := DeserializeGetBlocksByHeightReq(&ovb)
+			k,x,err := DeserializeGetBlocksByHeightRequest(&ovb)
 			if err != nil {
 				return 0, &v, err
 			}
@@ -1995,7 +1923,7 @@ func DeserializeBlockStoreReq(vb *VariableBlob) (uint64,*BlockStoreReq,error) {
 			v.Value = x
 		case 3:
 			ovb := (*vb)[i:]
-			k,x,err := DeserializeAddBlockReq(&ovb)
+			k,x,err := DeserializeAddBlockRequest(&ovb)
 			if err != nil {
 				return 0, &v, err
 			}
@@ -2003,7 +1931,7 @@ func DeserializeBlockStoreReq(vb *VariableBlob) (uint64,*BlockStoreReq,error) {
 			v.Value = x
 		case 4:
 			ovb := (*vb)[i:]
-			k,x,err := DeserializeAddTransactionReq(&ovb)
+			k,x,err := DeserializeAddTransactionRequest(&ovb)
 			if err != nil {
 				return 0, &v, err
 			}
@@ -2011,7 +1939,7 @@ func DeserializeBlockStoreReq(vb *VariableBlob) (uint64,*BlockStoreReq,error) {
 			v.Value = x
 		case 5:
 			ovb := (*vb)[i:]
-			k,x,err := DeserializeGetTransactionsByIDReq(&ovb)
+			k,x,err := DeserializeGetTransactionsByIDRequest(&ovb)
 			if err != nil {
 				return 0, &v, err
 			}
@@ -2023,8 +1951,8 @@ func DeserializeBlockStoreReq(vb *VariableBlob) (uint64,*BlockStoreReq,error) {
 	return uint64(i)+j,&v,nil
 }
 
-// UnmarshalJSON *BlockStoreReq
-func (n *BlockStoreReq) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON *BlockStoreRequest
+func (n *BlockStoreRequest) UnmarshalJSON(data []byte) error {
 	variant := struct {
 		Type  string          `json:"type"`
 		Value json.RawMessage `json:"value"`
@@ -2036,28 +1964,28 @@ func (n *BlockStoreReq) UnmarshalJSON(data []byte) error {
 	}
 
 	switch variant.Type {
-		case "koinos::types::block_store::reserved_req":
-			v := NewReservedReq()
+		case "koinos::rpc::block_store::block_store_reserved_request":
+			v := NewBlockStoreReservedRequest()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::types::block_store::get_blocks_by_id_req":
-			v := NewGetBlocksByIDReq()
+		case "koinos::rpc::block_store::get_blocks_by_id_request":
+			v := NewGetBlocksByIDRequest()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::types::block_store::get_blocks_by_height_req":
-			v := NewGetBlocksByHeightReq()
+		case "koinos::rpc::block_store::get_blocks_by_height_request":
+			v := NewGetBlocksByHeightRequest()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::types::block_store::add_block_req":
-			v := NewAddBlockReq()
+		case "koinos::rpc::block_store::add_block_request":
+			v := NewAddBlockRequest()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::types::block_store::add_transaction_req":
-			v := NewAddTransactionReq()
+		case "koinos::rpc::block_store::add_transaction_request":
+			v := NewAddTransactionRequest()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::types::block_store::get_transactions_by_id_req":
-			v := NewGetTransactionsByIDReq()
+		case "koinos::rpc::block_store::get_transactions_by_id_request":
+			v := NewGetTransactionsByIDRequest()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
@@ -2069,38 +1997,38 @@ func (n *BlockStoreReq) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
-//  Variant: BlockStoreResp
+//  Variant: BlockStoreResponse
 // ----------------------------------------
 
-// BlockStoreResp type
-type BlockStoreResp struct {
+// BlockStoreResponse type
+type BlockStoreResponse struct {
 	Value interface{}
 }
 
-// NewBlockStoreResp factory
-func NewBlockStoreResp() *BlockStoreResp {
-	v := BlockStoreResp{}
-	v.Value = NewReservedResp()
+// NewBlockStoreResponse factory
+func NewBlockStoreResponse() *BlockStoreResponse {
+	v := BlockStoreResponse{}
+	v.Value = NewBlockStoreReservedResponse()
 	return &v
 }
 
-// Serialize BlockStoreResp
-func (n BlockStoreResp) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize BlockStoreResponse
+func (n BlockStoreResponse) Serialize(vb *VariableBlob) *VariableBlob {
 	var i uint64
 	switch n.Value.(type) {
-		case *ReservedResp:
+		case *BlockStoreReservedResponse:
 			i = 0
-		case *BlockStoreError:
+		case *BlockStoreErrorResponse:
 			i = 1
-		case *GetBlocksByIDResp:
+		case *GetBlocksByIDResponse:
 			i = 2
-		case *GetBlocksByHeightResp:
+		case *GetBlocksByHeightResponse:
 			i = 3
-		case *AddBlockResp:
+		case *AddBlockResponse:
 			i = 4
-		case *AddTransactionResp:
+		case *AddTransactionResponse:
 			i = 5
-		case *GetTransactionsByIDResp:
+		case *GetTransactionsByIDResponse:
 			i = 6
 		default:
 			panic("Unknown variant type")
@@ -2111,30 +2039,30 @@ func (n BlockStoreResp) Serialize(vb *VariableBlob) *VariableBlob {
 	return ser.Serialize(vb)
 }
 
-// TypeToName BlockStoreResp
-func (n BlockStoreResp) TypeToName() (string) {
+// TypeToName BlockStoreResponse
+func (n BlockStoreResponse) TypeToName() (string) {
 	switch n.Value.(type) {
-		case *ReservedResp:
-			return "koinos::types::block_store::reserved_resp"
-		case *BlockStoreError:
-			return "koinos::types::block_store::block_store_error"
-		case *GetBlocksByIDResp:
-			return "koinos::types::block_store::get_blocks_by_id_resp"
-		case *GetBlocksByHeightResp:
-			return "koinos::types::block_store::get_blocks_by_height_resp"
-		case *AddBlockResp:
-			return "koinos::types::block_store::add_block_resp"
-		case *AddTransactionResp:
-			return "koinos::types::block_store::add_transaction_resp"
-		case *GetTransactionsByIDResp:
-			return "koinos::types::block_store::get_transactions_by_id_resp"
+		case *BlockStoreReservedResponse:
+			return "koinos::rpc::block_store::block_store_reserved_response"
+		case *BlockStoreErrorResponse:
+			return "koinos::rpc::block_store::block_store_error_response"
+		case *GetBlocksByIDResponse:
+			return "koinos::rpc::block_store::get_blocks_by_id_response"
+		case *GetBlocksByHeightResponse:
+			return "koinos::rpc::block_store::get_blocks_by_height_response"
+		case *AddBlockResponse:
+			return "koinos::rpc::block_store::add_block_response"
+		case *AddTransactionResponse:
+			return "koinos::rpc::block_store::add_transaction_response"
+		case *GetTransactionsByIDResponse:
+			return "koinos::rpc::block_store::get_transactions_by_id_response"
 		default:
 			panic("Variant type is not serializeable.")
 	}
 }
 
-// MarshalJSON BlockStoreResp
-func (n BlockStoreResp) MarshalJSON() ([]byte, error) {
+// MarshalJSON BlockStoreResponse
+func (n BlockStoreResponse) MarshalJSON() ([]byte, error) {
 	variant := struct {
 		Type string `json:"type"`
 		Value *interface{} `json:"value"`
@@ -2146,9 +2074,9 @@ func (n BlockStoreResp) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&variant)
 }
 
-// DeserializeBlockStoreResp function
-func DeserializeBlockStoreResp(vb *VariableBlob) (uint64,*BlockStoreResp,error) {
-	var v BlockStoreResp
+// DeserializeBlockStoreResponse function
+func DeserializeBlockStoreResponse(vb *VariableBlob) (uint64,*BlockStoreResponse,error) {
+	var v BlockStoreResponse
 	typeID,i := binary.Uvarint(*vb)
 	if i <= 0 {
 		return 0, &v, errors.New("could not deserialize variant tag")
@@ -2157,10 +2085,10 @@ func DeserializeBlockStoreResp(vb *VariableBlob) (uint64,*BlockStoreResp,error) 
 
 	switch( typeID ) {
 		case 0:
-			v.Value = NewReservedResp()
+			v.Value = NewBlockStoreReservedResponse()
 		case 1:
 			ovb := (*vb)[i:]
-			k,x,err := DeserializeBlockStoreError(&ovb)
+			k,x,err := DeserializeBlockStoreErrorResponse(&ovb)
 			if err != nil {
 				return 0, &v, err
 			}
@@ -2168,7 +2096,7 @@ func DeserializeBlockStoreResp(vb *VariableBlob) (uint64,*BlockStoreResp,error) 
 			v.Value = x
 		case 2:
 			ovb := (*vb)[i:]
-			k,x,err := DeserializeGetBlocksByIDResp(&ovb)
+			k,x,err := DeserializeGetBlocksByIDResponse(&ovb)
 			if err != nil {
 				return 0, &v, err
 			}
@@ -2176,19 +2104,19 @@ func DeserializeBlockStoreResp(vb *VariableBlob) (uint64,*BlockStoreResp,error) 
 			v.Value = x
 		case 3:
 			ovb := (*vb)[i:]
-			k,x,err := DeserializeGetBlocksByHeightResp(&ovb)
+			k,x,err := DeserializeGetBlocksByHeightResponse(&ovb)
 			if err != nil {
 				return 0, &v, err
 			}
 			j = k
 			v.Value = x
 		case 4:
-			v.Value = NewAddBlockResp()
+			v.Value = NewAddBlockResponse()
 		case 5:
-			v.Value = NewAddTransactionResp()
+			v.Value = NewAddTransactionResponse()
 		case 6:
 			ovb := (*vb)[i:]
-			k,x,err := DeserializeGetTransactionsByIDResp(&ovb)
+			k,x,err := DeserializeGetTransactionsByIDResponse(&ovb)
 			if err != nil {
 				return 0, &v, err
 			}
@@ -2200,8 +2128,8 @@ func DeserializeBlockStoreResp(vb *VariableBlob) (uint64,*BlockStoreResp,error) 
 	return uint64(i)+j,&v,nil
 }
 
-// UnmarshalJSON *BlockStoreResp
-func (n *BlockStoreResp) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON *BlockStoreResponse
+func (n *BlockStoreResponse) UnmarshalJSON(data []byte) error {
 	variant := struct {
 		Type  string          `json:"type"`
 		Value json.RawMessage `json:"value"`
@@ -2213,32 +2141,32 @@ func (n *BlockStoreResp) UnmarshalJSON(data []byte) error {
 	}
 
 	switch variant.Type {
-		case "koinos::types::block_store::reserved_resp":
-			v := NewReservedResp()
+		case "koinos::rpc::block_store::block_store_reserved_response":
+			v := NewBlockStoreReservedResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::types::block_store::block_store_error":
-			v := NewBlockStoreError()
+		case "koinos::rpc::block_store::block_store_error_response":
+			v := NewBlockStoreErrorResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::types::block_store::get_blocks_by_id_resp":
-			v := NewGetBlocksByIDResp()
+		case "koinos::rpc::block_store::get_blocks_by_id_response":
+			v := NewGetBlocksByIDResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::types::block_store::get_blocks_by_height_resp":
-			v := NewGetBlocksByHeightResp()
+		case "koinos::rpc::block_store::get_blocks_by_height_response":
+			v := NewGetBlocksByHeightResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::types::block_store::add_block_resp":
-			v := NewAddBlockResp()
+		case "koinos::rpc::block_store::add_block_response":
+			v := NewAddBlockResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::types::block_store::add_transaction_resp":
-			v := NewAddTransactionResp()
+		case "koinos::rpc::block_store::add_transaction_response":
+			v := NewAddTransactionResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::types::block_store::get_transactions_by_id_resp":
-			v := NewGetTransactionsByIDResp()
+		case "koinos::rpc::block_store::get_transactions_by_id_response":
+			v := NewGetTransactionsByIDResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
@@ -2250,128 +2178,83 @@ func (n *BlockStoreResp) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
-//  Struct: HeadInfo
+//  Struct: TransactionTopology
 // ----------------------------------------
 
-// HeadInfo type
-type HeadInfo struct {
+// TransactionTopology type
+type TransactionTopology struct {
     ID Multihash `json:"id"`
-    Height BlockHeightType `json:"height"`
 }
 
-// NewHeadInfo factory
-func NewHeadInfo() *HeadInfo {
-	o := HeadInfo{}
+// NewTransactionTopology factory
+func NewTransactionTopology() *TransactionTopology {
+	o := TransactionTopology{}
 	o.ID = *NewMultihash()
-	o.Height = *NewBlockHeightType()
 	return &o
 }
 
-// Serialize HeadInfo
-func (n HeadInfo) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize TransactionTopology
+func (n TransactionTopology) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.ID.Serialize(vb)
-	vb = n.Height.Serialize(vb)
 	return vb
 }
 
-// DeserializeHeadInfo function
-func DeserializeHeadInfo(vb *VariableBlob) (uint64,*HeadInfo,error) {
+// DeserializeTransactionTopology function
+func DeserializeTransactionTopology(vb *VariableBlob) (uint64,*TransactionTopology,error) {
 	var i,j uint64 = 0,0
-	s := HeadInfo{}
+	s := TransactionTopology{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
 	j,tID,err := DeserializeMultihash(&ovb); i+=j
 	if err != nil {
-		return 0, &HeadInfo{}, err
+		return 0, &TransactionTopology{}, err
 	}
 	s.ID = *tID
-	ovb = (*vb)[i:]
-	j,tHeight,err := DeserializeBlockHeightType(&ovb); i+=j
-	if err != nil {
-		return 0, &HeadInfo{}, err
-	}
-	s.Height = *tHeight
 	return i, &s, nil
 }
 
 // ----------------------------------------
-//  Struct: BlockPart
+//  Struct: TransactionAccepted
 // ----------------------------------------
 
-// BlockPart type
-type BlockPart struct {
-    ActiveData VariableBlob `json:"active_data"`
-    PassiveData VariableBlob `json:"passive_data"`
-    SigData VariableBlob `json:"sig_data"`
+// TransactionAccepted type
+type TransactionAccepted struct {
+    Topology TransactionTopology `json:"topology"`
+    Transaction Transaction `json:"transaction"`
 }
 
-// NewBlockPart factory
-func NewBlockPart() *BlockPart {
-	o := BlockPart{}
-	o.ActiveData = *NewVariableBlob()
-	o.PassiveData = *NewVariableBlob()
-	o.SigData = *NewVariableBlob()
+// NewTransactionAccepted factory
+func NewTransactionAccepted() *TransactionAccepted {
+	o := TransactionAccepted{}
+	o.Topology = *NewTransactionTopology()
+	o.Transaction = *NewTransaction()
 	return &o
 }
 
-// Serialize BlockPart
-func (n BlockPart) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.ActiveData.Serialize(vb)
-	vb = n.PassiveData.Serialize(vb)
-	vb = n.SigData.Serialize(vb)
+// Serialize TransactionAccepted
+func (n TransactionAccepted) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Topology.Serialize(vb)
+	vb = n.Transaction.Serialize(vb)
 	return vb
 }
 
-// DeserializeBlockPart function
-func DeserializeBlockPart(vb *VariableBlob) (uint64,*BlockPart,error) {
+// DeserializeTransactionAccepted function
+func DeserializeTransactionAccepted(vb *VariableBlob) (uint64,*TransactionAccepted,error) {
 	var i,j uint64 = 0,0
-	s := BlockPart{}
+	s := TransactionAccepted{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
-	j,tActiveData,err := DeserializeVariableBlob(&ovb); i+=j
+	j,tTopology,err := DeserializeTransactionTopology(&ovb); i+=j
 	if err != nil {
-		return 0, &BlockPart{}, err
+		return 0, &TransactionAccepted{}, err
 	}
-	s.ActiveData = *tActiveData
+	s.Topology = *tTopology
 	ovb = (*vb)[i:]
-	j,tPassiveData,err := DeserializeVariableBlob(&ovb); i+=j
+	j,tTransaction,err := DeserializeTransaction(&ovb); i+=j
 	if err != nil {
-		return 0, &BlockPart{}, err
+		return 0, &TransactionAccepted{}, err
 	}
-	s.PassiveData = *tPassiveData
-	ovb = (*vb)[i:]
-	j,tSigData,err := DeserializeVariableBlob(&ovb); i+=j
-	if err != nil {
-		return 0, &BlockPart{}, err
-	}
-	s.SigData = *tSigData
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: ReservedRPCParams
-// ----------------------------------------
-
-// ReservedRPCParams type
-type ReservedRPCParams struct {
-}
-
-// NewReservedRPCParams factory
-func NewReservedRPCParams() *ReservedRPCParams {
-	o := ReservedRPCParams{}
-	return &o
-}
-
-// Serialize ReservedRPCParams
-func (n ReservedRPCParams) Serialize(vb *VariableBlob) *VariableBlob {
-	return vb
-}
-
-// DeserializeReservedRPCParams function
-func DeserializeReservedRPCParams(vb *VariableBlob) (uint64,*ReservedRPCParams,error) {
-	var i uint64 = 0
-	s := ReservedRPCParams{}
-	
+	s.Transaction = *tTransaction
 	return i, &s, nil
 }
 
@@ -2430,11 +2313,2062 @@ func DeserializeBlockTopology(vb *VariableBlob) (uint64,*BlockTopology,error) {
 }
 
 // ----------------------------------------
-//  Struct: SubmitBlockParams
+//  Struct: BlockAccepted
 // ----------------------------------------
 
-// SubmitBlockParams type
-type SubmitBlockParams struct {
+// BlockAccepted type
+type BlockAccepted struct {
+    Topology BlockTopology `json:"topology"`
+    Block Block `json:"block"`
+}
+
+// NewBlockAccepted factory
+func NewBlockAccepted() *BlockAccepted {
+	o := BlockAccepted{}
+	o.Topology = *NewBlockTopology()
+	o.Block = *NewBlock()
+	return &o
+}
+
+// Serialize BlockAccepted
+func (n BlockAccepted) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Topology.Serialize(vb)
+	vb = n.Block.Serialize(vb)
+	return vb
+}
+
+// DeserializeBlockAccepted function
+func DeserializeBlockAccepted(vb *VariableBlob) (uint64,*BlockAccepted,error) {
+	var i,j uint64 = 0,0
+	s := BlockAccepted{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tTopology,err := DeserializeBlockTopology(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockAccepted{}, err
+	}
+	s.Topology = *tTopology
+	ovb = (*vb)[i:]
+	j,tBlock,err := DeserializeBlock(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockAccepted{}, err
+	}
+	s.Block = *tBlock
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: HeadInfo
+// ----------------------------------------
+
+// HeadInfo type
+type HeadInfo struct {
+    ID Multihash `json:"id"`
+    Height BlockHeightType `json:"height"`
+}
+
+// NewHeadInfo factory
+func NewHeadInfo() *HeadInfo {
+	o := HeadInfo{}
+	o.ID = *NewMultihash()
+	o.Height = *NewBlockHeightType()
+	return &o
+}
+
+// Serialize HeadInfo
+func (n HeadInfo) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ID.Serialize(vb)
+	vb = n.Height.Serialize(vb)
+	return vb
+}
+
+// DeserializeHeadInfo function
+func DeserializeHeadInfo(vb *VariableBlob) (uint64,*HeadInfo,error) {
+	var i,j uint64 = 0,0
+	s := HeadInfo{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tID,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &HeadInfo{}, err
+	}
+	s.ID = *tID
+	ovb = (*vb)[i:]
+	j,tHeight,err := DeserializeBlockHeightType(&ovb); i+=j
+	if err != nil {
+		return 0, &HeadInfo{}, err
+	}
+	s.Height = *tHeight
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Enum: SystemCallID
+// ----------------------------------------
+
+// {'name': 'system_call_id', 'entries': [{'name': 'prints', 'value': 2602735937, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_header', 'value': 2519027790, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_block', 'value': 2494255093, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_transaction', 'value': 2643154394, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_reserved_operation', 'value': 2594724132, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_upload_contract_operation', 'value': 2658052407, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_execute_contract_operation', 'value': 2451064454, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_set_system_call_operation', 'value': 2507777116, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_put_object', 'value': 2535376802, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_object', 'value': 2540087547, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_next_object', 'value': 2577635560, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_prev_object', 'value': 2614326908, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'execute_contract', 'value': 2562796798, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args_size', 'value': 2601357273, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args', 'value': 2679873944, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'set_contract_return', 'value': 2672414186, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'exit_contract', 'value': 2564781488, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_head_info', 'value': 2507125293, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'hash', 'value': 2574716420, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_signature', 'value': 2411308443, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_merkle_root', 'value': 2574132409, 'doc': '', 'info': {'type': 'EnumEntry'}}], 'tref': {'name': ['koinos', 'uint32'], 'targs': None, 'info': {'type': 'Typeref'}}, 'doc': '', 'info': {'type': 'EnumClass'}}
+
+// SystemCallID type
+type SystemCallID UInt32
+
+// NewSystemCallID factory
+func NewSystemCallID() *SystemCallID {
+	o := SystemCallID(2602735937)
+	return &o
+}
+
+// SystemCallID values
+const (
+	SystemCallIDPrints SystemCallID = 2602735937
+	SystemCallIDVerifyBlockHeader SystemCallID = 2519027790
+	SystemCallIDApplyBlock SystemCallID = 2494255093
+	SystemCallIDApplyTransaction SystemCallID = 2643154394
+	SystemCallIDApplyReservedOperation SystemCallID = 2594724132
+	SystemCallIDApplyUploadContractOperation SystemCallID = 2658052407
+	SystemCallIDApplyExecuteContractOperation SystemCallID = 2451064454
+	SystemCallIDApplySetSystemCallOperation SystemCallID = 2507777116
+	SystemCallIDDbPutObject SystemCallID = 2535376802
+	SystemCallIDDbGetObject SystemCallID = 2540087547
+	SystemCallIDDbGetNextObject SystemCallID = 2577635560
+	SystemCallIDDbGetPrevObject SystemCallID = 2614326908
+	SystemCallIDExecuteContract SystemCallID = 2562796798
+	SystemCallIDGetContractArgsSize SystemCallID = 2601357273
+	SystemCallIDGetContractArgs SystemCallID = 2679873944
+	SystemCallIDSetContractReturn SystemCallID = 2672414186
+	SystemCallIDExitContract SystemCallID = 2564781488
+	SystemCallIDGetHeadInfo SystemCallID = 2507125293
+	SystemCallIDHash SystemCallID = 2574716420
+	SystemCallIDVerifyBlockSignature SystemCallID = 2411308443
+	SystemCallIDVerifyMerkleRoot SystemCallID = 2574132409
+)
+
+// Serialize SystemCallID
+func (n SystemCallID) Serialize(vb *VariableBlob) *VariableBlob {
+	if !IsValidSystemCallID(n) {
+		panic("Attempting to serialize an invalid value")
+	}
+	x := UInt32(n)
+	return x.Serialize(vb)
+}
+
+// DeserializeSystemCallID function
+func DeserializeSystemCallID(vb *VariableBlob) (uint64,*SystemCallID,error) {
+	i,item,err := DeserializeUInt32(vb)
+	var x SystemCallID
+	if err != nil {
+		return 0,&x,err
+	}
+
+	x = SystemCallID(*item)
+	if !IsValidSystemCallID(x) {
+		return i,&x,fmt.Errorf("invalid SystemCallID: %d", x)
+	}
+	return i,&x,nil
+}
+
+// MarshalJSON SystemCallID
+func (n SystemCallID) MarshalJSON() ([]byte, error) {
+	if !IsValidSystemCallID(n) {
+		panic("Attempting to serialize an invalid value")
+	}
+
+	return json.Marshal(UInt32(n))
+}
+
+// UnmarshalJSON *SystemCallID
+func (n *SystemCallID) UnmarshalJSON(b []byte) error {
+	var o UInt32
+	if err := json.Unmarshal(b, &o); err != nil {
+		return err
+	}
+
+	ov := SystemCallID(o)
+
+	if !IsValidSystemCallID(ov) {
+		return fmt.Errorf("invalid SystemCallID: %d", o)
+	}
+
+	*n = ov
+	return nil
+}
+
+// IsValidSystemCallID validator
+func IsValidSystemCallID(v SystemCallID) bool {
+	switch v {
+		case SystemCallIDPrints:
+			return true
+		case SystemCallIDVerifyBlockHeader:
+			return true
+		case SystemCallIDApplyBlock:
+			return true
+		case SystemCallIDApplyTransaction:
+			return true
+		case SystemCallIDApplyReservedOperation:
+			return true
+		case SystemCallIDApplyUploadContractOperation:
+			return true
+		case SystemCallIDApplyExecuteContractOperation:
+			return true
+		case SystemCallIDApplySetSystemCallOperation:
+			return true
+		case SystemCallIDDbPutObject:
+			return true
+		case SystemCallIDDbGetObject:
+			return true
+		case SystemCallIDDbGetNextObject:
+			return true
+		case SystemCallIDDbGetPrevObject:
+			return true
+		case SystemCallIDExecuteContract:
+			return true
+		case SystemCallIDGetContractArgsSize:
+			return true
+		case SystemCallIDGetContractArgs:
+			return true
+		case SystemCallIDSetContractReturn:
+			return true
+		case SystemCallIDExitContract:
+			return true
+		case SystemCallIDGetHeadInfo:
+			return true
+		case SystemCallIDHash:
+			return true
+		case SystemCallIDVerifyBlockSignature:
+			return true
+		case SystemCallIDVerifyMerkleRoot:
+			return true
+		default:
+			return false
+	}
+}
+
+
+// ----------------------------------------
+//  Struct: VoidType
+// ----------------------------------------
+
+// VoidType type
+type VoidType struct {
+}
+
+// NewVoidType factory
+func NewVoidType() *VoidType {
+	o := VoidType{}
+	return &o
+}
+
+// Serialize VoidType
+func (n VoidType) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeVoidType function
+func DeserializeVoidType(vb *VariableBlob) (uint64,*VoidType,error) {
+	var i uint64 = 0
+	s := VoidType{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: PrintsArgs
+// ----------------------------------------
+
+// PrintsArgs type
+type PrintsArgs struct {
+    Message String `json:"message"`
+}
+
+// NewPrintsArgs factory
+func NewPrintsArgs() *PrintsArgs {
+	o := PrintsArgs{}
+	o.Message = *NewString()
+	return &o
+}
+
+// Serialize PrintsArgs
+func (n PrintsArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Message.Serialize(vb)
+	return vb
+}
+
+// DeserializePrintsArgs function
+func DeserializePrintsArgs(vb *VariableBlob) (uint64,*PrintsArgs,error) {
+	var i,j uint64 = 0,0
+	s := PrintsArgs{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tMessage,err := DeserializeString(&ovb); i+=j
+	if err != nil {
+		return 0, &PrintsArgs{}, err
+	}
+	s.Message = *tMessage
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: PrintsReturn
+// ----------------------------------------
+
+// PrintsReturn type
+type PrintsReturn VoidType
+
+// NewPrintsReturn factory
+func NewPrintsReturn() *PrintsReturn {
+	o := PrintsReturn(*NewVoidType())
+	return &o
+}
+
+// Serialize PrintsReturn
+func (n PrintsReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := VoidType(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializePrintsReturn function
+func DeserializePrintsReturn(vb *VariableBlob) (uint64,*PrintsReturn,error) {
+	var ot PrintsReturn
+	return 0,&ot,nil}
+
+// MarshalJSON PrintsReturn
+func (n PrintsReturn) MarshalJSON() ([]byte, error) {
+	v := VoidType(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *PrintsReturn
+func (n *PrintsReturn) UnmarshalJSON(data []byte) error {
+	v := VoidType(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = PrintsReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: VerifyBlockSignatureArgs
+// ----------------------------------------
+
+// VerifyBlockSignatureArgs type
+type VerifyBlockSignatureArgs struct {
+    SignatureData VariableBlob `json:"signature_data"`
+    Digest Multihash `json:"digest"`
+}
+
+// NewVerifyBlockSignatureArgs factory
+func NewVerifyBlockSignatureArgs() *VerifyBlockSignatureArgs {
+	o := VerifyBlockSignatureArgs{}
+	o.SignatureData = *NewVariableBlob()
+	o.Digest = *NewMultihash()
+	return &o
+}
+
+// Serialize VerifyBlockSignatureArgs
+func (n VerifyBlockSignatureArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.SignatureData.Serialize(vb)
+	vb = n.Digest.Serialize(vb)
+	return vb
+}
+
+// DeserializeVerifyBlockSignatureArgs function
+func DeserializeVerifyBlockSignatureArgs(vb *VariableBlob) (uint64,*VerifyBlockSignatureArgs,error) {
+	var i,j uint64 = 0,0
+	s := VerifyBlockSignatureArgs{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tSignatureData,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &VerifyBlockSignatureArgs{}, err
+	}
+	s.SignatureData = *tSignatureData
+	ovb = (*vb)[i:]
+	j,tDigest,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &VerifyBlockSignatureArgs{}, err
+	}
+	s.Digest = *tDigest
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: VerifyBlockSignatureReturn
+// ----------------------------------------
+
+// VerifyBlockSignatureReturn type
+type VerifyBlockSignatureReturn Boolean
+
+// NewVerifyBlockSignatureReturn factory
+func NewVerifyBlockSignatureReturn() *VerifyBlockSignatureReturn {
+	o := VerifyBlockSignatureReturn(*NewBoolean())
+	return &o
+}
+
+// Serialize VerifyBlockSignatureReturn
+func (n VerifyBlockSignatureReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := Boolean(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeVerifyBlockSignatureReturn function
+func DeserializeVerifyBlockSignatureReturn(vb *VariableBlob) (uint64,*VerifyBlockSignatureReturn,error) {
+	var ot VerifyBlockSignatureReturn
+	i,n,err := DeserializeBoolean(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = VerifyBlockSignatureReturn(*n)
+	return i,&ot,nil}
+
+// MarshalJSON VerifyBlockSignatureReturn
+func (n VerifyBlockSignatureReturn) MarshalJSON() ([]byte, error) {
+	v := Boolean(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *VerifyBlockSignatureReturn
+func (n *VerifyBlockSignatureReturn) UnmarshalJSON(data []byte) error {
+	v := Boolean(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = VerifyBlockSignatureReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: VerifyMerkleRootArgs
+// ----------------------------------------
+
+// VerifyMerkleRootArgs type
+type VerifyMerkleRootArgs struct {
+    Root Multihash `json:"root"`
+    Hashes VectorMultihash `json:"hashes"`
+}
+
+// NewVerifyMerkleRootArgs factory
+func NewVerifyMerkleRootArgs() *VerifyMerkleRootArgs {
+	o := VerifyMerkleRootArgs{}
+	o.Root = *NewMultihash()
+	o.Hashes = *NewVectorMultihash()
+	return &o
+}
+
+// Serialize VerifyMerkleRootArgs
+func (n VerifyMerkleRootArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Root.Serialize(vb)
+	vb = n.Hashes.Serialize(vb)
+	return vb
+}
+
+// DeserializeVerifyMerkleRootArgs function
+func DeserializeVerifyMerkleRootArgs(vb *VariableBlob) (uint64,*VerifyMerkleRootArgs,error) {
+	var i,j uint64 = 0,0
+	s := VerifyMerkleRootArgs{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tRoot,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &VerifyMerkleRootArgs{}, err
+	}
+	s.Root = *tRoot
+	ovb = (*vb)[i:]
+	j,tHashes,err := DeserializeVectorMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &VerifyMerkleRootArgs{}, err
+	}
+	s.Hashes = *tHashes
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: VerifyMerkleRootReturn
+// ----------------------------------------
+
+// VerifyMerkleRootReturn type
+type VerifyMerkleRootReturn Boolean
+
+// NewVerifyMerkleRootReturn factory
+func NewVerifyMerkleRootReturn() *VerifyMerkleRootReturn {
+	o := VerifyMerkleRootReturn(*NewBoolean())
+	return &o
+}
+
+// Serialize VerifyMerkleRootReturn
+func (n VerifyMerkleRootReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := Boolean(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeVerifyMerkleRootReturn function
+func DeserializeVerifyMerkleRootReturn(vb *VariableBlob) (uint64,*VerifyMerkleRootReturn,error) {
+	var ot VerifyMerkleRootReturn
+	i,n,err := DeserializeBoolean(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = VerifyMerkleRootReturn(*n)
+	return i,&ot,nil}
+
+// MarshalJSON VerifyMerkleRootReturn
+func (n VerifyMerkleRootReturn) MarshalJSON() ([]byte, error) {
+	v := Boolean(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *VerifyMerkleRootReturn
+func (n *VerifyMerkleRootReturn) UnmarshalJSON(data []byte) error {
+	v := Boolean(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = VerifyMerkleRootReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: ApplyBlockArgs
+// ----------------------------------------
+
+// ApplyBlockArgs type
+type ApplyBlockArgs struct {
+    Block Block `json:"block"`
+    EnableCheckPassiveData Boolean `json:"enable_check_passive_data"`
+    EnableCheckBlockSignature Boolean `json:"enable_check_block_signature"`
+    EnableCheckTransactionSignatures Boolean `json:"enable_check_transaction_signatures"`
+}
+
+// NewApplyBlockArgs factory
+func NewApplyBlockArgs() *ApplyBlockArgs {
+	o := ApplyBlockArgs{}
+	o.Block = *NewBlock()
+	o.EnableCheckPassiveData = *NewBoolean()
+	o.EnableCheckBlockSignature = *NewBoolean()
+	o.EnableCheckTransactionSignatures = *NewBoolean()
+	return &o
+}
+
+// Serialize ApplyBlockArgs
+func (n ApplyBlockArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Block.Serialize(vb)
+	vb = n.EnableCheckPassiveData.Serialize(vb)
+	vb = n.EnableCheckBlockSignature.Serialize(vb)
+	vb = n.EnableCheckTransactionSignatures.Serialize(vb)
+	return vb
+}
+
+// DeserializeApplyBlockArgs function
+func DeserializeApplyBlockArgs(vb *VariableBlob) (uint64,*ApplyBlockArgs,error) {
+	var i,j uint64 = 0,0
+	s := ApplyBlockArgs{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tBlock,err := DeserializeBlock(&ovb); i+=j
+	if err != nil {
+		return 0, &ApplyBlockArgs{}, err
+	}
+	s.Block = *tBlock
+	ovb = (*vb)[i:]
+	j,tEnableCheckPassiveData,err := DeserializeBoolean(&ovb); i+=j
+	if err != nil {
+		return 0, &ApplyBlockArgs{}, err
+	}
+	s.EnableCheckPassiveData = *tEnableCheckPassiveData
+	ovb = (*vb)[i:]
+	j,tEnableCheckBlockSignature,err := DeserializeBoolean(&ovb); i+=j
+	if err != nil {
+		return 0, &ApplyBlockArgs{}, err
+	}
+	s.EnableCheckBlockSignature = *tEnableCheckBlockSignature
+	ovb = (*vb)[i:]
+	j,tEnableCheckTransactionSignatures,err := DeserializeBoolean(&ovb); i+=j
+	if err != nil {
+		return 0, &ApplyBlockArgs{}, err
+	}
+	s.EnableCheckTransactionSignatures = *tEnableCheckTransactionSignatures
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: ApplyBlockReturn
+// ----------------------------------------
+
+// ApplyBlockReturn type
+type ApplyBlockReturn VoidType
+
+// NewApplyBlockReturn factory
+func NewApplyBlockReturn() *ApplyBlockReturn {
+	o := ApplyBlockReturn(*NewVoidType())
+	return &o
+}
+
+// Serialize ApplyBlockReturn
+func (n ApplyBlockReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := VoidType(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeApplyBlockReturn function
+func DeserializeApplyBlockReturn(vb *VariableBlob) (uint64,*ApplyBlockReturn,error) {
+	var ot ApplyBlockReturn
+	return 0,&ot,nil}
+
+// MarshalJSON ApplyBlockReturn
+func (n ApplyBlockReturn) MarshalJSON() ([]byte, error) {
+	v := VoidType(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *ApplyBlockReturn
+func (n *ApplyBlockReturn) UnmarshalJSON(data []byte) error {
+	v := VoidType(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = ApplyBlockReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: ApplyTransactionArgs
+// ----------------------------------------
+
+// ApplyTransactionArgs type
+type ApplyTransactionArgs struct {
+    Trx OpaqueTransaction `json:"trx"`
+}
+
+// NewApplyTransactionArgs factory
+func NewApplyTransactionArgs() *ApplyTransactionArgs {
+	o := ApplyTransactionArgs{}
+	o.Trx = *NewOpaqueTransaction()
+	return &o
+}
+
+// Serialize ApplyTransactionArgs
+func (n ApplyTransactionArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Trx.Serialize(vb)
+	return vb
+}
+
+// DeserializeApplyTransactionArgs function
+func DeserializeApplyTransactionArgs(vb *VariableBlob) (uint64,*ApplyTransactionArgs,error) {
+	var i,j uint64 = 0,0
+	s := ApplyTransactionArgs{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tTrx,err := DeserializeOpaqueTransaction(&ovb); i+=j
+	if err != nil {
+		return 0, &ApplyTransactionArgs{}, err
+	}
+	s.Trx = *tTrx
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: ApplyTransactionReturn
+// ----------------------------------------
+
+// ApplyTransactionReturn type
+type ApplyTransactionReturn VoidType
+
+// NewApplyTransactionReturn factory
+func NewApplyTransactionReturn() *ApplyTransactionReturn {
+	o := ApplyTransactionReturn(*NewVoidType())
+	return &o
+}
+
+// Serialize ApplyTransactionReturn
+func (n ApplyTransactionReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := VoidType(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeApplyTransactionReturn function
+func DeserializeApplyTransactionReturn(vb *VariableBlob) (uint64,*ApplyTransactionReturn,error) {
+	var ot ApplyTransactionReturn
+	return 0,&ot,nil}
+
+// MarshalJSON ApplyTransactionReturn
+func (n ApplyTransactionReturn) MarshalJSON() ([]byte, error) {
+	v := VoidType(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *ApplyTransactionReturn
+func (n *ApplyTransactionReturn) UnmarshalJSON(data []byte) error {
+	v := VoidType(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = ApplyTransactionReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: ApplyUploadContractOperationArgs
+// ----------------------------------------
+
+// ApplyUploadContractOperationArgs type
+type ApplyUploadContractOperationArgs struct {
+    Op CreateSystemContractOperation `json:"op"`
+}
+
+// NewApplyUploadContractOperationArgs factory
+func NewApplyUploadContractOperationArgs() *ApplyUploadContractOperationArgs {
+	o := ApplyUploadContractOperationArgs{}
+	o.Op = *NewCreateSystemContractOperation()
+	return &o
+}
+
+// Serialize ApplyUploadContractOperationArgs
+func (n ApplyUploadContractOperationArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Op.Serialize(vb)
+	return vb
+}
+
+// DeserializeApplyUploadContractOperationArgs function
+func DeserializeApplyUploadContractOperationArgs(vb *VariableBlob) (uint64,*ApplyUploadContractOperationArgs,error) {
+	var i,j uint64 = 0,0
+	s := ApplyUploadContractOperationArgs{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tOp,err := DeserializeCreateSystemContractOperation(&ovb); i+=j
+	if err != nil {
+		return 0, &ApplyUploadContractOperationArgs{}, err
+	}
+	s.Op = *tOp
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: ApplyUploadContractOperationReturn
+// ----------------------------------------
+
+// ApplyUploadContractOperationReturn type
+type ApplyUploadContractOperationReturn VoidType
+
+// NewApplyUploadContractOperationReturn factory
+func NewApplyUploadContractOperationReturn() *ApplyUploadContractOperationReturn {
+	o := ApplyUploadContractOperationReturn(*NewVoidType())
+	return &o
+}
+
+// Serialize ApplyUploadContractOperationReturn
+func (n ApplyUploadContractOperationReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := VoidType(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeApplyUploadContractOperationReturn function
+func DeserializeApplyUploadContractOperationReturn(vb *VariableBlob) (uint64,*ApplyUploadContractOperationReturn,error) {
+	var ot ApplyUploadContractOperationReturn
+	return 0,&ot,nil}
+
+// MarshalJSON ApplyUploadContractOperationReturn
+func (n ApplyUploadContractOperationReturn) MarshalJSON() ([]byte, error) {
+	v := VoidType(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *ApplyUploadContractOperationReturn
+func (n *ApplyUploadContractOperationReturn) UnmarshalJSON(data []byte) error {
+	v := VoidType(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = ApplyUploadContractOperationReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: ApplyReservedOperationArgs
+// ----------------------------------------
+
+// ApplyReservedOperationArgs type
+type ApplyReservedOperationArgs struct {
+    Op ReservedOperation `json:"op"`
+}
+
+// NewApplyReservedOperationArgs factory
+func NewApplyReservedOperationArgs() *ApplyReservedOperationArgs {
+	o := ApplyReservedOperationArgs{}
+	o.Op = *NewReservedOperation()
+	return &o
+}
+
+// Serialize ApplyReservedOperationArgs
+func (n ApplyReservedOperationArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Op.Serialize(vb)
+	return vb
+}
+
+// DeserializeApplyReservedOperationArgs function
+func DeserializeApplyReservedOperationArgs(vb *VariableBlob) (uint64,*ApplyReservedOperationArgs,error) {
+	var i uint64 = 0
+	s := ApplyReservedOperationArgs{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: ApplyReservedOperationReturn
+// ----------------------------------------
+
+// ApplyReservedOperationReturn type
+type ApplyReservedOperationReturn VoidType
+
+// NewApplyReservedOperationReturn factory
+func NewApplyReservedOperationReturn() *ApplyReservedOperationReturn {
+	o := ApplyReservedOperationReturn(*NewVoidType())
+	return &o
+}
+
+// Serialize ApplyReservedOperationReturn
+func (n ApplyReservedOperationReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := VoidType(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeApplyReservedOperationReturn function
+func DeserializeApplyReservedOperationReturn(vb *VariableBlob) (uint64,*ApplyReservedOperationReturn,error) {
+	var ot ApplyReservedOperationReturn
+	return 0,&ot,nil}
+
+// MarshalJSON ApplyReservedOperationReturn
+func (n ApplyReservedOperationReturn) MarshalJSON() ([]byte, error) {
+	v := VoidType(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *ApplyReservedOperationReturn
+func (n *ApplyReservedOperationReturn) UnmarshalJSON(data []byte) error {
+	v := VoidType(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = ApplyReservedOperationReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: ApplyExecuteContractOperationArgs
+// ----------------------------------------
+
+// ApplyExecuteContractOperationArgs type
+type ApplyExecuteContractOperationArgs struct {
+    Op ContractCallOperation `json:"op"`
+}
+
+// NewApplyExecuteContractOperationArgs factory
+func NewApplyExecuteContractOperationArgs() *ApplyExecuteContractOperationArgs {
+	o := ApplyExecuteContractOperationArgs{}
+	o.Op = *NewContractCallOperation()
+	return &o
+}
+
+// Serialize ApplyExecuteContractOperationArgs
+func (n ApplyExecuteContractOperationArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Op.Serialize(vb)
+	return vb
+}
+
+// DeserializeApplyExecuteContractOperationArgs function
+func DeserializeApplyExecuteContractOperationArgs(vb *VariableBlob) (uint64,*ApplyExecuteContractOperationArgs,error) {
+	var i,j uint64 = 0,0
+	s := ApplyExecuteContractOperationArgs{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tOp,err := DeserializeContractCallOperation(&ovb); i+=j
+	if err != nil {
+		return 0, &ApplyExecuteContractOperationArgs{}, err
+	}
+	s.Op = *tOp
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: ApplyExecuteContractOperationReturn
+// ----------------------------------------
+
+// ApplyExecuteContractOperationReturn type
+type ApplyExecuteContractOperationReturn VoidType
+
+// NewApplyExecuteContractOperationReturn factory
+func NewApplyExecuteContractOperationReturn() *ApplyExecuteContractOperationReturn {
+	o := ApplyExecuteContractOperationReturn(*NewVoidType())
+	return &o
+}
+
+// Serialize ApplyExecuteContractOperationReturn
+func (n ApplyExecuteContractOperationReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := VoidType(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeApplyExecuteContractOperationReturn function
+func DeserializeApplyExecuteContractOperationReturn(vb *VariableBlob) (uint64,*ApplyExecuteContractOperationReturn,error) {
+	var ot ApplyExecuteContractOperationReturn
+	return 0,&ot,nil}
+
+// MarshalJSON ApplyExecuteContractOperationReturn
+func (n ApplyExecuteContractOperationReturn) MarshalJSON() ([]byte, error) {
+	v := VoidType(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *ApplyExecuteContractOperationReturn
+func (n *ApplyExecuteContractOperationReturn) UnmarshalJSON(data []byte) error {
+	v := VoidType(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = ApplyExecuteContractOperationReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: ApplySetSystemCallOperationArgs
+// ----------------------------------------
+
+// ApplySetSystemCallOperationArgs type
+type ApplySetSystemCallOperationArgs struct {
+    Op SetSystemCallOperation `json:"op"`
+}
+
+// NewApplySetSystemCallOperationArgs factory
+func NewApplySetSystemCallOperationArgs() *ApplySetSystemCallOperationArgs {
+	o := ApplySetSystemCallOperationArgs{}
+	o.Op = *NewSetSystemCallOperation()
+	return &o
+}
+
+// Serialize ApplySetSystemCallOperationArgs
+func (n ApplySetSystemCallOperationArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Op.Serialize(vb)
+	return vb
+}
+
+// DeserializeApplySetSystemCallOperationArgs function
+func DeserializeApplySetSystemCallOperationArgs(vb *VariableBlob) (uint64,*ApplySetSystemCallOperationArgs,error) {
+	var i,j uint64 = 0,0
+	s := ApplySetSystemCallOperationArgs{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tOp,err := DeserializeSetSystemCallOperation(&ovb); i+=j
+	if err != nil {
+		return 0, &ApplySetSystemCallOperationArgs{}, err
+	}
+	s.Op = *tOp
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: ApplySetSystemCallOperationReturn
+// ----------------------------------------
+
+// ApplySetSystemCallOperationReturn type
+type ApplySetSystemCallOperationReturn VoidType
+
+// NewApplySetSystemCallOperationReturn factory
+func NewApplySetSystemCallOperationReturn() *ApplySetSystemCallOperationReturn {
+	o := ApplySetSystemCallOperationReturn(*NewVoidType())
+	return &o
+}
+
+// Serialize ApplySetSystemCallOperationReturn
+func (n ApplySetSystemCallOperationReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := VoidType(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeApplySetSystemCallOperationReturn function
+func DeserializeApplySetSystemCallOperationReturn(vb *VariableBlob) (uint64,*ApplySetSystemCallOperationReturn,error) {
+	var ot ApplySetSystemCallOperationReturn
+	return 0,&ot,nil}
+
+// MarshalJSON ApplySetSystemCallOperationReturn
+func (n ApplySetSystemCallOperationReturn) MarshalJSON() ([]byte, error) {
+	v := VoidType(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *ApplySetSystemCallOperationReturn
+func (n *ApplySetSystemCallOperationReturn) UnmarshalJSON(data []byte) error {
+	v := VoidType(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = ApplySetSystemCallOperationReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: DbPutObjectArgs
+// ----------------------------------------
+
+// DbPutObjectArgs type
+type DbPutObjectArgs struct {
+    Space UInt256 `json:"space"`
+    Key UInt256 `json:"key"`
+    Obj VariableBlob `json:"obj"`
+}
+
+// NewDbPutObjectArgs factory
+func NewDbPutObjectArgs() *DbPutObjectArgs {
+	o := DbPutObjectArgs{}
+	o.Space = *NewUInt256()
+	o.Key = *NewUInt256()
+	o.Obj = *NewVariableBlob()
+	return &o
+}
+
+// Serialize DbPutObjectArgs
+func (n DbPutObjectArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Space.Serialize(vb)
+	vb = n.Key.Serialize(vb)
+	vb = n.Obj.Serialize(vb)
+	return vb
+}
+
+// DeserializeDbPutObjectArgs function
+func DeserializeDbPutObjectArgs(vb *VariableBlob) (uint64,*DbPutObjectArgs,error) {
+	var i,j uint64 = 0,0
+	s := DbPutObjectArgs{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tSpace,err := DeserializeUInt256(&ovb); i+=j
+	if err != nil {
+		return 0, &DbPutObjectArgs{}, err
+	}
+	s.Space = *tSpace
+	ovb = (*vb)[i:]
+	j,tKey,err := DeserializeUInt256(&ovb); i+=j
+	if err != nil {
+		return 0, &DbPutObjectArgs{}, err
+	}
+	s.Key = *tKey
+	ovb = (*vb)[i:]
+	j,tObj,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &DbPutObjectArgs{}, err
+	}
+	s.Obj = *tObj
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: DbPutObjectReturn
+// ----------------------------------------
+
+// DbPutObjectReturn type
+type DbPutObjectReturn Boolean
+
+// NewDbPutObjectReturn factory
+func NewDbPutObjectReturn() *DbPutObjectReturn {
+	o := DbPutObjectReturn(*NewBoolean())
+	return &o
+}
+
+// Serialize DbPutObjectReturn
+func (n DbPutObjectReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := Boolean(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeDbPutObjectReturn function
+func DeserializeDbPutObjectReturn(vb *VariableBlob) (uint64,*DbPutObjectReturn,error) {
+	var ot DbPutObjectReturn
+	i,n,err := DeserializeBoolean(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = DbPutObjectReturn(*n)
+	return i,&ot,nil}
+
+// MarshalJSON DbPutObjectReturn
+func (n DbPutObjectReturn) MarshalJSON() ([]byte, error) {
+	v := Boolean(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *DbPutObjectReturn
+func (n *DbPutObjectReturn) UnmarshalJSON(data []byte) error {
+	v := Boolean(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = DbPutObjectReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: DbGetObjectArgs
+// ----------------------------------------
+
+// DbGetObjectArgs type
+type DbGetObjectArgs struct {
+    Space UInt256 `json:"space"`
+    Key UInt256 `json:"key"`
+    ObjectSizeHint Int32 `json:"object_size_hint"`
+}
+
+// NewDbGetObjectArgs factory
+func NewDbGetObjectArgs() *DbGetObjectArgs {
+	o := DbGetObjectArgs{}
+	o.Space = *NewUInt256()
+	o.Key = *NewUInt256()
+	o.ObjectSizeHint = *NewInt32()
+	return &o
+}
+
+// Serialize DbGetObjectArgs
+func (n DbGetObjectArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Space.Serialize(vb)
+	vb = n.Key.Serialize(vb)
+	vb = n.ObjectSizeHint.Serialize(vb)
+	return vb
+}
+
+// DeserializeDbGetObjectArgs function
+func DeserializeDbGetObjectArgs(vb *VariableBlob) (uint64,*DbGetObjectArgs,error) {
+	var i,j uint64 = 0,0
+	s := DbGetObjectArgs{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tSpace,err := DeserializeUInt256(&ovb); i+=j
+	if err != nil {
+		return 0, &DbGetObjectArgs{}, err
+	}
+	s.Space = *tSpace
+	ovb = (*vb)[i:]
+	j,tKey,err := DeserializeUInt256(&ovb); i+=j
+	if err != nil {
+		return 0, &DbGetObjectArgs{}, err
+	}
+	s.Key = *tKey
+	ovb = (*vb)[i:]
+	j,tObjectSizeHint,err := DeserializeInt32(&ovb); i+=j
+	if err != nil {
+		return 0, &DbGetObjectArgs{}, err
+	}
+	s.ObjectSizeHint = *tObjectSizeHint
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: DbGetObjectReturn
+// ----------------------------------------
+
+// DbGetObjectReturn type
+type DbGetObjectReturn VariableBlob
+
+// NewDbGetObjectReturn factory
+func NewDbGetObjectReturn() *DbGetObjectReturn {
+	o := DbGetObjectReturn(*NewVariableBlob())
+	return &o
+}
+
+// Serialize DbGetObjectReturn
+func (n DbGetObjectReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := VariableBlob(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeDbGetObjectReturn function
+func DeserializeDbGetObjectReturn(vb *VariableBlob) (uint64,*DbGetObjectReturn,error) {
+	var ot DbGetObjectReturn
+	i,n,err := DeserializeVariableBlob(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = DbGetObjectReturn(*n)
+	return i,&ot,nil}
+
+// MarshalJSON DbGetObjectReturn
+func (n DbGetObjectReturn) MarshalJSON() ([]byte, error) {
+	v := VariableBlob(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *DbGetObjectReturn
+func (n *DbGetObjectReturn) UnmarshalJSON(data []byte) error {
+	v := VariableBlob(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = DbGetObjectReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Typedef: DbGetNextObjectArgs
+// ----------------------------------------
+
+// DbGetNextObjectArgs type
+type DbGetNextObjectArgs DbGetObjectArgs
+
+// NewDbGetNextObjectArgs factory
+func NewDbGetNextObjectArgs() *DbGetNextObjectArgs {
+	o := DbGetNextObjectArgs(*NewDbGetObjectArgs())
+	return &o
+}
+
+// Serialize DbGetNextObjectArgs
+func (n DbGetNextObjectArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := DbGetObjectArgs(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeDbGetNextObjectArgs function
+func DeserializeDbGetNextObjectArgs(vb *VariableBlob) (uint64,*DbGetNextObjectArgs,error) {
+	var ot DbGetNextObjectArgs
+	i,n,err := DeserializeDbGetObjectArgs(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = DbGetNextObjectArgs(*n)
+	return i,&ot,nil}
+
+// MarshalJSON DbGetNextObjectArgs
+func (n DbGetNextObjectArgs) MarshalJSON() ([]byte, error) {
+	v := DbGetObjectArgs(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *DbGetNextObjectArgs
+func (n *DbGetNextObjectArgs) UnmarshalJSON(data []byte) error {
+	v := DbGetObjectArgs(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = DbGetNextObjectArgs(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Typedef: DbGetNextObjectReturn
+// ----------------------------------------
+
+// DbGetNextObjectReturn type
+type DbGetNextObjectReturn DbGetObjectReturn
+
+// NewDbGetNextObjectReturn factory
+func NewDbGetNextObjectReturn() *DbGetNextObjectReturn {
+	o := DbGetNextObjectReturn(*NewDbGetObjectReturn())
+	return &o
+}
+
+// Serialize DbGetNextObjectReturn
+func (n DbGetNextObjectReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := DbGetObjectReturn(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeDbGetNextObjectReturn function
+func DeserializeDbGetNextObjectReturn(vb *VariableBlob) (uint64,*DbGetNextObjectReturn,error) {
+	var ot DbGetNextObjectReturn
+	i,n,err := DeserializeDbGetObjectReturn(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = DbGetNextObjectReturn(*n)
+	return i,&ot,nil}
+
+// MarshalJSON DbGetNextObjectReturn
+func (n DbGetNextObjectReturn) MarshalJSON() ([]byte, error) {
+	v := DbGetObjectReturn(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *DbGetNextObjectReturn
+func (n *DbGetNextObjectReturn) UnmarshalJSON(data []byte) error {
+	v := DbGetObjectReturn(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = DbGetNextObjectReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Typedef: DbGetPrevObjectArgs
+// ----------------------------------------
+
+// DbGetPrevObjectArgs type
+type DbGetPrevObjectArgs DbGetObjectArgs
+
+// NewDbGetPrevObjectArgs factory
+func NewDbGetPrevObjectArgs() *DbGetPrevObjectArgs {
+	o := DbGetPrevObjectArgs(*NewDbGetObjectArgs())
+	return &o
+}
+
+// Serialize DbGetPrevObjectArgs
+func (n DbGetPrevObjectArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := DbGetObjectArgs(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeDbGetPrevObjectArgs function
+func DeserializeDbGetPrevObjectArgs(vb *VariableBlob) (uint64,*DbGetPrevObjectArgs,error) {
+	var ot DbGetPrevObjectArgs
+	i,n,err := DeserializeDbGetObjectArgs(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = DbGetPrevObjectArgs(*n)
+	return i,&ot,nil}
+
+// MarshalJSON DbGetPrevObjectArgs
+func (n DbGetPrevObjectArgs) MarshalJSON() ([]byte, error) {
+	v := DbGetObjectArgs(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *DbGetPrevObjectArgs
+func (n *DbGetPrevObjectArgs) UnmarshalJSON(data []byte) error {
+	v := DbGetObjectArgs(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = DbGetPrevObjectArgs(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Typedef: DbGetPrevObjectReturn
+// ----------------------------------------
+
+// DbGetPrevObjectReturn type
+type DbGetPrevObjectReturn DbGetObjectReturn
+
+// NewDbGetPrevObjectReturn factory
+func NewDbGetPrevObjectReturn() *DbGetPrevObjectReturn {
+	o := DbGetPrevObjectReturn(*NewDbGetObjectReturn())
+	return &o
+}
+
+// Serialize DbGetPrevObjectReturn
+func (n DbGetPrevObjectReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := DbGetObjectReturn(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeDbGetPrevObjectReturn function
+func DeserializeDbGetPrevObjectReturn(vb *VariableBlob) (uint64,*DbGetPrevObjectReturn,error) {
+	var ot DbGetPrevObjectReturn
+	i,n,err := DeserializeDbGetObjectReturn(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = DbGetPrevObjectReturn(*n)
+	return i,&ot,nil}
+
+// MarshalJSON DbGetPrevObjectReturn
+func (n DbGetPrevObjectReturn) MarshalJSON() ([]byte, error) {
+	v := DbGetObjectReturn(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *DbGetPrevObjectReturn
+func (n *DbGetPrevObjectReturn) UnmarshalJSON(data []byte) error {
+	v := DbGetObjectReturn(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = DbGetPrevObjectReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: ExecuteContractArgs
+// ----------------------------------------
+
+// ExecuteContractArgs type
+type ExecuteContractArgs struct {
+    ContractID ContractIDType `json:"contract_id"`
+    EntryPoint UInt32 `json:"entry_point"`
+    Args VariableBlob `json:"args"`
+}
+
+// NewExecuteContractArgs factory
+func NewExecuteContractArgs() *ExecuteContractArgs {
+	o := ExecuteContractArgs{}
+	o.ContractID = *NewContractIDType()
+	o.EntryPoint = *NewUInt32()
+	o.Args = *NewVariableBlob()
+	return &o
+}
+
+// Serialize ExecuteContractArgs
+func (n ExecuteContractArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ContractID.Serialize(vb)
+	vb = n.EntryPoint.Serialize(vb)
+	vb = n.Args.Serialize(vb)
+	return vb
+}
+
+// DeserializeExecuteContractArgs function
+func DeserializeExecuteContractArgs(vb *VariableBlob) (uint64,*ExecuteContractArgs,error) {
+	var i,j uint64 = 0,0
+	s := ExecuteContractArgs{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tContractID,err := DeserializeContractIDType(&ovb); i+=j
+	if err != nil {
+		return 0, &ExecuteContractArgs{}, err
+	}
+	s.ContractID = *tContractID
+	ovb = (*vb)[i:]
+	j,tEntryPoint,err := DeserializeUInt32(&ovb); i+=j
+	if err != nil {
+		return 0, &ExecuteContractArgs{}, err
+	}
+	s.EntryPoint = *tEntryPoint
+	ovb = (*vb)[i:]
+	j,tArgs,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &ExecuteContractArgs{}, err
+	}
+	s.Args = *tArgs
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: ExecuteContractReturn
+// ----------------------------------------
+
+// ExecuteContractReturn type
+type ExecuteContractReturn VariableBlob
+
+// NewExecuteContractReturn factory
+func NewExecuteContractReturn() *ExecuteContractReturn {
+	o := ExecuteContractReturn(*NewVariableBlob())
+	return &o
+}
+
+// Serialize ExecuteContractReturn
+func (n ExecuteContractReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := VariableBlob(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeExecuteContractReturn function
+func DeserializeExecuteContractReturn(vb *VariableBlob) (uint64,*ExecuteContractReturn,error) {
+	var ot ExecuteContractReturn
+	i,n,err := DeserializeVariableBlob(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = ExecuteContractReturn(*n)
+	return i,&ot,nil}
+
+// MarshalJSON ExecuteContractReturn
+func (n ExecuteContractReturn) MarshalJSON() ([]byte, error) {
+	v := VariableBlob(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *ExecuteContractReturn
+func (n *ExecuteContractReturn) UnmarshalJSON(data []byte) error {
+	v := VariableBlob(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = ExecuteContractReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Typedef: GetContractArgsSizeArgs
+// ----------------------------------------
+
+// GetContractArgsSizeArgs type
+type GetContractArgsSizeArgs VoidType
+
+// NewGetContractArgsSizeArgs factory
+func NewGetContractArgsSizeArgs() *GetContractArgsSizeArgs {
+	o := GetContractArgsSizeArgs(*NewVoidType())
+	return &o
+}
+
+// Serialize GetContractArgsSizeArgs
+func (n GetContractArgsSizeArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := VoidType(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeGetContractArgsSizeArgs function
+func DeserializeGetContractArgsSizeArgs(vb *VariableBlob) (uint64,*GetContractArgsSizeArgs,error) {
+	var ot GetContractArgsSizeArgs
+	return 0,&ot,nil}
+
+// MarshalJSON GetContractArgsSizeArgs
+func (n GetContractArgsSizeArgs) MarshalJSON() ([]byte, error) {
+	v := VoidType(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *GetContractArgsSizeArgs
+func (n *GetContractArgsSizeArgs) UnmarshalJSON(data []byte) error {
+	v := VoidType(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = GetContractArgsSizeArgs(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Typedef: GetContractArgsSizeReturn
+// ----------------------------------------
+
+// GetContractArgsSizeReturn type
+type GetContractArgsSizeReturn UInt32
+
+// NewGetContractArgsSizeReturn factory
+func NewGetContractArgsSizeReturn() *GetContractArgsSizeReturn {
+	o := GetContractArgsSizeReturn(*NewUInt32())
+	return &o
+}
+
+// Serialize GetContractArgsSizeReturn
+func (n GetContractArgsSizeReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := UInt32(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeGetContractArgsSizeReturn function
+func DeserializeGetContractArgsSizeReturn(vb *VariableBlob) (uint64,*GetContractArgsSizeReturn,error) {
+	var ot GetContractArgsSizeReturn
+	i,n,err := DeserializeUInt32(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = GetContractArgsSizeReturn(*n)
+	return i,&ot,nil}
+
+// MarshalJSON GetContractArgsSizeReturn
+func (n GetContractArgsSizeReturn) MarshalJSON() ([]byte, error) {
+	v := UInt32(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *GetContractArgsSizeReturn
+func (n *GetContractArgsSizeReturn) UnmarshalJSON(data []byte) error {
+	v := UInt32(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = GetContractArgsSizeReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Typedef: GetContractArgsArgs
+// ----------------------------------------
+
+// GetContractArgsArgs type
+type GetContractArgsArgs VoidType
+
+// NewGetContractArgsArgs factory
+func NewGetContractArgsArgs() *GetContractArgsArgs {
+	o := GetContractArgsArgs(*NewVoidType())
+	return &o
+}
+
+// Serialize GetContractArgsArgs
+func (n GetContractArgsArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := VoidType(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeGetContractArgsArgs function
+func DeserializeGetContractArgsArgs(vb *VariableBlob) (uint64,*GetContractArgsArgs,error) {
+	var ot GetContractArgsArgs
+	return 0,&ot,nil}
+
+// MarshalJSON GetContractArgsArgs
+func (n GetContractArgsArgs) MarshalJSON() ([]byte, error) {
+	v := VoidType(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *GetContractArgsArgs
+func (n *GetContractArgsArgs) UnmarshalJSON(data []byte) error {
+	v := VoidType(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = GetContractArgsArgs(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Typedef: GetContractArgsReturn
+// ----------------------------------------
+
+// GetContractArgsReturn type
+type GetContractArgsReturn VariableBlob
+
+// NewGetContractArgsReturn factory
+func NewGetContractArgsReturn() *GetContractArgsReturn {
+	o := GetContractArgsReturn(*NewVariableBlob())
+	return &o
+}
+
+// Serialize GetContractArgsReturn
+func (n GetContractArgsReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := VariableBlob(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeGetContractArgsReturn function
+func DeserializeGetContractArgsReturn(vb *VariableBlob) (uint64,*GetContractArgsReturn,error) {
+	var ot GetContractArgsReturn
+	i,n,err := DeserializeVariableBlob(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = GetContractArgsReturn(*n)
+	return i,&ot,nil}
+
+// MarshalJSON GetContractArgsReturn
+func (n GetContractArgsReturn) MarshalJSON() ([]byte, error) {
+	v := VariableBlob(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *GetContractArgsReturn
+func (n *GetContractArgsReturn) UnmarshalJSON(data []byte) error {
+	v := VariableBlob(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = GetContractArgsReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: SetContractReturnArgs
+// ----------------------------------------
+
+// SetContractReturnArgs type
+type SetContractReturnArgs struct {
+    Value VariableBlob `json:"value"`
+}
+
+// NewSetContractReturnArgs factory
+func NewSetContractReturnArgs() *SetContractReturnArgs {
+	o := SetContractReturnArgs{}
+	o.Value = *NewVariableBlob()
+	return &o
+}
+
+// Serialize SetContractReturnArgs
+func (n SetContractReturnArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Value.Serialize(vb)
+	return vb
+}
+
+// DeserializeSetContractReturnArgs function
+func DeserializeSetContractReturnArgs(vb *VariableBlob) (uint64,*SetContractReturnArgs,error) {
+	var i,j uint64 = 0,0
+	s := SetContractReturnArgs{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tValue,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &SetContractReturnArgs{}, err
+	}
+	s.Value = *tValue
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: SetContractReturnReturn
+// ----------------------------------------
+
+// SetContractReturnReturn type
+type SetContractReturnReturn VoidType
+
+// NewSetContractReturnReturn factory
+func NewSetContractReturnReturn() *SetContractReturnReturn {
+	o := SetContractReturnReturn(*NewVoidType())
+	return &o
+}
+
+// Serialize SetContractReturnReturn
+func (n SetContractReturnReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := VoidType(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeSetContractReturnReturn function
+func DeserializeSetContractReturnReturn(vb *VariableBlob) (uint64,*SetContractReturnReturn,error) {
+	var ot SetContractReturnReturn
+	return 0,&ot,nil}
+
+// MarshalJSON SetContractReturnReturn
+func (n SetContractReturnReturn) MarshalJSON() ([]byte, error) {
+	v := VoidType(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *SetContractReturnReturn
+func (n *SetContractReturnReturn) UnmarshalJSON(data []byte) error {
+	v := VoidType(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = SetContractReturnReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: ExitContractArgs
+// ----------------------------------------
+
+// ExitContractArgs type
+type ExitContractArgs struct {
+    ExitCode UInt8 `json:"exit_code"`
+}
+
+// NewExitContractArgs factory
+func NewExitContractArgs() *ExitContractArgs {
+	o := ExitContractArgs{}
+	o.ExitCode = *NewUInt8()
+	return &o
+}
+
+// Serialize ExitContractArgs
+func (n ExitContractArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ExitCode.Serialize(vb)
+	return vb
+}
+
+// DeserializeExitContractArgs function
+func DeserializeExitContractArgs(vb *VariableBlob) (uint64,*ExitContractArgs,error) {
+	var i,j uint64 = 0,0
+	s := ExitContractArgs{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tExitCode,err := DeserializeUInt8(&ovb); i+=j
+	if err != nil {
+		return 0, &ExitContractArgs{}, err
+	}
+	s.ExitCode = *tExitCode
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: ExitContractReturn
+// ----------------------------------------
+
+// ExitContractReturn type
+type ExitContractReturn VoidType
+
+// NewExitContractReturn factory
+func NewExitContractReturn() *ExitContractReturn {
+	o := ExitContractReturn(*NewVoidType())
+	return &o
+}
+
+// Serialize ExitContractReturn
+func (n ExitContractReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := VoidType(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeExitContractReturn function
+func DeserializeExitContractReturn(vb *VariableBlob) (uint64,*ExitContractReturn,error) {
+	var ot ExitContractReturn
+	return 0,&ot,nil}
+
+// MarshalJSON ExitContractReturn
+func (n ExitContractReturn) MarshalJSON() ([]byte, error) {
+	v := VoidType(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *ExitContractReturn
+func (n *ExitContractReturn) UnmarshalJSON(data []byte) error {
+	v := VoidType(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = ExitContractReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Typedef: GetHeadInfoArgs
+// ----------------------------------------
+
+// GetHeadInfoArgs type
+type GetHeadInfoArgs VoidType
+
+// NewGetHeadInfoArgs factory
+func NewGetHeadInfoArgs() *GetHeadInfoArgs {
+	o := GetHeadInfoArgs(*NewVoidType())
+	return &o
+}
+
+// Serialize GetHeadInfoArgs
+func (n GetHeadInfoArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := VoidType(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeGetHeadInfoArgs function
+func DeserializeGetHeadInfoArgs(vb *VariableBlob) (uint64,*GetHeadInfoArgs,error) {
+	var ot GetHeadInfoArgs
+	return 0,&ot,nil}
+
+// MarshalJSON GetHeadInfoArgs
+func (n GetHeadInfoArgs) MarshalJSON() ([]byte, error) {
+	v := VoidType(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *GetHeadInfoArgs
+func (n *GetHeadInfoArgs) UnmarshalJSON(data []byte) error {
+	v := VoidType(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = GetHeadInfoArgs(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Typedef: GetHeadInfoReturn
+// ----------------------------------------
+
+// GetHeadInfoReturn type
+type GetHeadInfoReturn HeadInfo
+
+// NewGetHeadInfoReturn factory
+func NewGetHeadInfoReturn() *GetHeadInfoReturn {
+	o := GetHeadInfoReturn(*NewHeadInfo())
+	return &o
+}
+
+// Serialize GetHeadInfoReturn
+func (n GetHeadInfoReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := HeadInfo(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeGetHeadInfoReturn function
+func DeserializeGetHeadInfoReturn(vb *VariableBlob) (uint64,*GetHeadInfoReturn,error) {
+	var ot GetHeadInfoReturn
+	i,n,err := DeserializeHeadInfo(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = GetHeadInfoReturn(*n)
+	return i,&ot,nil}
+
+// MarshalJSON GetHeadInfoReturn
+func (n GetHeadInfoReturn) MarshalJSON() ([]byte, error) {
+	v := HeadInfo(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *GetHeadInfoReturn
+func (n *GetHeadInfoReturn) UnmarshalJSON(data []byte) error {
+	v := HeadInfo(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = GetHeadInfoReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: HashArgs
+// ----------------------------------------
+
+// HashArgs type
+type HashArgs struct {
+    Code UInt64 `json:"code"`
+    Obj VariableBlob `json:"obj"`
+    Size UInt64 `json:"size"`
+}
+
+// NewHashArgs factory
+func NewHashArgs() *HashArgs {
+	o := HashArgs{}
+	o.Code = *NewUInt64()
+	o.Obj = *NewVariableBlob()
+	o.Size = *NewUInt64()
+	return &o
+}
+
+// Serialize HashArgs
+func (n HashArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Code.Serialize(vb)
+	vb = n.Obj.Serialize(vb)
+	vb = n.Size.Serialize(vb)
+	return vb
+}
+
+// DeserializeHashArgs function
+func DeserializeHashArgs(vb *VariableBlob) (uint64,*HashArgs,error) {
+	var i,j uint64 = 0,0
+	s := HashArgs{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tCode,err := DeserializeUInt64(&ovb); i+=j
+	if err != nil {
+		return 0, &HashArgs{}, err
+	}
+	s.Code = *tCode
+	ovb = (*vb)[i:]
+	j,tObj,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &HashArgs{}, err
+	}
+	s.Obj = *tObj
+	ovb = (*vb)[i:]
+	j,tSize,err := DeserializeUInt64(&ovb); i+=j
+	if err != nil {
+		return 0, &HashArgs{}, err
+	}
+	s.Size = *tSize
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: HashReturn
+// ----------------------------------------
+
+// HashReturn type
+type HashReturn Multihash
+
+// NewHashReturn factory
+func NewHashReturn() *HashReturn {
+	o := HashReturn(*NewMultihash())
+	return &o
+}
+
+// Serialize HashReturn
+func (n HashReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := Multihash(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeHashReturn function
+func DeserializeHashReturn(vb *VariableBlob) (uint64,*HashReturn,error) {
+	var ot HashReturn
+	i,n,err := DeserializeMultihash(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = HashReturn(*n)
+	return i,&ot,nil}
+
+// MarshalJSON HashReturn
+func (n HashReturn) MarshalJSON() ([]byte, error) {
+	v := Multihash(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *HashReturn
+func (n *HashReturn) UnmarshalJSON(data []byte) error {
+	v := Multihash(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = HashReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: ChainReservedRequest
+// ----------------------------------------
+
+// ChainReservedRequest type
+type ChainReservedRequest struct {
+}
+
+// NewChainReservedRequest factory
+func NewChainReservedRequest() *ChainReservedRequest {
+	o := ChainReservedRequest{}
+	return &o
+}
+
+// Serialize ChainReservedRequest
+func (n ChainReservedRequest) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeChainReservedRequest function
+func DeserializeChainReservedRequest(vb *VariableBlob) (uint64,*ChainReservedRequest,error) {
+	var i uint64 = 0
+	s := ChainReservedRequest{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: SubmitBlockRequest
+// ----------------------------------------
+
+// SubmitBlockRequest type
+type SubmitBlockRequest struct {
     Topology BlockTopology `json:"topology"`
     Block Block `json:"block"`
     VerifyPassiveData Boolean `json:"verify_passive_data"`
@@ -2442,9 +4376,9 @@ type SubmitBlockParams struct {
     VerifyTransactionSignatures Boolean `json:"verify_transaction_signatures"`
 }
 
-// NewSubmitBlockParams factory
-func NewSubmitBlockParams() *SubmitBlockParams {
-	o := SubmitBlockParams{}
+// NewSubmitBlockRequest factory
+func NewSubmitBlockRequest() *SubmitBlockRequest {
+	o := SubmitBlockRequest{}
 	o.Topology = *NewBlockTopology()
 	o.Block = *NewBlock()
 	o.VerifyPassiveData = *NewBoolean()
@@ -2453,8 +4387,8 @@ func NewSubmitBlockParams() *SubmitBlockParams {
 	return &o
 }
 
-// Serialize SubmitBlockParams
-func (n SubmitBlockParams) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize SubmitBlockRequest
+func (n SubmitBlockRequest) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.Topology.Serialize(vb)
 	vb = n.Block.Serialize(vb)
 	vb = n.VerifyPassiveData.Serialize(vb)
@@ -2463,172 +4397,190 @@ func (n SubmitBlockParams) Serialize(vb *VariableBlob) *VariableBlob {
 	return vb
 }
 
-// DeserializeSubmitBlockParams function
-func DeserializeSubmitBlockParams(vb *VariableBlob) (uint64,*SubmitBlockParams,error) {
+// DeserializeSubmitBlockRequest function
+func DeserializeSubmitBlockRequest(vb *VariableBlob) (uint64,*SubmitBlockRequest,error) {
 	var i,j uint64 = 0,0
-	s := SubmitBlockParams{}
+	s := SubmitBlockRequest{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
 	j,tTopology,err := DeserializeBlockTopology(&ovb); i+=j
 	if err != nil {
-		return 0, &SubmitBlockParams{}, err
+		return 0, &SubmitBlockRequest{}, err
 	}
 	s.Topology = *tTopology
 	ovb = (*vb)[i:]
 	j,tBlock,err := DeserializeBlock(&ovb); i+=j
 	if err != nil {
-		return 0, &SubmitBlockParams{}, err
+		return 0, &SubmitBlockRequest{}, err
 	}
 	s.Block = *tBlock
 	ovb = (*vb)[i:]
 	j,tVerifyPassiveData,err := DeserializeBoolean(&ovb); i+=j
 	if err != nil {
-		return 0, &SubmitBlockParams{}, err
+		return 0, &SubmitBlockRequest{}, err
 	}
 	s.VerifyPassiveData = *tVerifyPassiveData
 	ovb = (*vb)[i:]
 	j,tVerifyBlockSignature,err := DeserializeBoolean(&ovb); i+=j
 	if err != nil {
-		return 0, &SubmitBlockParams{}, err
+		return 0, &SubmitBlockRequest{}, err
 	}
 	s.VerifyBlockSignature = *tVerifyBlockSignature
 	ovb = (*vb)[i:]
 	j,tVerifyTransactionSignatures,err := DeserializeBoolean(&ovb); i+=j
 	if err != nil {
-		return 0, &SubmitBlockParams{}, err
+		return 0, &SubmitBlockRequest{}, err
 	}
 	s.VerifyTransactionSignatures = *tVerifyTransactionSignatures
 	return i, &s, nil
 }
 
 // ----------------------------------------
-//  Struct: SubmitTransactionParams
+//  Struct: SubmitTransactionRequest
 // ----------------------------------------
 
-// SubmitTransactionParams type
-type SubmitTransactionParams struct {
-    ActiveBytes VariableBlob `json:"active_bytes"`
-    PassiveBytes VariableBlob `json:"passive_bytes"`
+// SubmitTransactionRequest type
+type SubmitTransactionRequest struct {
+    Topology TransactionTopology `json:"topology"`
+    Transaction Transaction `json:"transaction"`
+    VerifyPassiveData Boolean `json:"verify_passive_data"`
+    VerifyTransactionSignatures Boolean `json:"verify_transaction_signatures"`
 }
 
-// NewSubmitTransactionParams factory
-func NewSubmitTransactionParams() *SubmitTransactionParams {
-	o := SubmitTransactionParams{}
-	o.ActiveBytes = *NewVariableBlob()
-	o.PassiveBytes = *NewVariableBlob()
+// NewSubmitTransactionRequest factory
+func NewSubmitTransactionRequest() *SubmitTransactionRequest {
+	o := SubmitTransactionRequest{}
+	o.Topology = *NewTransactionTopology()
+	o.Transaction = *NewTransaction()
+	o.VerifyPassiveData = *NewBoolean()
+	o.VerifyTransactionSignatures = *NewBoolean()
 	return &o
 }
 
-// Serialize SubmitTransactionParams
-func (n SubmitTransactionParams) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.ActiveBytes.Serialize(vb)
-	vb = n.PassiveBytes.Serialize(vb)
+// Serialize SubmitTransactionRequest
+func (n SubmitTransactionRequest) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Topology.Serialize(vb)
+	vb = n.Transaction.Serialize(vb)
+	vb = n.VerifyPassiveData.Serialize(vb)
+	vb = n.VerifyTransactionSignatures.Serialize(vb)
 	return vb
 }
 
-// DeserializeSubmitTransactionParams function
-func DeserializeSubmitTransactionParams(vb *VariableBlob) (uint64,*SubmitTransactionParams,error) {
+// DeserializeSubmitTransactionRequest function
+func DeserializeSubmitTransactionRequest(vb *VariableBlob) (uint64,*SubmitTransactionRequest,error) {
 	var i,j uint64 = 0,0
-	s := SubmitTransactionParams{}
+	s := SubmitTransactionRequest{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
-	j,tActiveBytes,err := DeserializeVariableBlob(&ovb); i+=j
+	j,tTopology,err := DeserializeTransactionTopology(&ovb); i+=j
 	if err != nil {
-		return 0, &SubmitTransactionParams{}, err
+		return 0, &SubmitTransactionRequest{}, err
 	}
-	s.ActiveBytes = *tActiveBytes
+	s.Topology = *tTopology
 	ovb = (*vb)[i:]
-	j,tPassiveBytes,err := DeserializeVariableBlob(&ovb); i+=j
+	j,tTransaction,err := DeserializeTransaction(&ovb); i+=j
 	if err != nil {
-		return 0, &SubmitTransactionParams{}, err
+		return 0, &SubmitTransactionRequest{}, err
 	}
-	s.PassiveBytes = *tPassiveBytes
+	s.Transaction = *tTransaction
+	ovb = (*vb)[i:]
+	j,tVerifyPassiveData,err := DeserializeBoolean(&ovb); i+=j
+	if err != nil {
+		return 0, &SubmitTransactionRequest{}, err
+	}
+	s.VerifyPassiveData = *tVerifyPassiveData
+	ovb = (*vb)[i:]
+	j,tVerifyTransactionSignatures,err := DeserializeBoolean(&ovb); i+=j
+	if err != nil {
+		return 0, &SubmitTransactionRequest{}, err
+	}
+	s.VerifyTransactionSignatures = *tVerifyTransactionSignatures
 	return i, &s, nil
 }
 
 // ----------------------------------------
-//  Struct: GetHeadInfoParams
+//  Struct: GetHeadInfoRequest
 // ----------------------------------------
 
-// GetHeadInfoParams type
-type GetHeadInfoParams struct {
+// GetHeadInfoRequest type
+type GetHeadInfoRequest struct {
 }
 
-// NewGetHeadInfoParams factory
-func NewGetHeadInfoParams() *GetHeadInfoParams {
-	o := GetHeadInfoParams{}
+// NewGetHeadInfoRequest factory
+func NewGetHeadInfoRequest() *GetHeadInfoRequest {
+	o := GetHeadInfoRequest{}
 	return &o
 }
 
-// Serialize GetHeadInfoParams
-func (n GetHeadInfoParams) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize GetHeadInfoRequest
+func (n GetHeadInfoRequest) Serialize(vb *VariableBlob) *VariableBlob {
 	return vb
 }
 
-// DeserializeGetHeadInfoParams function
-func DeserializeGetHeadInfoParams(vb *VariableBlob) (uint64,*GetHeadInfoParams,error) {
+// DeserializeGetHeadInfoRequest function
+func DeserializeGetHeadInfoRequest(vb *VariableBlob) (uint64,*GetHeadInfoRequest,error) {
 	var i uint64 = 0
-	s := GetHeadInfoParams{}
+	s := GetHeadInfoRequest{}
 	
 	return i, &s, nil
 }
 
 // ----------------------------------------
-//  Struct: GetChainIDParams
+//  Struct: GetChainIDRequest
 // ----------------------------------------
 
-// GetChainIDParams type
-type GetChainIDParams struct {
+// GetChainIDRequest type
+type GetChainIDRequest struct {
 }
 
-// NewGetChainIDParams factory
-func NewGetChainIDParams() *GetChainIDParams {
-	o := GetChainIDParams{}
+// NewGetChainIDRequest factory
+func NewGetChainIDRequest() *GetChainIDRequest {
+	o := GetChainIDRequest{}
 	return &o
 }
 
-// Serialize GetChainIDParams
-func (n GetChainIDParams) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize GetChainIDRequest
+func (n GetChainIDRequest) Serialize(vb *VariableBlob) *VariableBlob {
 	return vb
 }
 
-// DeserializeGetChainIDParams function
-func DeserializeGetChainIDParams(vb *VariableBlob) (uint64,*GetChainIDParams,error) {
+// DeserializeGetChainIDRequest function
+func DeserializeGetChainIDRequest(vb *VariableBlob) (uint64,*GetChainIDRequest,error) {
 	var i uint64 = 0
-	s := GetChainIDParams{}
+	s := GetChainIDRequest{}
 	
 	return i, &s, nil
 }
 
 // ----------------------------------------
-//  Variant: ChainRPCParams
+//  Variant: ChainRPCRequest
 // ----------------------------------------
 
-// ChainRPCParams type
-type ChainRPCParams struct {
+// ChainRPCRequest type
+type ChainRPCRequest struct {
 	Value interface{}
 }
 
-// NewChainRPCParams factory
-func NewChainRPCParams() *ChainRPCParams {
-	v := ChainRPCParams{}
-	v.Value = NewReservedRPCParams()
+// NewChainRPCRequest factory
+func NewChainRPCRequest() *ChainRPCRequest {
+	v := ChainRPCRequest{}
+	v.Value = NewChainReservedRequest()
 	return &v
 }
 
-// Serialize ChainRPCParams
-func (n ChainRPCParams) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize ChainRPCRequest
+func (n ChainRPCRequest) Serialize(vb *VariableBlob) *VariableBlob {
 	var i uint64
 	switch n.Value.(type) {
-		case *ReservedRPCParams:
+		case *ChainReservedRequest:
 			i = 0
-		case *SubmitBlockParams:
+		case *SubmitBlockRequest:
 			i = 1
-		case *SubmitTransactionParams:
+		case *SubmitTransactionRequest:
 			i = 2
-		case *GetHeadInfoParams:
+		case *GetHeadInfoRequest:
 			i = 3
-		case *GetChainIDParams:
+		case *GetChainIDRequest:
 			i = 4
 		default:
 			panic("Unknown variant type")
@@ -2639,26 +4591,26 @@ func (n ChainRPCParams) Serialize(vb *VariableBlob) *VariableBlob {
 	return ser.Serialize(vb)
 }
 
-// TypeToName ChainRPCParams
-func (n ChainRPCParams) TypeToName() (string) {
+// TypeToName ChainRPCRequest
+func (n ChainRPCRequest) TypeToName() (string) {
 	switch n.Value.(type) {
-		case *ReservedRPCParams:
-			return "koinos::rpc::chain::reserved_rpc_params"
-		case *SubmitBlockParams:
-			return "koinos::rpc::chain::submit_block_params"
-		case *SubmitTransactionParams:
-			return "koinos::rpc::chain::submit_transaction_params"
-		case *GetHeadInfoParams:
-			return "koinos::rpc::chain::get_head_info_params"
-		case *GetChainIDParams:
-			return "koinos::rpc::chain::get_chain_id_params"
+		case *ChainReservedRequest:
+			return "koinos::rpc::chain::chain_reserved_request"
+		case *SubmitBlockRequest:
+			return "koinos::rpc::chain::submit_block_request"
+		case *SubmitTransactionRequest:
+			return "koinos::rpc::chain::submit_transaction_request"
+		case *GetHeadInfoRequest:
+			return "koinos::rpc::chain::get_head_info_request"
+		case *GetChainIDRequest:
+			return "koinos::rpc::chain::get_chain_id_request"
 		default:
 			panic("Variant type is not serializeable.")
 	}
 }
 
-// MarshalJSON ChainRPCParams
-func (n ChainRPCParams) MarshalJSON() ([]byte, error) {
+// MarshalJSON ChainRPCRequest
+func (n ChainRPCRequest) MarshalJSON() ([]byte, error) {
 	variant := struct {
 		Type string `json:"type"`
 		Value *interface{} `json:"value"`
@@ -2670,9 +4622,9 @@ func (n ChainRPCParams) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&variant)
 }
 
-// DeserializeChainRPCParams function
-func DeserializeChainRPCParams(vb *VariableBlob) (uint64,*ChainRPCParams,error) {
-	var v ChainRPCParams
+// DeserializeChainRPCRequest function
+func DeserializeChainRPCRequest(vb *VariableBlob) (uint64,*ChainRPCRequest,error) {
+	var v ChainRPCRequest
 	typeID,i := binary.Uvarint(*vb)
 	if i <= 0 {
 		return 0, &v, errors.New("could not deserialize variant tag")
@@ -2681,10 +4633,10 @@ func DeserializeChainRPCParams(vb *VariableBlob) (uint64,*ChainRPCParams,error) 
 
 	switch( typeID ) {
 		case 0:
-			v.Value = NewReservedRPCParams()
+			v.Value = NewChainReservedRequest()
 		case 1:
 			ovb := (*vb)[i:]
-			k,x,err := DeserializeSubmitBlockParams(&ovb)
+			k,x,err := DeserializeSubmitBlockRequest(&ovb)
 			if err != nil {
 				return 0, &v, err
 			}
@@ -2692,24 +4644,24 @@ func DeserializeChainRPCParams(vb *VariableBlob) (uint64,*ChainRPCParams,error) 
 			v.Value = x
 		case 2:
 			ovb := (*vb)[i:]
-			k,x,err := DeserializeSubmitTransactionParams(&ovb)
+			k,x,err := DeserializeSubmitTransactionRequest(&ovb)
 			if err != nil {
 				return 0, &v, err
 			}
 			j = k
 			v.Value = x
 		case 3:
-			v.Value = NewGetHeadInfoParams()
+			v.Value = NewGetHeadInfoRequest()
 		case 4:
-			v.Value = NewGetChainIDParams()
+			v.Value = NewGetChainIDRequest()
 		default:
 			return 0, &v, errors.New("unknown variant tag")
 	}
 	return uint64(i)+j,&v,nil
 }
 
-// UnmarshalJSON *ChainRPCParams
-func (n *ChainRPCParams) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON *ChainRPCRequest
+func (n *ChainRPCRequest) UnmarshalJSON(data []byte) error {
 	variant := struct {
 		Type  string          `json:"type"`
 		Value json.RawMessage `json:"value"`
@@ -2721,24 +4673,24 @@ func (n *ChainRPCParams) UnmarshalJSON(data []byte) error {
 	}
 
 	switch variant.Type {
-		case "koinos::rpc::chain::reserved_rpc_params":
-			v := NewReservedRPCParams()
+		case "koinos::rpc::chain::chain_reserved_request":
+			v := NewChainReservedRequest()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::rpc::chain::submit_block_params":
-			v := NewSubmitBlockParams()
+		case "koinos::rpc::chain::submit_block_request":
+			v := NewSubmitBlockRequest()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::rpc::chain::submit_transaction_params":
-			v := NewSubmitTransactionParams()
+		case "koinos::rpc::chain::submit_transaction_request":
+			v := NewSubmitTransactionRequest()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::rpc::chain::get_head_info_params":
-			v := NewGetHeadInfoParams()
+		case "koinos::rpc::chain::get_head_info_request":
+			v := NewGetHeadInfoRequest()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::rpc::chain::get_chain_id_params":
-			v := NewGetChainIDParams()
+		case "koinos::rpc::chain::get_chain_id_request":
+			v := NewGetChainIDRequest()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
@@ -2750,234 +4702,234 @@ func (n *ChainRPCParams) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
-//  Struct: ReservedRPCResult
+//  Struct: ChainReservedResponse
 // ----------------------------------------
 
-// ReservedRPCResult type
-type ReservedRPCResult struct {
+// ChainReservedResponse type
+type ChainReservedResponse struct {
 }
 
-// NewReservedRPCResult factory
-func NewReservedRPCResult() *ReservedRPCResult {
-	o := ReservedRPCResult{}
+// NewChainReservedResponse factory
+func NewChainReservedResponse() *ChainReservedResponse {
+	o := ChainReservedResponse{}
 	return &o
 }
 
-// Serialize ReservedRPCResult
-func (n ReservedRPCResult) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize ChainReservedResponse
+func (n ChainReservedResponse) Serialize(vb *VariableBlob) *VariableBlob {
 	return vb
 }
 
-// DeserializeReservedRPCResult function
-func DeserializeReservedRPCResult(vb *VariableBlob) (uint64,*ReservedRPCResult,error) {
+// DeserializeChainReservedResponse function
+func DeserializeChainReservedResponse(vb *VariableBlob) (uint64,*ChainReservedResponse,error) {
 	var i uint64 = 0
-	s := ReservedRPCResult{}
+	s := ChainReservedResponse{}
 	
 	return i, &s, nil
 }
 
 // ----------------------------------------
-//  Struct: RPCError
+//  Struct: ChainErrorResponse
 // ----------------------------------------
 
-// RPCError type
-type RPCError struct {
+// ChainErrorResponse type
+type ChainErrorResponse struct {
     ErrorText String `json:"error_text"`
 }
 
-// NewRPCError factory
-func NewRPCError() *RPCError {
-	o := RPCError{}
+// NewChainErrorResponse factory
+func NewChainErrorResponse() *ChainErrorResponse {
+	o := ChainErrorResponse{}
 	o.ErrorText = *NewString()
 	return &o
 }
 
-// Serialize RPCError
-func (n RPCError) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize ChainErrorResponse
+func (n ChainErrorResponse) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.ErrorText.Serialize(vb)
 	return vb
 }
 
-// DeserializeRPCError function
-func DeserializeRPCError(vb *VariableBlob) (uint64,*RPCError,error) {
+// DeserializeChainErrorResponse function
+func DeserializeChainErrorResponse(vb *VariableBlob) (uint64,*ChainErrorResponse,error) {
 	var i,j uint64 = 0,0
-	s := RPCError{}
+	s := ChainErrorResponse{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
 	j,tErrorText,err := DeserializeString(&ovb); i+=j
 	if err != nil {
-		return 0, &RPCError{}, err
+		return 0, &ChainErrorResponse{}, err
 	}
 	s.ErrorText = *tErrorText
 	return i, &s, nil
 }
 
 // ----------------------------------------
-//  Struct: SubmitBlockResult
+//  Struct: SubmitBlockResponse
 // ----------------------------------------
 
-// SubmitBlockResult type
-type SubmitBlockResult struct {
+// SubmitBlockResponse type
+type SubmitBlockResponse struct {
 }
 
-// NewSubmitBlockResult factory
-func NewSubmitBlockResult() *SubmitBlockResult {
-	o := SubmitBlockResult{}
+// NewSubmitBlockResponse factory
+func NewSubmitBlockResponse() *SubmitBlockResponse {
+	o := SubmitBlockResponse{}
 	return &o
 }
 
-// Serialize SubmitBlockResult
-func (n SubmitBlockResult) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize SubmitBlockResponse
+func (n SubmitBlockResponse) Serialize(vb *VariableBlob) *VariableBlob {
 	return vb
 }
 
-// DeserializeSubmitBlockResult function
-func DeserializeSubmitBlockResult(vb *VariableBlob) (uint64,*SubmitBlockResult,error) {
+// DeserializeSubmitBlockResponse function
+func DeserializeSubmitBlockResponse(vb *VariableBlob) (uint64,*SubmitBlockResponse,error) {
 	var i uint64 = 0
-	s := SubmitBlockResult{}
+	s := SubmitBlockResponse{}
 	
 	return i, &s, nil
 }
 
 // ----------------------------------------
-//  Struct: SubmitTransactionResult
+//  Struct: SubmitTransactionResponse
 // ----------------------------------------
 
-// SubmitTransactionResult type
-type SubmitTransactionResult struct {
+// SubmitTransactionResponse type
+type SubmitTransactionResponse struct {
 }
 
-// NewSubmitTransactionResult factory
-func NewSubmitTransactionResult() *SubmitTransactionResult {
-	o := SubmitTransactionResult{}
+// NewSubmitTransactionResponse factory
+func NewSubmitTransactionResponse() *SubmitTransactionResponse {
+	o := SubmitTransactionResponse{}
 	return &o
 }
 
-// Serialize SubmitTransactionResult
-func (n SubmitTransactionResult) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize SubmitTransactionResponse
+func (n SubmitTransactionResponse) Serialize(vb *VariableBlob) *VariableBlob {
 	return vb
 }
 
-// DeserializeSubmitTransactionResult function
-func DeserializeSubmitTransactionResult(vb *VariableBlob) (uint64,*SubmitTransactionResult,error) {
+// DeserializeSubmitTransactionResponse function
+func DeserializeSubmitTransactionResponse(vb *VariableBlob) (uint64,*SubmitTransactionResponse,error) {
 	var i uint64 = 0
-	s := SubmitTransactionResult{}
+	s := SubmitTransactionResponse{}
 	
 	return i, &s, nil
 }
 
 // ----------------------------------------
-//  Struct: GetHeadInfoResult
+//  Struct: GetHeadInfoResponse
 // ----------------------------------------
 
-// GetHeadInfoResult type
-type GetHeadInfoResult struct {
+// GetHeadInfoResponse type
+type GetHeadInfoResponse struct {
     ID Multihash `json:"id"`
     Height BlockHeightType `json:"height"`
 }
 
-// NewGetHeadInfoResult factory
-func NewGetHeadInfoResult() *GetHeadInfoResult {
-	o := GetHeadInfoResult{}
+// NewGetHeadInfoResponse factory
+func NewGetHeadInfoResponse() *GetHeadInfoResponse {
+	o := GetHeadInfoResponse{}
 	o.ID = *NewMultihash()
 	o.Height = *NewBlockHeightType()
 	return &o
 }
 
-// Serialize GetHeadInfoResult
-func (n GetHeadInfoResult) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize GetHeadInfoResponse
+func (n GetHeadInfoResponse) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.ID.Serialize(vb)
 	vb = n.Height.Serialize(vb)
 	return vb
 }
 
-// DeserializeGetHeadInfoResult function
-func DeserializeGetHeadInfoResult(vb *VariableBlob) (uint64,*GetHeadInfoResult,error) {
+// DeserializeGetHeadInfoResponse function
+func DeserializeGetHeadInfoResponse(vb *VariableBlob) (uint64,*GetHeadInfoResponse,error) {
 	var i,j uint64 = 0,0
-	s := GetHeadInfoResult{}
+	s := GetHeadInfoResponse{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
 	j,tID,err := DeserializeMultihash(&ovb); i+=j
 	if err != nil {
-		return 0, &GetHeadInfoResult{}, err
+		return 0, &GetHeadInfoResponse{}, err
 	}
 	s.ID = *tID
 	ovb = (*vb)[i:]
 	j,tHeight,err := DeserializeBlockHeightType(&ovb); i+=j
 	if err != nil {
-		return 0, &GetHeadInfoResult{}, err
+		return 0, &GetHeadInfoResponse{}, err
 	}
 	s.Height = *tHeight
 	return i, &s, nil
 }
 
 // ----------------------------------------
-//  Struct: GetChainIDResult
+//  Struct: GetChainIDResponse
 // ----------------------------------------
 
-// GetChainIDResult type
-type GetChainIDResult struct {
+// GetChainIDResponse type
+type GetChainIDResponse struct {
     ChainID Multihash `json:"chain_id"`
 }
 
-// NewGetChainIDResult factory
-func NewGetChainIDResult() *GetChainIDResult {
-	o := GetChainIDResult{}
+// NewGetChainIDResponse factory
+func NewGetChainIDResponse() *GetChainIDResponse {
+	o := GetChainIDResponse{}
 	o.ChainID = *NewMultihash()
 	return &o
 }
 
-// Serialize GetChainIDResult
-func (n GetChainIDResult) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize GetChainIDResponse
+func (n GetChainIDResponse) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.ChainID.Serialize(vb)
 	return vb
 }
 
-// DeserializeGetChainIDResult function
-func DeserializeGetChainIDResult(vb *VariableBlob) (uint64,*GetChainIDResult,error) {
+// DeserializeGetChainIDResponse function
+func DeserializeGetChainIDResponse(vb *VariableBlob) (uint64,*GetChainIDResponse,error) {
 	var i,j uint64 = 0,0
-	s := GetChainIDResult{}
+	s := GetChainIDResponse{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
 	j,tChainID,err := DeserializeMultihash(&ovb); i+=j
 	if err != nil {
-		return 0, &GetChainIDResult{}, err
+		return 0, &GetChainIDResponse{}, err
 	}
 	s.ChainID = *tChainID
 	return i, &s, nil
 }
 
 // ----------------------------------------
-//  Variant: ChainRPCResult
+//  Variant: ChainRPCResponse
 // ----------------------------------------
 
-// ChainRPCResult type
-type ChainRPCResult struct {
+// ChainRPCResponse type
+type ChainRPCResponse struct {
 	Value interface{}
 }
 
-// NewChainRPCResult factory
-func NewChainRPCResult() *ChainRPCResult {
-	v := ChainRPCResult{}
-	v.Value = NewReservedRPCResult()
+// NewChainRPCResponse factory
+func NewChainRPCResponse() *ChainRPCResponse {
+	v := ChainRPCResponse{}
+	v.Value = NewChainReservedResponse()
 	return &v
 }
 
-// Serialize ChainRPCResult
-func (n ChainRPCResult) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize ChainRPCResponse
+func (n ChainRPCResponse) Serialize(vb *VariableBlob) *VariableBlob {
 	var i uint64
 	switch n.Value.(type) {
-		case *ReservedRPCResult:
+		case *ChainReservedResponse:
 			i = 0
-		case *RPCError:
+		case *ChainErrorResponse:
 			i = 1
-		case *SubmitBlockResult:
+		case *SubmitBlockResponse:
 			i = 2
-		case *SubmitTransactionResult:
+		case *SubmitTransactionResponse:
 			i = 3
-		case *GetHeadInfoResult:
+		case *GetHeadInfoResponse:
 			i = 4
-		case *GetChainIDResult:
+		case *GetChainIDResponse:
 			i = 5
 		default:
 			panic("Unknown variant type")
@@ -2988,28 +4940,28 @@ func (n ChainRPCResult) Serialize(vb *VariableBlob) *VariableBlob {
 	return ser.Serialize(vb)
 }
 
-// TypeToName ChainRPCResult
-func (n ChainRPCResult) TypeToName() (string) {
+// TypeToName ChainRPCResponse
+func (n ChainRPCResponse) TypeToName() (string) {
 	switch n.Value.(type) {
-		case *ReservedRPCResult:
-			return "koinos::rpc::chain::reserved_rpc_result"
-		case *RPCError:
-			return "koinos::rpc::chain::rpc_error"
-		case *SubmitBlockResult:
-			return "koinos::rpc::chain::submit_block_result"
-		case *SubmitTransactionResult:
-			return "koinos::rpc::chain::submit_transaction_result"
-		case *GetHeadInfoResult:
-			return "koinos::rpc::chain::get_head_info_result"
-		case *GetChainIDResult:
-			return "koinos::rpc::chain::get_chain_id_result"
+		case *ChainReservedResponse:
+			return "koinos::rpc::chain::chain_reserved_response"
+		case *ChainErrorResponse:
+			return "koinos::rpc::chain::chain_error_response"
+		case *SubmitBlockResponse:
+			return "koinos::rpc::chain::submit_block_response"
+		case *SubmitTransactionResponse:
+			return "koinos::rpc::chain::submit_transaction_response"
+		case *GetHeadInfoResponse:
+			return "koinos::rpc::chain::get_head_info_response"
+		case *GetChainIDResponse:
+			return "koinos::rpc::chain::get_chain_id_response"
 		default:
 			panic("Variant type is not serializeable.")
 	}
 }
 
-// MarshalJSON ChainRPCResult
-func (n ChainRPCResult) MarshalJSON() ([]byte, error) {
+// MarshalJSON ChainRPCResponse
+func (n ChainRPCResponse) MarshalJSON() ([]byte, error) {
 	variant := struct {
 		Type string `json:"type"`
 		Value *interface{} `json:"value"`
@@ -3021,9 +4973,9 @@ func (n ChainRPCResult) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&variant)
 }
 
-// DeserializeChainRPCResult function
-func DeserializeChainRPCResult(vb *VariableBlob) (uint64,*ChainRPCResult,error) {
-	var v ChainRPCResult
+// DeserializeChainRPCResponse function
+func DeserializeChainRPCResponse(vb *VariableBlob) (uint64,*ChainRPCResponse,error) {
+	var v ChainRPCResponse
 	typeID,i := binary.Uvarint(*vb)
 	if i <= 0 {
 		return 0, &v, errors.New("could not deserialize variant tag")
@@ -3032,22 +4984,22 @@ func DeserializeChainRPCResult(vb *VariableBlob) (uint64,*ChainRPCResult,error) 
 
 	switch( typeID ) {
 		case 0:
-			v.Value = NewReservedRPCResult()
+			v.Value = NewChainReservedResponse()
 		case 1:
 			ovb := (*vb)[i:]
-			k,x,err := DeserializeRPCError(&ovb)
+			k,x,err := DeserializeChainErrorResponse(&ovb)
 			if err != nil {
 				return 0, &v, err
 			}
 			j = k
 			v.Value = x
 		case 2:
-			v.Value = NewSubmitBlockResult()
+			v.Value = NewSubmitBlockResponse()
 		case 3:
-			v.Value = NewSubmitTransactionResult()
+			v.Value = NewSubmitTransactionResponse()
 		case 4:
 			ovb := (*vb)[i:]
-			k,x,err := DeserializeGetHeadInfoResult(&ovb)
+			k,x,err := DeserializeGetHeadInfoResponse(&ovb)
 			if err != nil {
 				return 0, &v, err
 			}
@@ -3055,7 +5007,7 @@ func DeserializeChainRPCResult(vb *VariableBlob) (uint64,*ChainRPCResult,error) 
 			v.Value = x
 		case 5:
 			ovb := (*vb)[i:]
-			k,x,err := DeserializeGetChainIDResult(&ovb)
+			k,x,err := DeserializeGetChainIDResponse(&ovb)
 			if err != nil {
 				return 0, &v, err
 			}
@@ -3067,8 +5019,8 @@ func DeserializeChainRPCResult(vb *VariableBlob) (uint64,*ChainRPCResult,error) 
 	return uint64(i)+j,&v,nil
 }
 
-// UnmarshalJSON *ChainRPCResult
-func (n *ChainRPCResult) UnmarshalJSON(data []byte) error {
+// UnmarshalJSON *ChainRPCResponse
+func (n *ChainRPCResponse) UnmarshalJSON(data []byte) error {
 	variant := struct {
 		Type  string          `json:"type"`
 		Value json.RawMessage `json:"value"`
@@ -3080,28 +5032,28 @@ func (n *ChainRPCResult) UnmarshalJSON(data []byte) error {
 	}
 
 	switch variant.Type {
-		case "koinos::rpc::chain::reserved_rpc_result":
-			v := NewReservedRPCResult()
+		case "koinos::rpc::chain::chain_reserved_response":
+			v := NewChainReservedResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::rpc::chain::rpc_error":
-			v := NewRPCError()
+		case "koinos::rpc::chain::chain_error_response":
+			v := NewChainErrorResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::rpc::chain::submit_block_result":
-			v := NewSubmitBlockResult()
+		case "koinos::rpc::chain::submit_block_response":
+			v := NewSubmitBlockResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::rpc::chain::submit_transaction_result":
-			v := NewSubmitTransactionResult()
+		case "koinos::rpc::chain::submit_transaction_response":
+			v := NewSubmitTransactionResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::rpc::chain::get_head_info_result":
-			v := NewGetHeadInfoResult()
+		case "koinos::rpc::chain::get_head_info_response":
+			v := NewGetHeadInfoResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::rpc::chain::get_chain_id_result":
-			v := NewGetChainIDResult()
+		case "koinos::rpc::chain::get_chain_id_response":
+			v := NewGetChainIDResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
@@ -3113,21 +5065,68 @@ func (n *ChainRPCResult) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
+//  Typedef: SignatureType
+// ----------------------------------------
+
+// SignatureType type
+type SignatureType FixedBlob65
+
+// NewSignatureType factory
+func NewSignatureType() *SignatureType {
+	o := SignatureType(*NewFixedBlob65())
+	return &o
+}
+
+// Serialize SignatureType
+func (n SignatureType) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := FixedBlob65(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeSignatureType function
+func DeserializeSignatureType(vb *VariableBlob) (uint64,*SignatureType,error) {
+	var ot SignatureType
+	i,n,err := DeserializeFixedBlob65(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = SignatureType(*n)
+	return i,&ot,nil}
+
+// MarshalJSON SignatureType
+func (n SignatureType) MarshalJSON() ([]byte, error) {
+	v := FixedBlob65(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *SignatureType
+func (n *SignatureType) UnmarshalJSON(data []byte) error {
+	v := FixedBlob65(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = SignatureType(v)
+	return nil
+}
+
+
+// ----------------------------------------
 //  Typedef: ReservedQueryParams
 // ----------------------------------------
 
 // ReservedQueryParams type
-type ReservedQueryParams ReservedRPCParams
+type ReservedQueryParams ChainReservedRequest
 
 // NewReservedQueryParams factory
 func NewReservedQueryParams() *ReservedQueryParams {
-	o := ReservedQueryParams(*NewReservedRPCParams())
+	o := ReservedQueryParams(*NewChainReservedRequest())
 	return &o
 }
 
 // Serialize ReservedQueryParams
 func (n ReservedQueryParams) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := ReservedRPCParams(n)
+	ox := ChainReservedRequest(n)
 	return ox.Serialize(vb)
 }
 
@@ -3138,13 +5137,13 @@ func DeserializeReservedQueryParams(vb *VariableBlob) (uint64,*ReservedQueryPara
 
 // MarshalJSON ReservedQueryParams
 func (n ReservedQueryParams) MarshalJSON() ([]byte, error) {
-	v := ReservedRPCParams(n)
+	v := ChainReservedRequest(n)
 	return json.Marshal(&v)
 }
 
 // UnmarshalJSON *ReservedQueryParams
 func (n *ReservedQueryParams) UnmarshalJSON(data []byte) error {
-	v := ReservedRPCParams(*n);
+	v := ChainReservedRequest(*n);
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
@@ -3154,10 +5153,88 @@ func (n *ReservedQueryParams) UnmarshalJSON(data []byte) error {
 }
 
 
+// ----------------------------------------
+//  Typedef: GetHeadInfoParams
+// ----------------------------------------
+
+// GetHeadInfoParams type
+type GetHeadInfoParams GetHeadInfoRequest
+
+// NewGetHeadInfoParams factory
+func NewGetHeadInfoParams() *GetHeadInfoParams {
+	o := GetHeadInfoParams(*NewGetHeadInfoRequest())
+	return &o
+}
+
+// Serialize GetHeadInfoParams
+func (n GetHeadInfoParams) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := GetHeadInfoRequest(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeGetHeadInfoParams function
+func DeserializeGetHeadInfoParams(vb *VariableBlob) (uint64,*GetHeadInfoParams,error) {
+	var ot GetHeadInfoParams
+	return 0,&ot,nil}
+
+// MarshalJSON GetHeadInfoParams
+func (n GetHeadInfoParams) MarshalJSON() ([]byte, error) {
+	v := GetHeadInfoRequest(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *GetHeadInfoParams
+func (n *GetHeadInfoParams) UnmarshalJSON(data []byte) error {
+	v := GetHeadInfoRequest(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = GetHeadInfoParams(v)
+	return nil
+}
 
 
+// ----------------------------------------
+//  Typedef: GetChainIDParams
+// ----------------------------------------
 
+// GetChainIDParams type
+type GetChainIDParams GetChainIDRequest
 
+// NewGetChainIDParams factory
+func NewGetChainIDParams() *GetChainIDParams {
+	o := GetChainIDParams(*NewGetChainIDRequest())
+	return &o
+}
+
+// Serialize GetChainIDParams
+func (n GetChainIDParams) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := GetChainIDRequest(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeGetChainIDParams function
+func DeserializeGetChainIDParams(vb *VariableBlob) (uint64,*GetChainIDParams,error) {
+	var ot GetChainIDParams
+	return 0,&ot,nil}
+
+// MarshalJSON GetChainIDParams
+func (n GetChainIDParams) MarshalJSON() ([]byte, error) {
+	v := GetChainIDRequest(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *GetChainIDParams
+func (n *GetChainIDParams) UnmarshalJSON(data []byte) error {
+	v := GetChainIDRequest(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = GetChainIDParams(v)
+	return nil
+}
 
 
 // ----------------------------------------
@@ -3329,17 +5406,17 @@ func (n *QuerySubmission) UnmarshalJSON(data []byte) error {
 // ----------------------------------------
 
 // ReservedQueryResult type
-type ReservedQueryResult ReservedRPCResult
+type ReservedQueryResult ChainReservedResponse
 
 // NewReservedQueryResult factory
 func NewReservedQueryResult() *ReservedQueryResult {
-	o := ReservedQueryResult(*NewReservedRPCResult())
+	o := ReservedQueryResult(*NewChainReservedResponse())
 	return &o
 }
 
 // Serialize ReservedQueryResult
 func (n ReservedQueryResult) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := ReservedRPCResult(n)
+	ox := ChainReservedResponse(n)
 	return ox.Serialize(vb)
 }
 
@@ -3350,13 +5427,13 @@ func DeserializeReservedQueryResult(vb *VariableBlob) (uint64,*ReservedQueryResu
 
 // MarshalJSON ReservedQueryResult
 func (n ReservedQueryResult) MarshalJSON() ([]byte, error) {
-	v := ReservedRPCResult(n)
+	v := ChainReservedResponse(n)
 	return json.Marshal(&v)
 }
 
 // UnmarshalJSON *ReservedQueryResult
 func (n *ReservedQueryResult) UnmarshalJSON(data []byte) error {
-	v := ReservedRPCResult(*n);
+	v := ChainReservedResponse(*n);
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
@@ -3371,24 +5448,24 @@ func (n *ReservedQueryResult) UnmarshalJSON(data []byte) error {
 // ----------------------------------------
 
 // QueryError type
-type QueryError RPCError
+type QueryError ChainErrorResponse
 
 // NewQueryError factory
 func NewQueryError() *QueryError {
-	o := QueryError(*NewRPCError())
+	o := QueryError(*NewChainErrorResponse())
 	return &o
 }
 
 // Serialize QueryError
 func (n QueryError) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := RPCError(n)
+	ox := ChainErrorResponse(n)
 	return ox.Serialize(vb)
 }
 
 // DeserializeQueryError function
 func DeserializeQueryError(vb *VariableBlob) (uint64,*QueryError,error) {
 	var ot QueryError
-	i,n,err := DeserializeRPCError(vb)
+	i,n,err := DeserializeChainErrorResponse(vb)
 	if err != nil {
 		return 0,&ot,err
 	}
@@ -3397,13 +5474,13 @@ func DeserializeQueryError(vb *VariableBlob) (uint64,*QueryError,error) {
 
 // MarshalJSON QueryError
 func (n QueryError) MarshalJSON() ([]byte, error) {
-	v := RPCError(n)
+	v := ChainErrorResponse(n)
 	return json.Marshal(&v)
 }
 
 // UnmarshalJSON *QueryError
 func (n *QueryError) UnmarshalJSON(data []byte) error {
-	v := RPCError(*n);
+	v := ChainErrorResponse(*n);
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
@@ -3413,10 +5490,98 @@ func (n *QueryError) UnmarshalJSON(data []byte) error {
 }
 
 
+// ----------------------------------------
+//  Typedef: GetHeadInfoResult
+// ----------------------------------------
+
+// GetHeadInfoResult type
+type GetHeadInfoResult GetHeadInfoResponse
+
+// NewGetHeadInfoResult factory
+func NewGetHeadInfoResult() *GetHeadInfoResult {
+	o := GetHeadInfoResult(*NewGetHeadInfoResponse())
+	return &o
+}
+
+// Serialize GetHeadInfoResult
+func (n GetHeadInfoResult) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := GetHeadInfoResponse(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeGetHeadInfoResult function
+func DeserializeGetHeadInfoResult(vb *VariableBlob) (uint64,*GetHeadInfoResult,error) {
+	var ot GetHeadInfoResult
+	i,n,err := DeserializeGetHeadInfoResponse(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = GetHeadInfoResult(*n)
+	return i,&ot,nil}
+
+// MarshalJSON GetHeadInfoResult
+func (n GetHeadInfoResult) MarshalJSON() ([]byte, error) {
+	v := GetHeadInfoResponse(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *GetHeadInfoResult
+func (n *GetHeadInfoResult) UnmarshalJSON(data []byte) error {
+	v := GetHeadInfoResponse(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = GetHeadInfoResult(v)
+	return nil
+}
 
 
+// ----------------------------------------
+//  Typedef: GetChainIDResult
+// ----------------------------------------
 
+// GetChainIDResult type
+type GetChainIDResult GetChainIDResponse
 
+// NewGetChainIDResult factory
+func NewGetChainIDResult() *GetChainIDResult {
+	o := GetChainIDResult(*NewGetChainIDResponse())
+	return &o
+}
+
+// Serialize GetChainIDResult
+func (n GetChainIDResult) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := GetChainIDResponse(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeGetChainIDResult function
+func DeserializeGetChainIDResult(vb *VariableBlob) (uint64,*GetChainIDResult,error) {
+	var ot GetChainIDResult
+	i,n,err := DeserializeGetChainIDResponse(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = GetChainIDResult(*n)
+	return i,&ot,nil}
+
+// MarshalJSON GetChainIDResult
+func (n GetChainIDResult) MarshalJSON() ([]byte, error) {
+	v := GetChainIDResponse(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *GetChainIDResult
+func (n *GetChainIDResult) UnmarshalJSON(data []byte) error {
+	v := GetChainIDResponse(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = GetChainIDResult(v)
+	return nil
+}
 
 
 // ----------------------------------------
@@ -3616,17 +5781,17 @@ func (n *QuerySubmissionResult) UnmarshalJSON(data []byte) error {
 // ----------------------------------------
 
 // ReservedSubmission type
-type ReservedSubmission ReservedRPCParams
+type ReservedSubmission ChainReservedRequest
 
 // NewReservedSubmission factory
 func NewReservedSubmission() *ReservedSubmission {
-	o := ReservedSubmission(*NewReservedRPCParams())
+	o := ReservedSubmission(*NewChainReservedRequest())
 	return &o
 }
 
 // Serialize ReservedSubmission
 func (n ReservedSubmission) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := ReservedRPCParams(n)
+	ox := ChainReservedRequest(n)
 	return ox.Serialize(vb)
 }
 
@@ -3637,13 +5802,13 @@ func DeserializeReservedSubmission(vb *VariableBlob) (uint64,*ReservedSubmission
 
 // MarshalJSON ReservedSubmission
 func (n ReservedSubmission) MarshalJSON() ([]byte, error) {
-	v := ReservedRPCParams(n)
+	v := ChainReservedRequest(n)
 	return json.Marshal(&v)
 }
 
 // UnmarshalJSON *ReservedSubmission
 func (n *ReservedSubmission) UnmarshalJSON(data []byte) error {
-	v := ReservedRPCParams(*n);
+	v := ChainReservedRequest(*n);
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
@@ -3658,24 +5823,24 @@ func (n *ReservedSubmission) UnmarshalJSON(data []byte) error {
 // ----------------------------------------
 
 // BlockSubmission type
-type BlockSubmission SubmitBlockParams
+type BlockSubmission SubmitBlockRequest
 
 // NewBlockSubmission factory
 func NewBlockSubmission() *BlockSubmission {
-	o := BlockSubmission(*NewSubmitBlockParams())
+	o := BlockSubmission(*NewSubmitBlockRequest())
 	return &o
 }
 
 // Serialize BlockSubmission
 func (n BlockSubmission) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := SubmitBlockParams(n)
+	ox := SubmitBlockRequest(n)
 	return ox.Serialize(vb)
 }
 
 // DeserializeBlockSubmission function
 func DeserializeBlockSubmission(vb *VariableBlob) (uint64,*BlockSubmission,error) {
 	var ot BlockSubmission
-	i,n,err := DeserializeSubmitBlockParams(vb)
+	i,n,err := DeserializeSubmitBlockRequest(vb)
 	if err != nil {
 		return 0,&ot,err
 	}
@@ -3684,13 +5849,13 @@ func DeserializeBlockSubmission(vb *VariableBlob) (uint64,*BlockSubmission,error
 
 // MarshalJSON BlockSubmission
 func (n BlockSubmission) MarshalJSON() ([]byte, error) {
-	v := SubmitBlockParams(n)
+	v := SubmitBlockRequest(n)
 	return json.Marshal(&v)
 }
 
 // UnmarshalJSON *BlockSubmission
 func (n *BlockSubmission) UnmarshalJSON(data []byte) error {
-	v := SubmitBlockParams(*n);
+	v := SubmitBlockRequest(*n);
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
@@ -3705,24 +5870,24 @@ func (n *BlockSubmission) UnmarshalJSON(data []byte) error {
 // ----------------------------------------
 
 // TransactionSubmission type
-type TransactionSubmission SubmitTransactionParams
+type TransactionSubmission SubmitTransactionRequest
 
 // NewTransactionSubmission factory
 func NewTransactionSubmission() *TransactionSubmission {
-	o := TransactionSubmission(*NewSubmitTransactionParams())
+	o := TransactionSubmission(*NewSubmitTransactionRequest())
 	return &o
 }
 
 // Serialize TransactionSubmission
 func (n TransactionSubmission) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := SubmitTransactionParams(n)
+	ox := SubmitTransactionRequest(n)
 	return ox.Serialize(vb)
 }
 
 // DeserializeTransactionSubmission function
 func DeserializeTransactionSubmission(vb *VariableBlob) (uint64,*TransactionSubmission,error) {
 	var ot TransactionSubmission
-	i,n,err := DeserializeSubmitTransactionParams(vb)
+	i,n,err := DeserializeSubmitTransactionRequest(vb)
 	if err != nil {
 		return 0,&ot,err
 	}
@@ -3731,13 +5896,13 @@ func DeserializeTransactionSubmission(vb *VariableBlob) (uint64,*TransactionSubm
 
 // MarshalJSON TransactionSubmission
 func (n TransactionSubmission) MarshalJSON() ([]byte, error) {
-	v := SubmitTransactionParams(n)
+	v := SubmitTransactionRequest(n)
 	return json.Marshal(&v)
 }
 
 // UnmarshalJSON *TransactionSubmission
 func (n *TransactionSubmission) UnmarshalJSON(data []byte) error {
-	v := SubmitTransactionParams(*n);
+	v := SubmitTransactionRequest(*n);
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
@@ -3897,17 +6062,17 @@ func (n *SubmissionItem) UnmarshalJSON(data []byte) error {
 // ----------------------------------------
 
 // ReservedSubmissionResult type
-type ReservedSubmissionResult ReservedRPCResult
+type ReservedSubmissionResult ChainReservedResponse
 
 // NewReservedSubmissionResult factory
 func NewReservedSubmissionResult() *ReservedSubmissionResult {
-	o := ReservedSubmissionResult(*NewReservedRPCResult())
+	o := ReservedSubmissionResult(*NewChainReservedResponse())
 	return &o
 }
 
 // Serialize ReservedSubmissionResult
 func (n ReservedSubmissionResult) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := ReservedRPCResult(n)
+	ox := ChainReservedResponse(n)
 	return ox.Serialize(vb)
 }
 
@@ -3918,13 +6083,13 @@ func DeserializeReservedSubmissionResult(vb *VariableBlob) (uint64,*ReservedSubm
 
 // MarshalJSON ReservedSubmissionResult
 func (n ReservedSubmissionResult) MarshalJSON() ([]byte, error) {
-	v := ReservedRPCResult(n)
+	v := ChainReservedResponse(n)
 	return json.Marshal(&v)
 }
 
 // UnmarshalJSON *ReservedSubmissionResult
 func (n *ReservedSubmissionResult) UnmarshalJSON(data []byte) error {
-	v := ReservedRPCResult(*n);
+	v := ChainReservedResponse(*n);
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
@@ -3939,17 +6104,17 @@ func (n *ReservedSubmissionResult) UnmarshalJSON(data []byte) error {
 // ----------------------------------------
 
 // BlockSubmissionResult type
-type BlockSubmissionResult SubmitBlockResult
+type BlockSubmissionResult SubmitBlockResponse
 
 // NewBlockSubmissionResult factory
 func NewBlockSubmissionResult() *BlockSubmissionResult {
-	o := BlockSubmissionResult(*NewSubmitBlockResult())
+	o := BlockSubmissionResult(*NewSubmitBlockResponse())
 	return &o
 }
 
 // Serialize BlockSubmissionResult
 func (n BlockSubmissionResult) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := SubmitBlockResult(n)
+	ox := SubmitBlockResponse(n)
 	return ox.Serialize(vb)
 }
 
@@ -3960,13 +6125,13 @@ func DeserializeBlockSubmissionResult(vb *VariableBlob) (uint64,*BlockSubmission
 
 // MarshalJSON BlockSubmissionResult
 func (n BlockSubmissionResult) MarshalJSON() ([]byte, error) {
-	v := SubmitBlockResult(n)
+	v := SubmitBlockResponse(n)
 	return json.Marshal(&v)
 }
 
 // UnmarshalJSON *BlockSubmissionResult
 func (n *BlockSubmissionResult) UnmarshalJSON(data []byte) error {
-	v := SubmitBlockResult(*n);
+	v := SubmitBlockResponse(*n);
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
@@ -3981,17 +6146,17 @@ func (n *BlockSubmissionResult) UnmarshalJSON(data []byte) error {
 // ----------------------------------------
 
 // TransactionSubmissionResult type
-type TransactionSubmissionResult SubmitTransactionResult
+type TransactionSubmissionResult SubmitTransactionResponse
 
 // NewTransactionSubmissionResult factory
 func NewTransactionSubmissionResult() *TransactionSubmissionResult {
-	o := TransactionSubmissionResult(*NewSubmitTransactionResult())
+	o := TransactionSubmissionResult(*NewSubmitTransactionResponse())
 	return &o
 }
 
 // Serialize TransactionSubmissionResult
 func (n TransactionSubmissionResult) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := SubmitTransactionResult(n)
+	ox := SubmitTransactionResponse(n)
 	return ox.Serialize(vb)
 }
 
@@ -4002,13 +6167,13 @@ func DeserializeTransactionSubmissionResult(vb *VariableBlob) (uint64,*Transacti
 
 // MarshalJSON TransactionSubmissionResult
 func (n TransactionSubmissionResult) MarshalJSON() ([]byte, error) {
-	v := SubmitTransactionResult(n)
+	v := SubmitTransactionResponse(n)
 	return json.Marshal(&v)
 }
 
 // UnmarshalJSON *TransactionSubmissionResult
 func (n *TransactionSubmissionResult) UnmarshalJSON(data []byte) error {
-	v := SubmitTransactionResult(*n);
+	v := SubmitTransactionResponse(*n);
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
@@ -4023,24 +6188,24 @@ func (n *TransactionSubmissionResult) UnmarshalJSON(data []byte) error {
 // ----------------------------------------
 
 // SubmissionErrorResult type
-type SubmissionErrorResult RPCError
+type SubmissionErrorResult ChainErrorResponse
 
 // NewSubmissionErrorResult factory
 func NewSubmissionErrorResult() *SubmissionErrorResult {
-	o := SubmissionErrorResult(*NewRPCError())
+	o := SubmissionErrorResult(*NewChainErrorResponse())
 	return &o
 }
 
 // Serialize SubmissionErrorResult
 func (n SubmissionErrorResult) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := RPCError(n)
+	ox := ChainErrorResponse(n)
 	return ox.Serialize(vb)
 }
 
 // DeserializeSubmissionErrorResult function
 func DeserializeSubmissionErrorResult(vb *VariableBlob) (uint64,*SubmissionErrorResult,error) {
 	var ot SubmissionErrorResult
-	i,n,err := DeserializeRPCError(vb)
+	i,n,err := DeserializeChainErrorResponse(vb)
 	if err != nil {
 		return 0,&ot,err
 	}
@@ -4049,13 +6214,13 @@ func DeserializeSubmissionErrorResult(vb *VariableBlob) (uint64,*SubmissionError
 
 // MarshalJSON SubmissionErrorResult
 func (n SubmissionErrorResult) MarshalJSON() ([]byte, error) {
-	v := RPCError(n)
+	v := ChainErrorResponse(n)
 	return json.Marshal(&v)
 }
 
 // UnmarshalJSON *SubmissionErrorResult
 func (n *SubmissionErrorResult) UnmarshalJSON(data []byte) error {
-	v := RPCError(*n);
+	v := ChainErrorResponse(*n);
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
@@ -4210,1987 +6375,6 @@ func (n *SubmissionResult) UnmarshalJSON(data []byte) error {
 			return errors.New("unknown variant type: " + variant.Type)
 	}
 
-	return nil
-}
-
-
-// ----------------------------------------
-//  Enum: SystemCallID
-// ----------------------------------------
-
-// {'name': 'system_call_id', 'entries': [{'name': 'prints', 'value': 2602735937, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_header', 'value': 2519027790, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_block', 'value': 2494255093, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_transaction', 'value': 2643154394, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_reserved_operation', 'value': 2594724132, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_upload_contract_operation', 'value': 2658052407, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_execute_contract_operation', 'value': 2451064454, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_set_system_call_operation', 'value': 2507777116, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_put_object', 'value': 2535376802, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_object', 'value': 2540087547, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_next_object', 'value': 2577635560, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_prev_object', 'value': 2614326908, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'execute_contract', 'value': 2562796798, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args_size', 'value': 2601357273, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args', 'value': 2679873944, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'set_contract_return', 'value': 2672414186, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'exit_contract', 'value': 2564781488, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_head_info', 'value': 2507125293, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'hash', 'value': 2574716420, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_sig', 'value': 2508417296, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_merkle_root', 'value': 2574132409, 'doc': '', 'info': {'type': 'EnumEntry'}}], 'tref': {'name': ['koinos', 'types', 'uint32'], 'targs': None, 'info': {'type': 'Typeref'}}, 'doc': '', 'info': {'type': 'EnumClass'}}
-
-// SystemCallID type
-type SystemCallID UInt32
-
-// NewSystemCallID factory
-func NewSystemCallID() *SystemCallID {
-	o := SystemCallID(2602735937)
-	return &o
-}
-
-// SystemCallID values
-const (
-	SystemCallIDPrints SystemCallID = 2602735937
-	SystemCallIDVerifyBlockHeader SystemCallID = 2519027790
-	SystemCallIDApplyBlock SystemCallID = 2494255093
-	SystemCallIDApplyTransaction SystemCallID = 2643154394
-	SystemCallIDApplyReservedOperation SystemCallID = 2594724132
-	SystemCallIDApplyUploadContractOperation SystemCallID = 2658052407
-	SystemCallIDApplyExecuteContractOperation SystemCallID = 2451064454
-	SystemCallIDApplySetSystemCallOperation SystemCallID = 2507777116
-	SystemCallIDDbPutObject SystemCallID = 2535376802
-	SystemCallIDDbGetObject SystemCallID = 2540087547
-	SystemCallIDDbGetNextObject SystemCallID = 2577635560
-	SystemCallIDDbGetPrevObject SystemCallID = 2614326908
-	SystemCallIDExecuteContract SystemCallID = 2562796798
-	SystemCallIDGetContractArgsSize SystemCallID = 2601357273
-	SystemCallIDGetContractArgs SystemCallID = 2679873944
-	SystemCallIDSetContractReturn SystemCallID = 2672414186
-	SystemCallIDExitContract SystemCallID = 2564781488
-	SystemCallIDGetHeadInfo SystemCallID = 2507125293
-	SystemCallIDHash SystemCallID = 2574716420
-	SystemCallIDVerifyBlockSig SystemCallID = 2508417296
-	SystemCallIDVerifyMerkleRoot SystemCallID = 2574132409
-)
-
-// Serialize SystemCallID
-func (n SystemCallID) Serialize(vb *VariableBlob) *VariableBlob {
-	if !IsValidSystemCallID(n) {
-		panic("Attempting to serialize an invalid value")
-	}
-	x := UInt32(n)
-	return x.Serialize(vb)
-}
-
-// DeserializeSystemCallID function
-func DeserializeSystemCallID(vb *VariableBlob) (uint64,*SystemCallID,error) {
-	i,item,err := DeserializeUInt32(vb)
-	var x SystemCallID
-	if err != nil {
-		return 0,&x,err
-	}
-
-	x = SystemCallID(*item)
-	if !IsValidSystemCallID(x) {
-		return i,&x,fmt.Errorf("invalid SystemCallID: %d", x)
-	}
-	return i,&x,nil
-}
-
-// MarshalJSON SystemCallID
-func (n SystemCallID) MarshalJSON() ([]byte, error) {
-	if !IsValidSystemCallID(n) {
-		panic("Attempting to serialize an invalid value")
-	}
-
-	return json.Marshal(UInt32(n))
-}
-
-// UnmarshalJSON *SystemCallID
-func (n *SystemCallID) UnmarshalJSON(b []byte) error {
-	var o UInt32
-	if err := json.Unmarshal(b, &o); err != nil {
-		return err
-	}
-
-	ov := SystemCallID(o)
-
-	if !IsValidSystemCallID(ov) {
-		return fmt.Errorf("invalid SystemCallID: %d", o)
-	}
-
-	*n = ov
-	return nil
-}
-
-// IsValidSystemCallID validator
-func IsValidSystemCallID(v SystemCallID) bool {
-	switch v {
-		case SystemCallIDPrints:
-			return true
-		case SystemCallIDVerifyBlockHeader:
-			return true
-		case SystemCallIDApplyBlock:
-			return true
-		case SystemCallIDApplyTransaction:
-			return true
-		case SystemCallIDApplyReservedOperation:
-			return true
-		case SystemCallIDApplyUploadContractOperation:
-			return true
-		case SystemCallIDApplyExecuteContractOperation:
-			return true
-		case SystemCallIDApplySetSystemCallOperation:
-			return true
-		case SystemCallIDDbPutObject:
-			return true
-		case SystemCallIDDbGetObject:
-			return true
-		case SystemCallIDDbGetNextObject:
-			return true
-		case SystemCallIDDbGetPrevObject:
-			return true
-		case SystemCallIDExecuteContract:
-			return true
-		case SystemCallIDGetContractArgsSize:
-			return true
-		case SystemCallIDGetContractArgs:
-			return true
-		case SystemCallIDSetContractReturn:
-			return true
-		case SystemCallIDExitContract:
-			return true
-		case SystemCallIDGetHeadInfo:
-			return true
-		case SystemCallIDHash:
-			return true
-		case SystemCallIDVerifyBlockSig:
-			return true
-		case SystemCallIDVerifyMerkleRoot:
-			return true
-		default:
-			return false
-	}
-}
-
-
-// ----------------------------------------
-//  Struct: VoidType
-// ----------------------------------------
-
-// VoidType type
-type VoidType struct {
-}
-
-// NewVoidType factory
-func NewVoidType() *VoidType {
-	o := VoidType{}
-	return &o
-}
-
-// Serialize VoidType
-func (n VoidType) Serialize(vb *VariableBlob) *VariableBlob {
-	return vb
-}
-
-// DeserializeVoidType function
-func DeserializeVoidType(vb *VariableBlob) (uint64,*VoidType,error) {
-	var i uint64 = 0
-	s := VoidType{}
-	
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: PrintsArgs
-// ----------------------------------------
-
-// PrintsArgs type
-type PrintsArgs struct {
-    Message String `json:"message"`
-}
-
-// NewPrintsArgs factory
-func NewPrintsArgs() *PrintsArgs {
-	o := PrintsArgs{}
-	o.Message = *NewString()
-	return &o
-}
-
-// Serialize PrintsArgs
-func (n PrintsArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Message.Serialize(vb)
-	return vb
-}
-
-// DeserializePrintsArgs function
-func DeserializePrintsArgs(vb *VariableBlob) (uint64,*PrintsArgs,error) {
-	var i,j uint64 = 0,0
-	s := PrintsArgs{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tMessage,err := DeserializeString(&ovb); i+=j
-	if err != nil {
-		return 0, &PrintsArgs{}, err
-	}
-	s.Message = *tMessage
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Typedef: PrintsRet
-// ----------------------------------------
-
-// PrintsRet type
-type PrintsRet VoidType
-
-// NewPrintsRet factory
-func NewPrintsRet() *PrintsRet {
-	o := PrintsRet(*NewVoidType())
-	return &o
-}
-
-// Serialize PrintsRet
-func (n PrintsRet) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := VoidType(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializePrintsRet function
-func DeserializePrintsRet(vb *VariableBlob) (uint64,*PrintsRet,error) {
-	var ot PrintsRet
-	return 0,&ot,nil}
-
-// MarshalJSON PrintsRet
-func (n PrintsRet) MarshalJSON() ([]byte, error) {
-	v := VoidType(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *PrintsRet
-func (n *PrintsRet) UnmarshalJSON(data []byte) error {
-	v := VoidType(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = PrintsRet(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Struct: VerifyBlockSigArgs
-// ----------------------------------------
-
-// VerifyBlockSigArgs type
-type VerifyBlockSigArgs struct {
-    SigData VariableBlob `json:"sig_data"`
-    Digest Multihash `json:"digest"`
-}
-
-// NewVerifyBlockSigArgs factory
-func NewVerifyBlockSigArgs() *VerifyBlockSigArgs {
-	o := VerifyBlockSigArgs{}
-	o.SigData = *NewVariableBlob()
-	o.Digest = *NewMultihash()
-	return &o
-}
-
-// Serialize VerifyBlockSigArgs
-func (n VerifyBlockSigArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.SigData.Serialize(vb)
-	vb = n.Digest.Serialize(vb)
-	return vb
-}
-
-// DeserializeVerifyBlockSigArgs function
-func DeserializeVerifyBlockSigArgs(vb *VariableBlob) (uint64,*VerifyBlockSigArgs,error) {
-	var i,j uint64 = 0,0
-	s := VerifyBlockSigArgs{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tSigData,err := DeserializeVariableBlob(&ovb); i+=j
-	if err != nil {
-		return 0, &VerifyBlockSigArgs{}, err
-	}
-	s.SigData = *tSigData
-	ovb = (*vb)[i:]
-	j,tDigest,err := DeserializeMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &VerifyBlockSigArgs{}, err
-	}
-	s.Digest = *tDigest
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Typedef: VerifyBlockSigRet
-// ----------------------------------------
-
-// VerifyBlockSigRet type
-type VerifyBlockSigRet Boolean
-
-// NewVerifyBlockSigRet factory
-func NewVerifyBlockSigRet() *VerifyBlockSigRet {
-	o := VerifyBlockSigRet(*NewBoolean())
-	return &o
-}
-
-// Serialize VerifyBlockSigRet
-func (n VerifyBlockSigRet) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := Boolean(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeVerifyBlockSigRet function
-func DeserializeVerifyBlockSigRet(vb *VariableBlob) (uint64,*VerifyBlockSigRet,error) {
-	var ot VerifyBlockSigRet
-	i,n,err := DeserializeBoolean(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = VerifyBlockSigRet(*n)
-	return i,&ot,nil}
-
-// MarshalJSON VerifyBlockSigRet
-func (n VerifyBlockSigRet) MarshalJSON() ([]byte, error) {
-	v := Boolean(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *VerifyBlockSigRet
-func (n *VerifyBlockSigRet) UnmarshalJSON(data []byte) error {
-	v := Boolean(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = VerifyBlockSigRet(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Struct: VerifyMerkleRootArgs
-// ----------------------------------------
-
-// VerifyMerkleRootArgs type
-type VerifyMerkleRootArgs struct {
-    Root Multihash `json:"root"`
-    Hashes VectorMultihash `json:"hashes"`
-}
-
-// NewVerifyMerkleRootArgs factory
-func NewVerifyMerkleRootArgs() *VerifyMerkleRootArgs {
-	o := VerifyMerkleRootArgs{}
-	o.Root = *NewMultihash()
-	o.Hashes = *NewVectorMultihash()
-	return &o
-}
-
-// Serialize VerifyMerkleRootArgs
-func (n VerifyMerkleRootArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Root.Serialize(vb)
-	vb = n.Hashes.Serialize(vb)
-	return vb
-}
-
-// DeserializeVerifyMerkleRootArgs function
-func DeserializeVerifyMerkleRootArgs(vb *VariableBlob) (uint64,*VerifyMerkleRootArgs,error) {
-	var i,j uint64 = 0,0
-	s := VerifyMerkleRootArgs{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tRoot,err := DeserializeMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &VerifyMerkleRootArgs{}, err
-	}
-	s.Root = *tRoot
-	ovb = (*vb)[i:]
-	j,tHashes,err := DeserializeVectorMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &VerifyMerkleRootArgs{}, err
-	}
-	s.Hashes = *tHashes
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Typedef: VerifyMerkleRootRet
-// ----------------------------------------
-
-// VerifyMerkleRootRet type
-type VerifyMerkleRootRet Boolean
-
-// NewVerifyMerkleRootRet factory
-func NewVerifyMerkleRootRet() *VerifyMerkleRootRet {
-	o := VerifyMerkleRootRet(*NewBoolean())
-	return &o
-}
-
-// Serialize VerifyMerkleRootRet
-func (n VerifyMerkleRootRet) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := Boolean(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeVerifyMerkleRootRet function
-func DeserializeVerifyMerkleRootRet(vb *VariableBlob) (uint64,*VerifyMerkleRootRet,error) {
-	var ot VerifyMerkleRootRet
-	i,n,err := DeserializeBoolean(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = VerifyMerkleRootRet(*n)
-	return i,&ot,nil}
-
-// MarshalJSON VerifyMerkleRootRet
-func (n VerifyMerkleRootRet) MarshalJSON() ([]byte, error) {
-	v := Boolean(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *VerifyMerkleRootRet
-func (n *VerifyMerkleRootRet) UnmarshalJSON(data []byte) error {
-	v := Boolean(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = VerifyMerkleRootRet(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Struct: ApplyBlockArgs
-// ----------------------------------------
-
-// ApplyBlockArgs type
-type ApplyBlockArgs struct {
-    Block Block `json:"block"`
-    EnableCheckPassiveData Boolean `json:"enable_check_passive_data"`
-    EnableCheckBlockSignature Boolean `json:"enable_check_block_signature"`
-    EnableCheckTransactionSignatures Boolean `json:"enable_check_transaction_signatures"`
-}
-
-// NewApplyBlockArgs factory
-func NewApplyBlockArgs() *ApplyBlockArgs {
-	o := ApplyBlockArgs{}
-	o.Block = *NewBlock()
-	o.EnableCheckPassiveData = *NewBoolean()
-	o.EnableCheckBlockSignature = *NewBoolean()
-	o.EnableCheckTransactionSignatures = *NewBoolean()
-	return &o
-}
-
-// Serialize ApplyBlockArgs
-func (n ApplyBlockArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Block.Serialize(vb)
-	vb = n.EnableCheckPassiveData.Serialize(vb)
-	vb = n.EnableCheckBlockSignature.Serialize(vb)
-	vb = n.EnableCheckTransactionSignatures.Serialize(vb)
-	return vb
-}
-
-// DeserializeApplyBlockArgs function
-func DeserializeApplyBlockArgs(vb *VariableBlob) (uint64,*ApplyBlockArgs,error) {
-	var i,j uint64 = 0,0
-	s := ApplyBlockArgs{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tBlock,err := DeserializeBlock(&ovb); i+=j
-	if err != nil {
-		return 0, &ApplyBlockArgs{}, err
-	}
-	s.Block = *tBlock
-	ovb = (*vb)[i:]
-	j,tEnableCheckPassiveData,err := DeserializeBoolean(&ovb); i+=j
-	if err != nil {
-		return 0, &ApplyBlockArgs{}, err
-	}
-	s.EnableCheckPassiveData = *tEnableCheckPassiveData
-	ovb = (*vb)[i:]
-	j,tEnableCheckBlockSignature,err := DeserializeBoolean(&ovb); i+=j
-	if err != nil {
-		return 0, &ApplyBlockArgs{}, err
-	}
-	s.EnableCheckBlockSignature = *tEnableCheckBlockSignature
-	ovb = (*vb)[i:]
-	j,tEnableCheckTransactionSignatures,err := DeserializeBoolean(&ovb); i+=j
-	if err != nil {
-		return 0, &ApplyBlockArgs{}, err
-	}
-	s.EnableCheckTransactionSignatures = *tEnableCheckTransactionSignatures
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Typedef: ApplyBlockRet
-// ----------------------------------------
-
-// ApplyBlockRet type
-type ApplyBlockRet VoidType
-
-// NewApplyBlockRet factory
-func NewApplyBlockRet() *ApplyBlockRet {
-	o := ApplyBlockRet(*NewVoidType())
-	return &o
-}
-
-// Serialize ApplyBlockRet
-func (n ApplyBlockRet) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := VoidType(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeApplyBlockRet function
-func DeserializeApplyBlockRet(vb *VariableBlob) (uint64,*ApplyBlockRet,error) {
-	var ot ApplyBlockRet
-	return 0,&ot,nil}
-
-// MarshalJSON ApplyBlockRet
-func (n ApplyBlockRet) MarshalJSON() ([]byte, error) {
-	v := VoidType(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *ApplyBlockRet
-func (n *ApplyBlockRet) UnmarshalJSON(data []byte) error {
-	v := VoidType(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = ApplyBlockRet(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Struct: ApplyTransactionArgs
-// ----------------------------------------
-
-// ApplyTransactionArgs type
-type ApplyTransactionArgs struct {
-    Trx OpaqueTransaction `json:"trx"`
-}
-
-// NewApplyTransactionArgs factory
-func NewApplyTransactionArgs() *ApplyTransactionArgs {
-	o := ApplyTransactionArgs{}
-	o.Trx = *NewOpaqueTransaction()
-	return &o
-}
-
-// Serialize ApplyTransactionArgs
-func (n ApplyTransactionArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Trx.Serialize(vb)
-	return vb
-}
-
-// DeserializeApplyTransactionArgs function
-func DeserializeApplyTransactionArgs(vb *VariableBlob) (uint64,*ApplyTransactionArgs,error) {
-	var i,j uint64 = 0,0
-	s := ApplyTransactionArgs{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tTrx,err := DeserializeOpaqueTransaction(&ovb); i+=j
-	if err != nil {
-		return 0, &ApplyTransactionArgs{}, err
-	}
-	s.Trx = *tTrx
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Typedef: ApplyTransactionRet
-// ----------------------------------------
-
-// ApplyTransactionRet type
-type ApplyTransactionRet VoidType
-
-// NewApplyTransactionRet factory
-func NewApplyTransactionRet() *ApplyTransactionRet {
-	o := ApplyTransactionRet(*NewVoidType())
-	return &o
-}
-
-// Serialize ApplyTransactionRet
-func (n ApplyTransactionRet) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := VoidType(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeApplyTransactionRet function
-func DeserializeApplyTransactionRet(vb *VariableBlob) (uint64,*ApplyTransactionRet,error) {
-	var ot ApplyTransactionRet
-	return 0,&ot,nil}
-
-// MarshalJSON ApplyTransactionRet
-func (n ApplyTransactionRet) MarshalJSON() ([]byte, error) {
-	v := VoidType(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *ApplyTransactionRet
-func (n *ApplyTransactionRet) UnmarshalJSON(data []byte) error {
-	v := VoidType(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = ApplyTransactionRet(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Struct: ApplyUploadContractOperationArgs
-// ----------------------------------------
-
-// ApplyUploadContractOperationArgs type
-type ApplyUploadContractOperationArgs struct {
-    Op CreateSystemContractOperation `json:"op"`
-}
-
-// NewApplyUploadContractOperationArgs factory
-func NewApplyUploadContractOperationArgs() *ApplyUploadContractOperationArgs {
-	o := ApplyUploadContractOperationArgs{}
-	o.Op = *NewCreateSystemContractOperation()
-	return &o
-}
-
-// Serialize ApplyUploadContractOperationArgs
-func (n ApplyUploadContractOperationArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Op.Serialize(vb)
-	return vb
-}
-
-// DeserializeApplyUploadContractOperationArgs function
-func DeserializeApplyUploadContractOperationArgs(vb *VariableBlob) (uint64,*ApplyUploadContractOperationArgs,error) {
-	var i,j uint64 = 0,0
-	s := ApplyUploadContractOperationArgs{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tOp,err := DeserializeCreateSystemContractOperation(&ovb); i+=j
-	if err != nil {
-		return 0, &ApplyUploadContractOperationArgs{}, err
-	}
-	s.Op = *tOp
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Typedef: ApplyUploadContractOperationRet
-// ----------------------------------------
-
-// ApplyUploadContractOperationRet type
-type ApplyUploadContractOperationRet VoidType
-
-// NewApplyUploadContractOperationRet factory
-func NewApplyUploadContractOperationRet() *ApplyUploadContractOperationRet {
-	o := ApplyUploadContractOperationRet(*NewVoidType())
-	return &o
-}
-
-// Serialize ApplyUploadContractOperationRet
-func (n ApplyUploadContractOperationRet) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := VoidType(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeApplyUploadContractOperationRet function
-func DeserializeApplyUploadContractOperationRet(vb *VariableBlob) (uint64,*ApplyUploadContractOperationRet,error) {
-	var ot ApplyUploadContractOperationRet
-	return 0,&ot,nil}
-
-// MarshalJSON ApplyUploadContractOperationRet
-func (n ApplyUploadContractOperationRet) MarshalJSON() ([]byte, error) {
-	v := VoidType(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *ApplyUploadContractOperationRet
-func (n *ApplyUploadContractOperationRet) UnmarshalJSON(data []byte) error {
-	v := VoidType(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = ApplyUploadContractOperationRet(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Struct: ApplyReservedOperationArgs
-// ----------------------------------------
-
-// ApplyReservedOperationArgs type
-type ApplyReservedOperationArgs struct {
-    Op ReservedOperation `json:"op"`
-}
-
-// NewApplyReservedOperationArgs factory
-func NewApplyReservedOperationArgs() *ApplyReservedOperationArgs {
-	o := ApplyReservedOperationArgs{}
-	o.Op = *NewReservedOperation()
-	return &o
-}
-
-// Serialize ApplyReservedOperationArgs
-func (n ApplyReservedOperationArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Op.Serialize(vb)
-	return vb
-}
-
-// DeserializeApplyReservedOperationArgs function
-func DeserializeApplyReservedOperationArgs(vb *VariableBlob) (uint64,*ApplyReservedOperationArgs,error) {
-	var i uint64 = 0
-	s := ApplyReservedOperationArgs{}
-	
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Typedef: ApplyReservedOperationRet
-// ----------------------------------------
-
-// ApplyReservedOperationRet type
-type ApplyReservedOperationRet VoidType
-
-// NewApplyReservedOperationRet factory
-func NewApplyReservedOperationRet() *ApplyReservedOperationRet {
-	o := ApplyReservedOperationRet(*NewVoidType())
-	return &o
-}
-
-// Serialize ApplyReservedOperationRet
-func (n ApplyReservedOperationRet) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := VoidType(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeApplyReservedOperationRet function
-func DeserializeApplyReservedOperationRet(vb *VariableBlob) (uint64,*ApplyReservedOperationRet,error) {
-	var ot ApplyReservedOperationRet
-	return 0,&ot,nil}
-
-// MarshalJSON ApplyReservedOperationRet
-func (n ApplyReservedOperationRet) MarshalJSON() ([]byte, error) {
-	v := VoidType(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *ApplyReservedOperationRet
-func (n *ApplyReservedOperationRet) UnmarshalJSON(data []byte) error {
-	v := VoidType(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = ApplyReservedOperationRet(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Struct: ApplyExecuteContractOperationArgs
-// ----------------------------------------
-
-// ApplyExecuteContractOperationArgs type
-type ApplyExecuteContractOperationArgs struct {
-    Op ContractCallOperation `json:"op"`
-}
-
-// NewApplyExecuteContractOperationArgs factory
-func NewApplyExecuteContractOperationArgs() *ApplyExecuteContractOperationArgs {
-	o := ApplyExecuteContractOperationArgs{}
-	o.Op = *NewContractCallOperation()
-	return &o
-}
-
-// Serialize ApplyExecuteContractOperationArgs
-func (n ApplyExecuteContractOperationArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Op.Serialize(vb)
-	return vb
-}
-
-// DeserializeApplyExecuteContractOperationArgs function
-func DeserializeApplyExecuteContractOperationArgs(vb *VariableBlob) (uint64,*ApplyExecuteContractOperationArgs,error) {
-	var i,j uint64 = 0,0
-	s := ApplyExecuteContractOperationArgs{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tOp,err := DeserializeContractCallOperation(&ovb); i+=j
-	if err != nil {
-		return 0, &ApplyExecuteContractOperationArgs{}, err
-	}
-	s.Op = *tOp
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Typedef: ApplyExecuteContractOperationRet
-// ----------------------------------------
-
-// ApplyExecuteContractOperationRet type
-type ApplyExecuteContractOperationRet VoidType
-
-// NewApplyExecuteContractOperationRet factory
-func NewApplyExecuteContractOperationRet() *ApplyExecuteContractOperationRet {
-	o := ApplyExecuteContractOperationRet(*NewVoidType())
-	return &o
-}
-
-// Serialize ApplyExecuteContractOperationRet
-func (n ApplyExecuteContractOperationRet) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := VoidType(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeApplyExecuteContractOperationRet function
-func DeserializeApplyExecuteContractOperationRet(vb *VariableBlob) (uint64,*ApplyExecuteContractOperationRet,error) {
-	var ot ApplyExecuteContractOperationRet
-	return 0,&ot,nil}
-
-// MarshalJSON ApplyExecuteContractOperationRet
-func (n ApplyExecuteContractOperationRet) MarshalJSON() ([]byte, error) {
-	v := VoidType(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *ApplyExecuteContractOperationRet
-func (n *ApplyExecuteContractOperationRet) UnmarshalJSON(data []byte) error {
-	v := VoidType(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = ApplyExecuteContractOperationRet(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Struct: ApplySetSystemCallOperationArgs
-// ----------------------------------------
-
-// ApplySetSystemCallOperationArgs type
-type ApplySetSystemCallOperationArgs struct {
-    Op SetSystemCallOperation `json:"op"`
-}
-
-// NewApplySetSystemCallOperationArgs factory
-func NewApplySetSystemCallOperationArgs() *ApplySetSystemCallOperationArgs {
-	o := ApplySetSystemCallOperationArgs{}
-	o.Op = *NewSetSystemCallOperation()
-	return &o
-}
-
-// Serialize ApplySetSystemCallOperationArgs
-func (n ApplySetSystemCallOperationArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Op.Serialize(vb)
-	return vb
-}
-
-// DeserializeApplySetSystemCallOperationArgs function
-func DeserializeApplySetSystemCallOperationArgs(vb *VariableBlob) (uint64,*ApplySetSystemCallOperationArgs,error) {
-	var i,j uint64 = 0,0
-	s := ApplySetSystemCallOperationArgs{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tOp,err := DeserializeSetSystemCallOperation(&ovb); i+=j
-	if err != nil {
-		return 0, &ApplySetSystemCallOperationArgs{}, err
-	}
-	s.Op = *tOp
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Typedef: ApplySetSystemCallOperationRet
-// ----------------------------------------
-
-// ApplySetSystemCallOperationRet type
-type ApplySetSystemCallOperationRet VoidType
-
-// NewApplySetSystemCallOperationRet factory
-func NewApplySetSystemCallOperationRet() *ApplySetSystemCallOperationRet {
-	o := ApplySetSystemCallOperationRet(*NewVoidType())
-	return &o
-}
-
-// Serialize ApplySetSystemCallOperationRet
-func (n ApplySetSystemCallOperationRet) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := VoidType(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeApplySetSystemCallOperationRet function
-func DeserializeApplySetSystemCallOperationRet(vb *VariableBlob) (uint64,*ApplySetSystemCallOperationRet,error) {
-	var ot ApplySetSystemCallOperationRet
-	return 0,&ot,nil}
-
-// MarshalJSON ApplySetSystemCallOperationRet
-func (n ApplySetSystemCallOperationRet) MarshalJSON() ([]byte, error) {
-	v := VoidType(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *ApplySetSystemCallOperationRet
-func (n *ApplySetSystemCallOperationRet) UnmarshalJSON(data []byte) error {
-	v := VoidType(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = ApplySetSystemCallOperationRet(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Struct: DbPutObjectArgs
-// ----------------------------------------
-
-// DbPutObjectArgs type
-type DbPutObjectArgs struct {
-    Space UInt256 `json:"space"`
-    Key UInt256 `json:"key"`
-    Obj VariableBlob `json:"obj"`
-}
-
-// NewDbPutObjectArgs factory
-func NewDbPutObjectArgs() *DbPutObjectArgs {
-	o := DbPutObjectArgs{}
-	o.Space = *NewUInt256()
-	o.Key = *NewUInt256()
-	o.Obj = *NewVariableBlob()
-	return &o
-}
-
-// Serialize DbPutObjectArgs
-func (n DbPutObjectArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Space.Serialize(vb)
-	vb = n.Key.Serialize(vb)
-	vb = n.Obj.Serialize(vb)
-	return vb
-}
-
-// DeserializeDbPutObjectArgs function
-func DeserializeDbPutObjectArgs(vb *VariableBlob) (uint64,*DbPutObjectArgs,error) {
-	var i,j uint64 = 0,0
-	s := DbPutObjectArgs{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tSpace,err := DeserializeUInt256(&ovb); i+=j
-	if err != nil {
-		return 0, &DbPutObjectArgs{}, err
-	}
-	s.Space = *tSpace
-	ovb = (*vb)[i:]
-	j,tKey,err := DeserializeUInt256(&ovb); i+=j
-	if err != nil {
-		return 0, &DbPutObjectArgs{}, err
-	}
-	s.Key = *tKey
-	ovb = (*vb)[i:]
-	j,tObj,err := DeserializeVariableBlob(&ovb); i+=j
-	if err != nil {
-		return 0, &DbPutObjectArgs{}, err
-	}
-	s.Obj = *tObj
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Typedef: DbPutObjectRet
-// ----------------------------------------
-
-// DbPutObjectRet type
-type DbPutObjectRet Boolean
-
-// NewDbPutObjectRet factory
-func NewDbPutObjectRet() *DbPutObjectRet {
-	o := DbPutObjectRet(*NewBoolean())
-	return &o
-}
-
-// Serialize DbPutObjectRet
-func (n DbPutObjectRet) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := Boolean(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeDbPutObjectRet function
-func DeserializeDbPutObjectRet(vb *VariableBlob) (uint64,*DbPutObjectRet,error) {
-	var ot DbPutObjectRet
-	i,n,err := DeserializeBoolean(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = DbPutObjectRet(*n)
-	return i,&ot,nil}
-
-// MarshalJSON DbPutObjectRet
-func (n DbPutObjectRet) MarshalJSON() ([]byte, error) {
-	v := Boolean(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *DbPutObjectRet
-func (n *DbPutObjectRet) UnmarshalJSON(data []byte) error {
-	v := Boolean(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = DbPutObjectRet(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Struct: DbGetObjectArgs
-// ----------------------------------------
-
-// DbGetObjectArgs type
-type DbGetObjectArgs struct {
-    Space UInt256 `json:"space"`
-    Key UInt256 `json:"key"`
-    ObjectSizeHint Int32 `json:"object_size_hint"`
-}
-
-// NewDbGetObjectArgs factory
-func NewDbGetObjectArgs() *DbGetObjectArgs {
-	o := DbGetObjectArgs{}
-	o.Space = *NewUInt256()
-	o.Key = *NewUInt256()
-	o.ObjectSizeHint = *NewInt32()
-	return &o
-}
-
-// Serialize DbGetObjectArgs
-func (n DbGetObjectArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Space.Serialize(vb)
-	vb = n.Key.Serialize(vb)
-	vb = n.ObjectSizeHint.Serialize(vb)
-	return vb
-}
-
-// DeserializeDbGetObjectArgs function
-func DeserializeDbGetObjectArgs(vb *VariableBlob) (uint64,*DbGetObjectArgs,error) {
-	var i,j uint64 = 0,0
-	s := DbGetObjectArgs{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tSpace,err := DeserializeUInt256(&ovb); i+=j
-	if err != nil {
-		return 0, &DbGetObjectArgs{}, err
-	}
-	s.Space = *tSpace
-	ovb = (*vb)[i:]
-	j,tKey,err := DeserializeUInt256(&ovb); i+=j
-	if err != nil {
-		return 0, &DbGetObjectArgs{}, err
-	}
-	s.Key = *tKey
-	ovb = (*vb)[i:]
-	j,tObjectSizeHint,err := DeserializeInt32(&ovb); i+=j
-	if err != nil {
-		return 0, &DbGetObjectArgs{}, err
-	}
-	s.ObjectSizeHint = *tObjectSizeHint
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Typedef: DbGetObjectRet
-// ----------------------------------------
-
-// DbGetObjectRet type
-type DbGetObjectRet VariableBlob
-
-// NewDbGetObjectRet factory
-func NewDbGetObjectRet() *DbGetObjectRet {
-	o := DbGetObjectRet(*NewVariableBlob())
-	return &o
-}
-
-// Serialize DbGetObjectRet
-func (n DbGetObjectRet) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := VariableBlob(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeDbGetObjectRet function
-func DeserializeDbGetObjectRet(vb *VariableBlob) (uint64,*DbGetObjectRet,error) {
-	var ot DbGetObjectRet
-	i,n,err := DeserializeVariableBlob(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = DbGetObjectRet(*n)
-	return i,&ot,nil}
-
-// MarshalJSON DbGetObjectRet
-func (n DbGetObjectRet) MarshalJSON() ([]byte, error) {
-	v := VariableBlob(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *DbGetObjectRet
-func (n *DbGetObjectRet) UnmarshalJSON(data []byte) error {
-	v := VariableBlob(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = DbGetObjectRet(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Typedef: DbGetNextObjectArgs
-// ----------------------------------------
-
-// DbGetNextObjectArgs type
-type DbGetNextObjectArgs DbGetObjectArgs
-
-// NewDbGetNextObjectArgs factory
-func NewDbGetNextObjectArgs() *DbGetNextObjectArgs {
-	o := DbGetNextObjectArgs(*NewDbGetObjectArgs())
-	return &o
-}
-
-// Serialize DbGetNextObjectArgs
-func (n DbGetNextObjectArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := DbGetObjectArgs(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeDbGetNextObjectArgs function
-func DeserializeDbGetNextObjectArgs(vb *VariableBlob) (uint64,*DbGetNextObjectArgs,error) {
-	var ot DbGetNextObjectArgs
-	i,n,err := DeserializeDbGetObjectArgs(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = DbGetNextObjectArgs(*n)
-	return i,&ot,nil}
-
-// MarshalJSON DbGetNextObjectArgs
-func (n DbGetNextObjectArgs) MarshalJSON() ([]byte, error) {
-	v := DbGetObjectArgs(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *DbGetNextObjectArgs
-func (n *DbGetNextObjectArgs) UnmarshalJSON(data []byte) error {
-	v := DbGetObjectArgs(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = DbGetNextObjectArgs(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Typedef: DbGetNextObjectRet
-// ----------------------------------------
-
-// DbGetNextObjectRet type
-type DbGetNextObjectRet DbGetObjectRet
-
-// NewDbGetNextObjectRet factory
-func NewDbGetNextObjectRet() *DbGetNextObjectRet {
-	o := DbGetNextObjectRet(*NewDbGetObjectRet())
-	return &o
-}
-
-// Serialize DbGetNextObjectRet
-func (n DbGetNextObjectRet) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := DbGetObjectRet(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeDbGetNextObjectRet function
-func DeserializeDbGetNextObjectRet(vb *VariableBlob) (uint64,*DbGetNextObjectRet,error) {
-	var ot DbGetNextObjectRet
-	i,n,err := DeserializeDbGetObjectRet(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = DbGetNextObjectRet(*n)
-	return i,&ot,nil}
-
-// MarshalJSON DbGetNextObjectRet
-func (n DbGetNextObjectRet) MarshalJSON() ([]byte, error) {
-	v := DbGetObjectRet(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *DbGetNextObjectRet
-func (n *DbGetNextObjectRet) UnmarshalJSON(data []byte) error {
-	v := DbGetObjectRet(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = DbGetNextObjectRet(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Typedef: DbGetPrevObjectArgs
-// ----------------------------------------
-
-// DbGetPrevObjectArgs type
-type DbGetPrevObjectArgs DbGetObjectArgs
-
-// NewDbGetPrevObjectArgs factory
-func NewDbGetPrevObjectArgs() *DbGetPrevObjectArgs {
-	o := DbGetPrevObjectArgs(*NewDbGetObjectArgs())
-	return &o
-}
-
-// Serialize DbGetPrevObjectArgs
-func (n DbGetPrevObjectArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := DbGetObjectArgs(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeDbGetPrevObjectArgs function
-func DeserializeDbGetPrevObjectArgs(vb *VariableBlob) (uint64,*DbGetPrevObjectArgs,error) {
-	var ot DbGetPrevObjectArgs
-	i,n,err := DeserializeDbGetObjectArgs(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = DbGetPrevObjectArgs(*n)
-	return i,&ot,nil}
-
-// MarshalJSON DbGetPrevObjectArgs
-func (n DbGetPrevObjectArgs) MarshalJSON() ([]byte, error) {
-	v := DbGetObjectArgs(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *DbGetPrevObjectArgs
-func (n *DbGetPrevObjectArgs) UnmarshalJSON(data []byte) error {
-	v := DbGetObjectArgs(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = DbGetPrevObjectArgs(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Typedef: DbGetPrevObjectRet
-// ----------------------------------------
-
-// DbGetPrevObjectRet type
-type DbGetPrevObjectRet DbGetObjectRet
-
-// NewDbGetPrevObjectRet factory
-func NewDbGetPrevObjectRet() *DbGetPrevObjectRet {
-	o := DbGetPrevObjectRet(*NewDbGetObjectRet())
-	return &o
-}
-
-// Serialize DbGetPrevObjectRet
-func (n DbGetPrevObjectRet) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := DbGetObjectRet(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeDbGetPrevObjectRet function
-func DeserializeDbGetPrevObjectRet(vb *VariableBlob) (uint64,*DbGetPrevObjectRet,error) {
-	var ot DbGetPrevObjectRet
-	i,n,err := DeserializeDbGetObjectRet(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = DbGetPrevObjectRet(*n)
-	return i,&ot,nil}
-
-// MarshalJSON DbGetPrevObjectRet
-func (n DbGetPrevObjectRet) MarshalJSON() ([]byte, error) {
-	v := DbGetObjectRet(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *DbGetPrevObjectRet
-func (n *DbGetPrevObjectRet) UnmarshalJSON(data []byte) error {
-	v := DbGetObjectRet(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = DbGetPrevObjectRet(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Struct: ExecuteContractArgs
-// ----------------------------------------
-
-// ExecuteContractArgs type
-type ExecuteContractArgs struct {
-    ContractID ContractIDType `json:"contract_id"`
-    EntryPoint UInt32 `json:"entry_point"`
-    Args VariableBlob `json:"args"`
-}
-
-// NewExecuteContractArgs factory
-func NewExecuteContractArgs() *ExecuteContractArgs {
-	o := ExecuteContractArgs{}
-	o.ContractID = *NewContractIDType()
-	o.EntryPoint = *NewUInt32()
-	o.Args = *NewVariableBlob()
-	return &o
-}
-
-// Serialize ExecuteContractArgs
-func (n ExecuteContractArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.ContractID.Serialize(vb)
-	vb = n.EntryPoint.Serialize(vb)
-	vb = n.Args.Serialize(vb)
-	return vb
-}
-
-// DeserializeExecuteContractArgs function
-func DeserializeExecuteContractArgs(vb *VariableBlob) (uint64,*ExecuteContractArgs,error) {
-	var i,j uint64 = 0,0
-	s := ExecuteContractArgs{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tContractID,err := DeserializeContractIDType(&ovb); i+=j
-	if err != nil {
-		return 0, &ExecuteContractArgs{}, err
-	}
-	s.ContractID = *tContractID
-	ovb = (*vb)[i:]
-	j,tEntryPoint,err := DeserializeUInt32(&ovb); i+=j
-	if err != nil {
-		return 0, &ExecuteContractArgs{}, err
-	}
-	s.EntryPoint = *tEntryPoint
-	ovb = (*vb)[i:]
-	j,tArgs,err := DeserializeVariableBlob(&ovb); i+=j
-	if err != nil {
-		return 0, &ExecuteContractArgs{}, err
-	}
-	s.Args = *tArgs
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Typedef: ExecuteContractRet
-// ----------------------------------------
-
-// ExecuteContractRet type
-type ExecuteContractRet VariableBlob
-
-// NewExecuteContractRet factory
-func NewExecuteContractRet() *ExecuteContractRet {
-	o := ExecuteContractRet(*NewVariableBlob())
-	return &o
-}
-
-// Serialize ExecuteContractRet
-func (n ExecuteContractRet) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := VariableBlob(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeExecuteContractRet function
-func DeserializeExecuteContractRet(vb *VariableBlob) (uint64,*ExecuteContractRet,error) {
-	var ot ExecuteContractRet
-	i,n,err := DeserializeVariableBlob(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = ExecuteContractRet(*n)
-	return i,&ot,nil}
-
-// MarshalJSON ExecuteContractRet
-func (n ExecuteContractRet) MarshalJSON() ([]byte, error) {
-	v := VariableBlob(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *ExecuteContractRet
-func (n *ExecuteContractRet) UnmarshalJSON(data []byte) error {
-	v := VariableBlob(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = ExecuteContractRet(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Typedef: GetContractArgsSizeArgs
-// ----------------------------------------
-
-// GetContractArgsSizeArgs type
-type GetContractArgsSizeArgs VoidType
-
-// NewGetContractArgsSizeArgs factory
-func NewGetContractArgsSizeArgs() *GetContractArgsSizeArgs {
-	o := GetContractArgsSizeArgs(*NewVoidType())
-	return &o
-}
-
-// Serialize GetContractArgsSizeArgs
-func (n GetContractArgsSizeArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := VoidType(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeGetContractArgsSizeArgs function
-func DeserializeGetContractArgsSizeArgs(vb *VariableBlob) (uint64,*GetContractArgsSizeArgs,error) {
-	var ot GetContractArgsSizeArgs
-	return 0,&ot,nil}
-
-// MarshalJSON GetContractArgsSizeArgs
-func (n GetContractArgsSizeArgs) MarshalJSON() ([]byte, error) {
-	v := VoidType(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *GetContractArgsSizeArgs
-func (n *GetContractArgsSizeArgs) UnmarshalJSON(data []byte) error {
-	v := VoidType(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = GetContractArgsSizeArgs(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Typedef: GetContractArgsSizeRet
-// ----------------------------------------
-
-// GetContractArgsSizeRet type
-type GetContractArgsSizeRet UInt32
-
-// NewGetContractArgsSizeRet factory
-func NewGetContractArgsSizeRet() *GetContractArgsSizeRet {
-	o := GetContractArgsSizeRet(*NewUInt32())
-	return &o
-}
-
-// Serialize GetContractArgsSizeRet
-func (n GetContractArgsSizeRet) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := UInt32(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeGetContractArgsSizeRet function
-func DeserializeGetContractArgsSizeRet(vb *VariableBlob) (uint64,*GetContractArgsSizeRet,error) {
-	var ot GetContractArgsSizeRet
-	i,n,err := DeserializeUInt32(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = GetContractArgsSizeRet(*n)
-	return i,&ot,nil}
-
-// MarshalJSON GetContractArgsSizeRet
-func (n GetContractArgsSizeRet) MarshalJSON() ([]byte, error) {
-	v := UInt32(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *GetContractArgsSizeRet
-func (n *GetContractArgsSizeRet) UnmarshalJSON(data []byte) error {
-	v := UInt32(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = GetContractArgsSizeRet(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Typedef: GetContractArgsArgs
-// ----------------------------------------
-
-// GetContractArgsArgs type
-type GetContractArgsArgs VoidType
-
-// NewGetContractArgsArgs factory
-func NewGetContractArgsArgs() *GetContractArgsArgs {
-	o := GetContractArgsArgs(*NewVoidType())
-	return &o
-}
-
-// Serialize GetContractArgsArgs
-func (n GetContractArgsArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := VoidType(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeGetContractArgsArgs function
-func DeserializeGetContractArgsArgs(vb *VariableBlob) (uint64,*GetContractArgsArgs,error) {
-	var ot GetContractArgsArgs
-	return 0,&ot,nil}
-
-// MarshalJSON GetContractArgsArgs
-func (n GetContractArgsArgs) MarshalJSON() ([]byte, error) {
-	v := VoidType(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *GetContractArgsArgs
-func (n *GetContractArgsArgs) UnmarshalJSON(data []byte) error {
-	v := VoidType(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = GetContractArgsArgs(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Typedef: GetContractArgsRet
-// ----------------------------------------
-
-// GetContractArgsRet type
-type GetContractArgsRet VariableBlob
-
-// NewGetContractArgsRet factory
-func NewGetContractArgsRet() *GetContractArgsRet {
-	o := GetContractArgsRet(*NewVariableBlob())
-	return &o
-}
-
-// Serialize GetContractArgsRet
-func (n GetContractArgsRet) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := VariableBlob(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeGetContractArgsRet function
-func DeserializeGetContractArgsRet(vb *VariableBlob) (uint64,*GetContractArgsRet,error) {
-	var ot GetContractArgsRet
-	i,n,err := DeserializeVariableBlob(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = GetContractArgsRet(*n)
-	return i,&ot,nil}
-
-// MarshalJSON GetContractArgsRet
-func (n GetContractArgsRet) MarshalJSON() ([]byte, error) {
-	v := VariableBlob(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *GetContractArgsRet
-func (n *GetContractArgsRet) UnmarshalJSON(data []byte) error {
-	v := VariableBlob(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = GetContractArgsRet(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Struct: SetContractReturnArgs
-// ----------------------------------------
-
-// SetContractReturnArgs type
-type SetContractReturnArgs struct {
-    Ret VariableBlob `json:"ret"`
-}
-
-// NewSetContractReturnArgs factory
-func NewSetContractReturnArgs() *SetContractReturnArgs {
-	o := SetContractReturnArgs{}
-	o.Ret = *NewVariableBlob()
-	return &o
-}
-
-// Serialize SetContractReturnArgs
-func (n SetContractReturnArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Ret.Serialize(vb)
-	return vb
-}
-
-// DeserializeSetContractReturnArgs function
-func DeserializeSetContractReturnArgs(vb *VariableBlob) (uint64,*SetContractReturnArgs,error) {
-	var i,j uint64 = 0,0
-	s := SetContractReturnArgs{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tRet,err := DeserializeVariableBlob(&ovb); i+=j
-	if err != nil {
-		return 0, &SetContractReturnArgs{}, err
-	}
-	s.Ret = *tRet
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Typedef: SetContractReturnRet
-// ----------------------------------------
-
-// SetContractReturnRet type
-type SetContractReturnRet VoidType
-
-// NewSetContractReturnRet factory
-func NewSetContractReturnRet() *SetContractReturnRet {
-	o := SetContractReturnRet(*NewVoidType())
-	return &o
-}
-
-// Serialize SetContractReturnRet
-func (n SetContractReturnRet) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := VoidType(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeSetContractReturnRet function
-func DeserializeSetContractReturnRet(vb *VariableBlob) (uint64,*SetContractReturnRet,error) {
-	var ot SetContractReturnRet
-	return 0,&ot,nil}
-
-// MarshalJSON SetContractReturnRet
-func (n SetContractReturnRet) MarshalJSON() ([]byte, error) {
-	v := VoidType(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *SetContractReturnRet
-func (n *SetContractReturnRet) UnmarshalJSON(data []byte) error {
-	v := VoidType(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = SetContractReturnRet(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Struct: ExitContractArgs
-// ----------------------------------------
-
-// ExitContractArgs type
-type ExitContractArgs struct {
-    ExitCode UInt8 `json:"exit_code"`
-}
-
-// NewExitContractArgs factory
-func NewExitContractArgs() *ExitContractArgs {
-	o := ExitContractArgs{}
-	o.ExitCode = *NewUInt8()
-	return &o
-}
-
-// Serialize ExitContractArgs
-func (n ExitContractArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.ExitCode.Serialize(vb)
-	return vb
-}
-
-// DeserializeExitContractArgs function
-func DeserializeExitContractArgs(vb *VariableBlob) (uint64,*ExitContractArgs,error) {
-	var i,j uint64 = 0,0
-	s := ExitContractArgs{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tExitCode,err := DeserializeUInt8(&ovb); i+=j
-	if err != nil {
-		return 0, &ExitContractArgs{}, err
-	}
-	s.ExitCode = *tExitCode
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Typedef: ExitContractRet
-// ----------------------------------------
-
-// ExitContractRet type
-type ExitContractRet VoidType
-
-// NewExitContractRet factory
-func NewExitContractRet() *ExitContractRet {
-	o := ExitContractRet(*NewVoidType())
-	return &o
-}
-
-// Serialize ExitContractRet
-func (n ExitContractRet) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := VoidType(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeExitContractRet function
-func DeserializeExitContractRet(vb *VariableBlob) (uint64,*ExitContractRet,error) {
-	var ot ExitContractRet
-	return 0,&ot,nil}
-
-// MarshalJSON ExitContractRet
-func (n ExitContractRet) MarshalJSON() ([]byte, error) {
-	v := VoidType(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *ExitContractRet
-func (n *ExitContractRet) UnmarshalJSON(data []byte) error {
-	v := VoidType(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = ExitContractRet(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Typedef: GetHeadInfoArgs
-// ----------------------------------------
-
-// GetHeadInfoArgs type
-type GetHeadInfoArgs VoidType
-
-// NewGetHeadInfoArgs factory
-func NewGetHeadInfoArgs() *GetHeadInfoArgs {
-	o := GetHeadInfoArgs(*NewVoidType())
-	return &o
-}
-
-// Serialize GetHeadInfoArgs
-func (n GetHeadInfoArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := VoidType(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeGetHeadInfoArgs function
-func DeserializeGetHeadInfoArgs(vb *VariableBlob) (uint64,*GetHeadInfoArgs,error) {
-	var ot GetHeadInfoArgs
-	return 0,&ot,nil}
-
-// MarshalJSON GetHeadInfoArgs
-func (n GetHeadInfoArgs) MarshalJSON() ([]byte, error) {
-	v := VoidType(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *GetHeadInfoArgs
-func (n *GetHeadInfoArgs) UnmarshalJSON(data []byte) error {
-	v := VoidType(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = GetHeadInfoArgs(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Typedef: GetHeadInfoRet
-// ----------------------------------------
-
-// GetHeadInfoRet type
-type GetHeadInfoRet HeadInfo
-
-// NewGetHeadInfoRet factory
-func NewGetHeadInfoRet() *GetHeadInfoRet {
-	o := GetHeadInfoRet(*NewHeadInfo())
-	return &o
-}
-
-// Serialize GetHeadInfoRet
-func (n GetHeadInfoRet) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := HeadInfo(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeGetHeadInfoRet function
-func DeserializeGetHeadInfoRet(vb *VariableBlob) (uint64,*GetHeadInfoRet,error) {
-	var ot GetHeadInfoRet
-	i,n,err := DeserializeHeadInfo(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = GetHeadInfoRet(*n)
-	return i,&ot,nil}
-
-// MarshalJSON GetHeadInfoRet
-func (n GetHeadInfoRet) MarshalJSON() ([]byte, error) {
-	v := HeadInfo(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *GetHeadInfoRet
-func (n *GetHeadInfoRet) UnmarshalJSON(data []byte) error {
-	v := HeadInfo(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = GetHeadInfoRet(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Struct: HashArgs
-// ----------------------------------------
-
-// HashArgs type
-type HashArgs struct {
-    Code UInt64 `json:"code"`
-    Obj VariableBlob `json:"obj"`
-    Size UInt64 `json:"size"`
-}
-
-// NewHashArgs factory
-func NewHashArgs() *HashArgs {
-	o := HashArgs{}
-	o.Code = *NewUInt64()
-	o.Obj = *NewVariableBlob()
-	o.Size = *NewUInt64()
-	return &o
-}
-
-// Serialize HashArgs
-func (n HashArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Code.Serialize(vb)
-	vb = n.Obj.Serialize(vb)
-	vb = n.Size.Serialize(vb)
-	return vb
-}
-
-// DeserializeHashArgs function
-func DeserializeHashArgs(vb *VariableBlob) (uint64,*HashArgs,error) {
-	var i,j uint64 = 0,0
-	s := HashArgs{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tCode,err := DeserializeUInt64(&ovb); i+=j
-	if err != nil {
-		return 0, &HashArgs{}, err
-	}
-	s.Code = *tCode
-	ovb = (*vb)[i:]
-	j,tObj,err := DeserializeVariableBlob(&ovb); i+=j
-	if err != nil {
-		return 0, &HashArgs{}, err
-	}
-	s.Obj = *tObj
-	ovb = (*vb)[i:]
-	j,tSize,err := DeserializeUInt64(&ovb); i+=j
-	if err != nil {
-		return 0, &HashArgs{}, err
-	}
-	s.Size = *tSize
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Typedef: HashRet
-// ----------------------------------------
-
-// HashRet type
-type HashRet Multihash
-
-// NewHashRet factory
-func NewHashRet() *HashRet {
-	o := HashRet(*NewMultihash())
-	return &o
-}
-
-// Serialize HashRet
-func (n HashRet) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := Multihash(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeHashRet function
-func DeserializeHashRet(vb *VariableBlob) (uint64,*HashRet,error) {
-	var ot HashRet
-	i,n,err := DeserializeMultihash(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = HashRet(*n)
-	return i,&ot,nil}
-
-// MarshalJSON HashRet
-func (n HashRet) MarshalJSON() ([]byte, error) {
-	v := Multihash(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *HashRet
-func (n *HashRet) UnmarshalJSON(data []byte) error {
-	v := Multihash(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = HashRet(v)
-	return nil
-}
-
-
-// ----------------------------------------
-//  Typedef: SignatureType
-// ----------------------------------------
-
-// SignatureType type
-type SignatureType FixedBlob65
-
-// NewSignatureType factory
-func NewSignatureType() *SignatureType {
-	o := SignatureType(*NewFixedBlob65())
-	return &o
-}
-
-// Serialize SignatureType
-func (n SignatureType) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := FixedBlob65(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeSignatureType function
-func DeserializeSignatureType(vb *VariableBlob) (uint64,*SignatureType,error) {
-	var ot SignatureType
-	i,n,err := DeserializeFixedBlob65(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = SignatureType(*n)
-	return i,&ot,nil}
-
-// MarshalJSON SignatureType
-func (n SignatureType) MarshalJSON() ([]byte, error) {
-	v := FixedBlob65(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *SignatureType
-func (n *SignatureType) UnmarshalJSON(data []byte) error {
-	v := FixedBlob65(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = SignatureType(v)
 	return nil
 }
 
@@ -6431,7 +6615,7 @@ func (n OpaqueActiveBlockData) MarshalJSON() ([]byte, error) {
 	}
 
 	v := opaqueJSON{}
-	v.Opaque.Type = "koinos::types::protocol::active_block_data"
+	v.Opaque.Type = "koinos::protocol::active_block_data"
 	v.Opaque.Value = *n.blob
 
 	return json.Marshal(&v)
@@ -6451,7 +6635,7 @@ func (n *OpaqueActiveBlockData) UnmarshalJSON(data []byte) (error) {
 		if err := json.Unmarshal(data, &obj); err != nil {
 			return err
 		}
-		if strings.Compare(obj.Opaque.Type, "koinos::types::protocol::active_block_data") != 0 {
+		if strings.Compare(obj.Opaque.Type, "koinos::protocol::active_block_data") != 0 {
 			return errors.New("unexpected opaque type name")
 		}
 		n.blob = &obj.Opaque.Value
@@ -6571,7 +6755,7 @@ func (n OpaqueActiveTransactionData) MarshalJSON() ([]byte, error) {
 	}
 
 	v := opaqueJSON{}
-	v.Opaque.Type = "koinos::types::protocol::active_transaction_data"
+	v.Opaque.Type = "koinos::protocol::active_transaction_data"
 	v.Opaque.Value = *n.blob
 
 	return json.Marshal(&v)
@@ -6591,7 +6775,7 @@ func (n *OpaqueActiveTransactionData) UnmarshalJSON(data []byte) (error) {
 		if err := json.Unmarshal(data, &obj); err != nil {
 			return err
 		}
-		if strings.Compare(obj.Opaque.Type, "koinos::types::protocol::active_transaction_data") != 0 {
+		if strings.Compare(obj.Opaque.Type, "koinos::protocol::active_transaction_data") != 0 {
 			return errors.New("unexpected opaque type name")
 		}
 		n.blob = &obj.Opaque.Value
@@ -6711,7 +6895,7 @@ func (n OpaqueBlock) MarshalJSON() ([]byte, error) {
 	}
 
 	v := opaqueJSON{}
-	v.Opaque.Type = "koinos::types::protocol::block"
+	v.Opaque.Type = "koinos::protocol::block"
 	v.Opaque.Value = *n.blob
 
 	return json.Marshal(&v)
@@ -6731,7 +6915,7 @@ func (n *OpaqueBlock) UnmarshalJSON(data []byte) (error) {
 		if err := json.Unmarshal(data, &obj); err != nil {
 			return err
 		}
-		if strings.Compare(obj.Opaque.Type, "koinos::types::protocol::block") != 0 {
+		if strings.Compare(obj.Opaque.Type, "koinos::protocol::block") != 0 {
 			return errors.New("unexpected opaque type name")
 		}
 		n.blob = &obj.Opaque.Value
@@ -6851,7 +7035,7 @@ func (n OpaqueBlockReceipt) MarshalJSON() ([]byte, error) {
 	}
 
 	v := opaqueJSON{}
-	v.Opaque.Type = "koinos::types::protocol::block_receipt"
+	v.Opaque.Type = "koinos::protocol::block_receipt"
 	v.Opaque.Value = *n.blob
 
 	return json.Marshal(&v)
@@ -6871,7 +7055,7 @@ func (n *OpaqueBlockReceipt) UnmarshalJSON(data []byte) (error) {
 		if err := json.Unmarshal(data, &obj); err != nil {
 			return err
 		}
-		if strings.Compare(obj.Opaque.Type, "koinos::types::protocol::block_receipt") != 0 {
+		if strings.Compare(obj.Opaque.Type, "koinos::protocol::block_receipt") != 0 {
 			return errors.New("unexpected opaque type name")
 		}
 		n.blob = &obj.Opaque.Value
@@ -6991,7 +7175,7 @@ func (n OpaquePassiveBlockData) MarshalJSON() ([]byte, error) {
 	}
 
 	v := opaqueJSON{}
-	v.Opaque.Type = "koinos::types::protocol::passive_block_data"
+	v.Opaque.Type = "koinos::protocol::passive_block_data"
 	v.Opaque.Value = *n.blob
 
 	return json.Marshal(&v)
@@ -7011,7 +7195,7 @@ func (n *OpaquePassiveBlockData) UnmarshalJSON(data []byte) (error) {
 		if err := json.Unmarshal(data, &obj); err != nil {
 			return err
 		}
-		if strings.Compare(obj.Opaque.Type, "koinos::types::protocol::passive_block_data") != 0 {
+		if strings.Compare(obj.Opaque.Type, "koinos::protocol::passive_block_data") != 0 {
 			return errors.New("unexpected opaque type name")
 		}
 		n.blob = &obj.Opaque.Value
@@ -7131,7 +7315,7 @@ func (n OpaquePassiveTransactionData) MarshalJSON() ([]byte, error) {
 	}
 
 	v := opaqueJSON{}
-	v.Opaque.Type = "koinos::types::protocol::passive_transaction_data"
+	v.Opaque.Type = "koinos::protocol::passive_transaction_data"
 	v.Opaque.Value = *n.blob
 
 	return json.Marshal(&v)
@@ -7151,7 +7335,7 @@ func (n *OpaquePassiveTransactionData) UnmarshalJSON(data []byte) (error) {
 		if err := json.Unmarshal(data, &obj); err != nil {
 			return err
 		}
-		if strings.Compare(obj.Opaque.Type, "koinos::types::protocol::passive_transaction_data") != 0 {
+		if strings.Compare(obj.Opaque.Type, "koinos::protocol::passive_transaction_data") != 0 {
 			return errors.New("unexpected opaque type name")
 		}
 		n.blob = &obj.Opaque.Value
@@ -7551,7 +7735,7 @@ func (n OpaqueTransaction) MarshalJSON() ([]byte, error) {
 	}
 
 	v := opaqueJSON{}
-	v.Opaque.Type = "koinos::types::protocol::transaction"
+	v.Opaque.Type = "koinos::protocol::transaction"
 	v.Opaque.Value = *n.blob
 
 	return json.Marshal(&v)
@@ -7571,7 +7755,7 @@ func (n *OpaqueTransaction) UnmarshalJSON(data []byte) (error) {
 		if err := json.Unmarshal(data, &obj); err != nil {
 			return err
 		}
-		if strings.Compare(obj.Opaque.Type, "koinos::types::protocol::transaction") != 0 {
+		if strings.Compare(obj.Opaque.Type, "koinos::protocol::transaction") != 0 {
 			return errors.New("unexpected opaque type name")
 		}
 		n.blob = &obj.Opaque.Value
