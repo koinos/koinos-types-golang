@@ -438,7 +438,7 @@ func DeserializeSystemCallTargetReserved(vb *VariableBlob) (uint64,*SystemCallTa
 //  Enum: ThunkID
 // ----------------------------------------
 
-// {'name': 'thunk_id', 'entries': [{'name': 'prints', 'value': 2406348109, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_header', 'value': 2369936044, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_block', 'value': 2372743592, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_transaction', 'value': 2306978015, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_reserved_operation', 'value': 2335970550, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_upload_contract_operation', 'value': 2290263390, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_execute_contract_operation', 'value': 2246607595, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_set_system_call_operation', 'value': 2264476812, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_put_object', 'value': 2181271013, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_object', 'value': 2288165080, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_next_object', 'value': 2263109703, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_prev_object', 'value': 2371348733, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'execute_contract', 'value': 2319711875, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args_size', 'value': 2201456262, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args', 'value': 2383977862, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'set_contract_return', 'value': 2260230773, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'exit_contract', 'value': 2180390815, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_head_info', 'value': 2313106628, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'hash', 'value': 2326459719, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_signature', 'value': 2635873417, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_merkle_root', 'value': 2396642763, 'doc': '', 'info': {'type': 'EnumEntry'}}], 'tref': {'name': ['koinos', 'uint32'], 'targs': None, 'info': {'type': 'Typeref'}}, 'doc': '', 'info': {'type': 'EnumClass'}}
+// {'name': 'thunk_id', 'entries': [{'name': 'prints', 'value': 2406348109, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_header', 'value': 2369936044, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_block', 'value': 2372743592, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_transaction', 'value': 2306978015, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_reserved_operation', 'value': 2335970550, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_upload_contract_operation', 'value': 2290263390, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_execute_contract_operation', 'value': 2246607595, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_set_system_call_operation', 'value': 2264476812, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_put_object', 'value': 2181271013, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_object', 'value': 2288165080, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_next_object', 'value': 2263109703, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_prev_object', 'value': 2371348733, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'execute_contract', 'value': 2319711875, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args_size', 'value': 2201456262, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args', 'value': 2383977862, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'set_contract_return', 'value': 2260230773, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'exit_contract', 'value': 2180390815, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_head_info', 'value': 2313106628, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'hash', 'value': 2326459719, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_signature', 'value': 2635873417, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_merkle_root', 'value': 2396642763, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_transaction_payer', 'value': 2645774470, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_max_account_resources', 'value': 2431733645, 'doc': '', 'info': {'type': 'EnumEntry'}}], 'tref': {'name': ['koinos', 'uint32'], 'targs': None, 'info': {'type': 'Typeref'}}, 'doc': '', 'info': {'type': 'EnumClass'}}
 
 // ThunkID type
 type ThunkID UInt32
@@ -472,6 +472,8 @@ const (
 	ThunkIDHash ThunkID = 2326459719
 	ThunkIDVerifyBlockSignature ThunkID = 2635873417
 	ThunkIDVerifyMerkleRoot ThunkID = 2396642763
+	ThunkIDGetTransactionPayer ThunkID = 2645774470
+	ThunkIDGetMaxAccountResources ThunkID = 2431733645
 )
 
 // Serialize ThunkID
@@ -568,6 +570,10 @@ func IsValidThunkID(v ThunkID) bool {
 		case ThunkIDVerifyBlockSignature:
 			return true
 		case ThunkIDVerifyMerkleRoot:
+			return true
+		case ThunkIDGetTransactionPayer:
+			return true
+		case ThunkIDGetMaxAccountResources:
 			return true
 		default:
 			return false
@@ -2358,55 +2364,10 @@ func DeserializeBlockAccepted(vb *VariableBlob) (uint64,*BlockAccepted,error) {
 }
 
 // ----------------------------------------
-//  Struct: HeadInfo
-// ----------------------------------------
-
-// HeadInfo type
-type HeadInfo struct {
-    ID Multihash `json:"id"`
-    Height BlockHeightType `json:"height"`
-}
-
-// NewHeadInfo factory
-func NewHeadInfo() *HeadInfo {
-	o := HeadInfo{}
-	o.ID = *NewMultihash()
-	o.Height = *NewBlockHeightType()
-	return &o
-}
-
-// Serialize HeadInfo
-func (n HeadInfo) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.ID.Serialize(vb)
-	vb = n.Height.Serialize(vb)
-	return vb
-}
-
-// DeserializeHeadInfo function
-func DeserializeHeadInfo(vb *VariableBlob) (uint64,*HeadInfo,error) {
-	var i,j uint64 = 0,0
-	s := HeadInfo{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tID,err := DeserializeMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &HeadInfo{}, err
-	}
-	s.ID = *tID
-	ovb = (*vb)[i:]
-	j,tHeight,err := DeserializeBlockHeightType(&ovb); i+=j
-	if err != nil {
-		return 0, &HeadInfo{}, err
-	}
-	s.Height = *tHeight
-	return i, &s, nil
-}
-
-// ----------------------------------------
 //  Enum: SystemCallID
 // ----------------------------------------
 
-// {'name': 'system_call_id', 'entries': [{'name': 'prints', 'value': 2602735937, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_header', 'value': 2519027790, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_block', 'value': 2494255093, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_transaction', 'value': 2643154394, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_reserved_operation', 'value': 2594724132, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_upload_contract_operation', 'value': 2658052407, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_execute_contract_operation', 'value': 2451064454, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_set_system_call_operation', 'value': 2507777116, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_put_object', 'value': 2535376802, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_object', 'value': 2540087547, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_next_object', 'value': 2577635560, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_prev_object', 'value': 2614326908, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'execute_contract', 'value': 2562796798, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args_size', 'value': 2601357273, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args', 'value': 2679873944, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'set_contract_return', 'value': 2672414186, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'exit_contract', 'value': 2564781488, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_head_info', 'value': 2507125293, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'hash', 'value': 2574716420, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_signature', 'value': 2411308443, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_merkle_root', 'value': 2574132409, 'doc': '', 'info': {'type': 'EnumEntry'}}], 'tref': {'name': ['koinos', 'uint32'], 'targs': None, 'info': {'type': 'Typeref'}}, 'doc': '', 'info': {'type': 'EnumClass'}}
+// {'name': 'system_call_id', 'entries': [{'name': 'prints', 'value': 2602735937, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_header', 'value': 2519027790, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_block', 'value': 2494255093, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_transaction', 'value': 2643154394, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_reserved_operation', 'value': 2594724132, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_upload_contract_operation', 'value': 2658052407, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_execute_contract_operation', 'value': 2451064454, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_set_system_call_operation', 'value': 2507777116, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_put_object', 'value': 2535376802, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_object', 'value': 2540087547, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_next_object', 'value': 2577635560, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_prev_object', 'value': 2614326908, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'execute_contract', 'value': 2562796798, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args_size', 'value': 2601357273, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args', 'value': 2679873944, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'set_contract_return', 'value': 2672414186, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'exit_contract', 'value': 2564781488, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_head_info', 'value': 2507125293, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'hash', 'value': 2574716420, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_signature', 'value': 2411308443, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_merkle_root', 'value': 2574132409, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_transaction_payer', 'value': 2259188725, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_max_account_resources', 'value': 2217503873, 'doc': '', 'info': {'type': 'EnumEntry'}}], 'tref': {'name': ['koinos', 'uint32'], 'targs': None, 'info': {'type': 'Typeref'}}, 'doc': '', 'info': {'type': 'EnumClass'}}
 
 // SystemCallID type
 type SystemCallID UInt32
@@ -2440,6 +2401,8 @@ const (
 	SystemCallIDHash SystemCallID = 2574716420
 	SystemCallIDVerifyBlockSignature SystemCallID = 2411308443
 	SystemCallIDVerifyMerkleRoot SystemCallID = 2574132409
+	SystemCallIDGetTransactionPayer SystemCallID = 2259188725
+	SystemCallIDGetMaxAccountResources SystemCallID = 2217503873
 )
 
 // Serialize SystemCallID
@@ -2537,9 +2500,105 @@ func IsValidSystemCallID(v SystemCallID) bool {
 			return true
 		case SystemCallIDVerifyMerkleRoot:
 			return true
+		case SystemCallIDGetTransactionPayer:
+			return true
+		case SystemCallIDGetMaxAccountResources:
+			return true
 		default:
 			return false
 	}
+}
+
+
+// ----------------------------------------
+//  Struct: HeadInfo
+// ----------------------------------------
+
+// HeadInfo type
+type HeadInfo struct {
+    ID Multihash `json:"id"`
+    Height BlockHeightType `json:"height"`
+}
+
+// NewHeadInfo factory
+func NewHeadInfo() *HeadInfo {
+	o := HeadInfo{}
+	o.ID = *NewMultihash()
+	o.Height = *NewBlockHeightType()
+	return &o
+}
+
+// Serialize HeadInfo
+func (n HeadInfo) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ID.Serialize(vb)
+	vb = n.Height.Serialize(vb)
+	return vb
+}
+
+// DeserializeHeadInfo function
+func DeserializeHeadInfo(vb *VariableBlob) (uint64,*HeadInfo,error) {
+	var i,j uint64 = 0,0
+	s := HeadInfo{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tID,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &HeadInfo{}, err
+	}
+	s.ID = *tID
+	ovb = (*vb)[i:]
+	j,tHeight,err := DeserializeBlockHeightType(&ovb); i+=j
+	if err != nil {
+		return 0, &HeadInfo{}, err
+	}
+	s.Height = *tHeight
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: AccountType
+// ----------------------------------------
+
+// AccountType type
+type AccountType VariableBlob
+
+// NewAccountType factory
+func NewAccountType() *AccountType {
+	o := AccountType(*NewVariableBlob())
+	return &o
+}
+
+// Serialize AccountType
+func (n AccountType) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := VariableBlob(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeAccountType function
+func DeserializeAccountType(vb *VariableBlob) (uint64,*AccountType,error) {
+	var ot AccountType
+	i,n,err := DeserializeVariableBlob(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = AccountType(*n)
+	return i,&ot,nil}
+
+// MarshalJSON AccountType
+func (n AccountType) MarshalJSON() ([]byte, error) {
+	v := VariableBlob(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *AccountType
+func (n *AccountType) UnmarshalJSON(data []byte) error {
+	v := VariableBlob(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = AccountType(v)
+	return nil
 }
 
 
@@ -4337,6 +4396,172 @@ func (n *HashReturn) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
+//  Struct: GetTransactionPayerArgs
+// ----------------------------------------
+
+// GetTransactionPayerArgs type
+type GetTransactionPayerArgs struct {
+    Transaction OpaqueTransaction `json:"transaction"`
+}
+
+// NewGetTransactionPayerArgs factory
+func NewGetTransactionPayerArgs() *GetTransactionPayerArgs {
+	o := GetTransactionPayerArgs{}
+	o.Transaction = *NewOpaqueTransaction()
+	return &o
+}
+
+// Serialize GetTransactionPayerArgs
+func (n GetTransactionPayerArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Transaction.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetTransactionPayerArgs function
+func DeserializeGetTransactionPayerArgs(vb *VariableBlob) (uint64,*GetTransactionPayerArgs,error) {
+	var i,j uint64 = 0,0
+	s := GetTransactionPayerArgs{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tTransaction,err := DeserializeOpaqueTransaction(&ovb); i+=j
+	if err != nil {
+		return 0, &GetTransactionPayerArgs{}, err
+	}
+	s.Transaction = *tTransaction
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: GetTransactionPayerReturn
+// ----------------------------------------
+
+// GetTransactionPayerReturn type
+type GetTransactionPayerReturn AccountType
+
+// NewGetTransactionPayerReturn factory
+func NewGetTransactionPayerReturn() *GetTransactionPayerReturn {
+	o := GetTransactionPayerReturn(*NewAccountType())
+	return &o
+}
+
+// Serialize GetTransactionPayerReturn
+func (n GetTransactionPayerReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := AccountType(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeGetTransactionPayerReturn function
+func DeserializeGetTransactionPayerReturn(vb *VariableBlob) (uint64,*GetTransactionPayerReturn,error) {
+	var ot GetTransactionPayerReturn
+	i,n,err := DeserializeAccountType(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = GetTransactionPayerReturn(*n)
+	return i,&ot,nil}
+
+// MarshalJSON GetTransactionPayerReturn
+func (n GetTransactionPayerReturn) MarshalJSON() ([]byte, error) {
+	v := AccountType(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *GetTransactionPayerReturn
+func (n *GetTransactionPayerReturn) UnmarshalJSON(data []byte) error {
+	v := AccountType(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = GetTransactionPayerReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: GetMaxAccountResourcesArgs
+// ----------------------------------------
+
+// GetMaxAccountResourcesArgs type
+type GetMaxAccountResourcesArgs struct {
+    Account AccountType `json:"account"`
+}
+
+// NewGetMaxAccountResourcesArgs factory
+func NewGetMaxAccountResourcesArgs() *GetMaxAccountResourcesArgs {
+	o := GetMaxAccountResourcesArgs{}
+	o.Account = *NewAccountType()
+	return &o
+}
+
+// Serialize GetMaxAccountResourcesArgs
+func (n GetMaxAccountResourcesArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Account.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetMaxAccountResourcesArgs function
+func DeserializeGetMaxAccountResourcesArgs(vb *VariableBlob) (uint64,*GetMaxAccountResourcesArgs,error) {
+	var i,j uint64 = 0,0
+	s := GetMaxAccountResourcesArgs{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tAccount,err := DeserializeAccountType(&ovb); i+=j
+	if err != nil {
+		return 0, &GetMaxAccountResourcesArgs{}, err
+	}
+	s.Account = *tAccount
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: GetMaxAccountResourcesReturn
+// ----------------------------------------
+
+// GetMaxAccountResourcesReturn type
+type GetMaxAccountResourcesReturn UInt128
+
+// NewGetMaxAccountResourcesReturn factory
+func NewGetMaxAccountResourcesReturn() *GetMaxAccountResourcesReturn {
+	o := GetMaxAccountResourcesReturn(*NewUInt128())
+	return &o
+}
+
+// Serialize GetMaxAccountResourcesReturn
+func (n GetMaxAccountResourcesReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := UInt128(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeGetMaxAccountResourcesReturn function
+func DeserializeGetMaxAccountResourcesReturn(vb *VariableBlob) (uint64,*GetMaxAccountResourcesReturn,error) {
+	var ot GetMaxAccountResourcesReturn
+	i,n,err := DeserializeUInt128(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = GetMaxAccountResourcesReturn(*n)
+	return i,&ot,nil}
+
+// MarshalJSON GetMaxAccountResourcesReturn
+func (n GetMaxAccountResourcesReturn) MarshalJSON() ([]byte, error) {
+	v := UInt128(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *GetMaxAccountResourcesReturn
+func (n *GetMaxAccountResourcesReturn) UnmarshalJSON(data []byte) error {
+	v := UInt128(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = GetMaxAccountResourcesReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
 //  Struct: ChainReservedRequest
 // ----------------------------------------
 
@@ -4553,6 +4778,51 @@ func DeserializeGetChainIDRequest(vb *VariableBlob) (uint64,*GetChainIDRequest,e
 }
 
 // ----------------------------------------
+//  Struct: GetPendingTransactionsRequest
+// ----------------------------------------
+
+// GetPendingTransactionsRequest type
+type GetPendingTransactionsRequest struct {
+    Start Multihash `json:"start"`
+    Limit UInt64 `json:"limit"`
+}
+
+// NewGetPendingTransactionsRequest factory
+func NewGetPendingTransactionsRequest() *GetPendingTransactionsRequest {
+	o := GetPendingTransactionsRequest{}
+	o.Start = *NewMultihash()
+	o.Limit = *NewUInt64()
+	return &o
+}
+
+// Serialize GetPendingTransactionsRequest
+func (n GetPendingTransactionsRequest) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Start.Serialize(vb)
+	vb = n.Limit.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetPendingTransactionsRequest function
+func DeserializeGetPendingTransactionsRequest(vb *VariableBlob) (uint64,*GetPendingTransactionsRequest,error) {
+	var i,j uint64 = 0,0
+	s := GetPendingTransactionsRequest{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tStart,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &GetPendingTransactionsRequest{}, err
+	}
+	s.Start = *tStart
+	ovb = (*vb)[i:]
+	j,tLimit,err := DeserializeUInt64(&ovb); i+=j
+	if err != nil {
+		return 0, &GetPendingTransactionsRequest{}, err
+	}
+	s.Limit = *tLimit
+	return i, &s, nil
+}
+
+// ----------------------------------------
 //  Variant: ChainRPCRequest
 // ----------------------------------------
 
@@ -4582,6 +4852,8 @@ func (n ChainRPCRequest) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 3
 		case *GetChainIDRequest:
 			i = 4
+		case *GetPendingTransactionsRequest:
+			i = 5
 		default:
 			panic("Unknown variant type")
 	}
@@ -4604,6 +4876,8 @@ func (n ChainRPCRequest) TypeToName() (string) {
 			return "koinos::rpc::chain::get_head_info_request"
 		case *GetChainIDRequest:
 			return "koinos::rpc::chain::get_chain_id_request"
+		case *GetPendingTransactionsRequest:
+			return "koinos::rpc::chain::get_pending_transactions_request"
 		default:
 			panic("Variant type is not serializeable.")
 	}
@@ -4654,6 +4928,14 @@ func DeserializeChainRPCRequest(vb *VariableBlob) (uint64,*ChainRPCRequest,error
 			v.Value = NewGetHeadInfoRequest()
 		case 4:
 			v.Value = NewGetChainIDRequest()
+		case 5:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetPendingTransactionsRequest(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
 		default:
 			return 0, &v, errors.New("unknown variant tag")
 	}
@@ -4691,6 +4973,10 @@ func (n *ChainRPCRequest) UnmarshalJSON(data []byte) error {
 			n.Value = v
 		case "koinos::rpc::chain::get_chain_id_request":
 			v := NewGetChainIDRequest()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::chain::get_pending_transactions_request":
+			v := NewGetPendingTransactionsRequest()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
@@ -4900,6 +5186,42 @@ func DeserializeGetChainIDResponse(vb *VariableBlob) (uint64,*GetChainIDResponse
 }
 
 // ----------------------------------------
+//  Struct: GetPendingTransactionsResponse
+// ----------------------------------------
+
+// GetPendingTransactionsResponse type
+type GetPendingTransactionsResponse struct {
+    Transactions VectorTransaction `json:"transactions"`
+}
+
+// NewGetPendingTransactionsResponse factory
+func NewGetPendingTransactionsResponse() *GetPendingTransactionsResponse {
+	o := GetPendingTransactionsResponse{}
+	o.Transactions = *NewVectorTransaction()
+	return &o
+}
+
+// Serialize GetPendingTransactionsResponse
+func (n GetPendingTransactionsResponse) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Transactions.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetPendingTransactionsResponse function
+func DeserializeGetPendingTransactionsResponse(vb *VariableBlob) (uint64,*GetPendingTransactionsResponse,error) {
+	var i,j uint64 = 0,0
+	s := GetPendingTransactionsResponse{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tTransactions,err := DeserializeVectorTransaction(&ovb); i+=j
+	if err != nil {
+		return 0, &GetPendingTransactionsResponse{}, err
+	}
+	s.Transactions = *tTransactions
+	return i, &s, nil
+}
+
+// ----------------------------------------
 //  Variant: ChainRPCResponse
 // ----------------------------------------
 
@@ -4931,6 +5253,8 @@ func (n ChainRPCResponse) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 4
 		case *GetChainIDResponse:
 			i = 5
+		case *GetPendingTransactionsResponse:
+			i = 6
 		default:
 			panic("Unknown variant type")
 	}
@@ -4955,6 +5279,8 @@ func (n ChainRPCResponse) TypeToName() (string) {
 			return "koinos::rpc::chain::get_head_info_response"
 		case *GetChainIDResponse:
 			return "koinos::rpc::chain::get_chain_id_response"
+		case *GetPendingTransactionsResponse:
+			return "koinos::rpc::chain::get_pending_transactions_response"
 		default:
 			panic("Variant type is not serializeable.")
 	}
@@ -5013,6 +5339,14 @@ func DeserializeChainRPCResponse(vb *VariableBlob) (uint64,*ChainRPCResponse,err
 			}
 			j = k
 			v.Value = x
+		case 6:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetPendingTransactionsResponse(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
 		default:
 			return 0, &v, errors.New("unknown variant tag")
 	}
@@ -5054,6 +5388,10 @@ func (n *ChainRPCResponse) UnmarshalJSON(data []byte) error {
 			n.Value = v
 		case "koinos::rpc::chain::get_chain_id_response":
 			v := NewGetChainIDResponse()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::chain::get_pending_transactions_response":
+			v := NewGetPendingTransactionsResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
@@ -7965,6 +8303,57 @@ func DeserializeVectorOperation(vb *VariableBlob) (uint64,*VectorOperation,error
 		j,item,err = DeserializeOperation(&ovb)
 		if nil != err {
 			var v VectorOperation
+			return 0,&v,err
+		}
+		i += j
+		result = append(result, *item)
+	}
+
+	return i, &result, nil
+}
+
+// ----------------------------------------
+//  VectorTransaction
+// ----------------------------------------
+
+// VectorTransaction type
+type VectorTransaction []Transaction
+
+// NewVectorTransaction factory
+func NewVectorTransaction() *VectorTransaction {
+	o := VectorTransaction(make([]Transaction, 0))
+	return &o
+}
+
+// Serialize VectorTransaction
+func (n VectorTransaction) Serialize(vb *VariableBlob) *VariableBlob {
+	header := make([]byte, binary.MaxVarintLen64)
+	bytes := binary.PutUvarint(header, uint64(len(n)))
+	ovb := append(*vb, header[:bytes]...)
+	vb = &ovb
+	for _, item := range n {
+		vb = item.Serialize(vb)
+	}
+
+	return vb
+}
+// DeserializeVectorTransaction function
+func DeserializeVectorTransaction(vb *VariableBlob) (uint64,*VectorTransaction,error) {
+	var result VectorTransaction
+	size,bytes := binary.Uvarint(*vb)
+	if bytes <= 0 {
+		return 0, &result, errors.New("could not deserialize multihash id")
+	}
+	result = VectorTransaction(make([]Transaction, 0, size))
+	i := uint64(bytes)
+	var j uint64
+	var item *Transaction
+	var err error
+	for num := uint64(0); num < size; num++ {
+		ovb := (*vb)[i:]
+		j,item,err = DeserializeTransaction(&ovb)
+		if nil != err {
+			var v VectorTransaction
 			return 0,&v,err
 		}
 		i += j
