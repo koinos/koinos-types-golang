@@ -2278,6 +2278,16 @@ func TestBlockStoreErrorResponse(t *testing.T) {
 		t.Errorf("Bytes were consumed on error")
 	}
 
+	// Test error_data
+	vb = &koinos.VariableBlob{0x00}
+	n, _, err = koinos.DeserializeBlockStoreErrorResponse(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
 	v, jerr := json.Marshal(o)
 	if jerr != nil {
 		t.Error(jerr)
@@ -5751,6 +5761,16 @@ func TestChainErrorResponse(t *testing.T) {
 		t.Errorf("Bytes were consumed on error")
 	}
 
+	// Test error_data
+	vb = &koinos.VariableBlob{0x00}
+	n, _, err = koinos.DeserializeChainErrorResponse(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
 	v, jerr := json.Marshal(o)
 	if jerr != nil {
 		t.Error(jerr)
@@ -6326,6 +6346,47 @@ func TestGetChainIDParams(t *testing.T) {
 }
 
 // ----------------------------------------
+//  Typedef: GetPendingTransactionsParams
+// ----------------------------------------
+
+func TestGetPendingTransactionsParams(t *testing.T) {
+	o := koinos.NewGetPendingTransactionsParams()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetPendingTransactionsParams(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeGetPendingTransactionsParams(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if size != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetPendingTransactionsParams()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
 //  Variant: QueryParamItem
 // ----------------------------------------
 
@@ -6350,6 +6411,20 @@ func TestQueryParamItem(t *testing.T) {
 		exerciseQueryParamItemSerialization(v, t)
 
 	}
+	{
+		v := koinos.NewQueryParamItem()
+		v.Value = koinos.NewGetPendingTransactionsParams()
+		exerciseQueryParamItemSerialization(v, t)
+
+		vb := koinos.VariableBlob{3}
+		n, _, err := koinos.DeserializeQueryParamItem(&vb)
+		if err == nil {
+			t.Errorf("err == nil")
+		}
+		if n != 0 {
+			t.Errorf("Bytes were consumed on error")
+		}
+	}
 
 	// Test bad variant tag
 	vb := koinos.VariableBlob{0x80}
@@ -6362,7 +6437,7 @@ func TestQueryParamItem(t *testing.T) {
 	}
 
 	// Test unknown tag
-	vb = koinos.VariableBlob{3}
+	vb = koinos.VariableBlob{4}
 	n, _, err = koinos.DeserializeQueryParamItem(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
@@ -6625,6 +6700,47 @@ func TestGetChainIDResult(t *testing.T) {
 }
 
 // ----------------------------------------
+//  Typedef: GetPendingTransactionsResult
+// ----------------------------------------
+
+func TestGetPendingTransactionsResult(t *testing.T) {
+	o := koinos.NewGetPendingTransactionsResult()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetPendingTransactionsResult(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeGetPendingTransactionsResult(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if size != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetPendingTransactionsResult()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
 //  Variant: QueryItemResult
 // ----------------------------------------
 
@@ -6679,6 +6795,20 @@ func TestQueryItemResult(t *testing.T) {
 			t.Errorf("Bytes were consumed on error")
 		}
 	}
+	{
+		v := koinos.NewQueryItemResult()
+		v.Value = koinos.NewGetPendingTransactionsResult()
+		exerciseQueryItemResultSerialization(v, t)
+
+		vb := koinos.VariableBlob{4}
+		n, _, err := koinos.DeserializeQueryItemResult(&vb)
+		if err == nil {
+			t.Errorf("err == nil")
+		}
+		if n != 0 {
+			t.Errorf("Bytes were consumed on error")
+		}
+	}
 
 	// Test bad variant tag
 	vb := koinos.VariableBlob{0x80}
@@ -6691,7 +6821,7 @@ func TestQueryItemResult(t *testing.T) {
 	}
 
 	// Test unknown tag
-	vb = koinos.VariableBlob{4}
+	vb = koinos.VariableBlob{5}
 	n, _, err = koinos.DeserializeQueryItemResult(&vb)
 	if err == nil {
 		t.Errorf("err == nil")

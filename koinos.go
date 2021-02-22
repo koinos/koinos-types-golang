@@ -1796,18 +1796,21 @@ func DeserializeGetTransactionsByIDResponse(vb *VariableBlob) (uint64,*GetTransa
 // BlockStoreErrorResponse type
 type BlockStoreErrorResponse struct {
     ErrorText String `json:"error_text"`
+    ErrorData String `json:"error_data"`
 }
 
 // NewBlockStoreErrorResponse factory
 func NewBlockStoreErrorResponse() *BlockStoreErrorResponse {
 	o := BlockStoreErrorResponse{}
 	o.ErrorText = *NewString()
+	o.ErrorData = *NewString()
 	return &o
 }
 
 // Serialize BlockStoreErrorResponse
 func (n BlockStoreErrorResponse) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.ErrorText.Serialize(vb)
+	vb = n.ErrorData.Serialize(vb)
 	return vb
 }
 
@@ -1822,6 +1825,12 @@ func DeserializeBlockStoreErrorResponse(vb *VariableBlob) (uint64,*BlockStoreErr
 		return 0, &BlockStoreErrorResponse{}, err
 	}
 	s.ErrorText = *tErrorText
+	ovb = (*vb)[i:]
+	j,tErrorData,err := DeserializeString(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockStoreErrorResponse{}, err
+	}
+	s.ErrorData = *tErrorData
 	return i, &s, nil
 }
 
@@ -5021,18 +5030,21 @@ func DeserializeChainReservedResponse(vb *VariableBlob) (uint64,*ChainReservedRe
 // ChainErrorResponse type
 type ChainErrorResponse struct {
     ErrorText String `json:"error_text"`
+    ErrorData String `json:"error_data"`
 }
 
 // NewChainErrorResponse factory
 func NewChainErrorResponse() *ChainErrorResponse {
 	o := ChainErrorResponse{}
 	o.ErrorText = *NewString()
+	o.ErrorData = *NewString()
 	return &o
 }
 
 // Serialize ChainErrorResponse
 func (n ChainErrorResponse) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.ErrorText.Serialize(vb)
+	vb = n.ErrorData.Serialize(vb)
 	return vb
 }
 
@@ -5047,6 +5059,12 @@ func DeserializeChainErrorResponse(vb *VariableBlob) (uint64,*ChainErrorResponse
 		return 0, &ChainErrorResponse{}, err
 	}
 	s.ErrorText = *tErrorText
+	ovb = (*vb)[i:]
+	j,tErrorData,err := DeserializeString(&ovb); i+=j
+	if err != nil {
+		return 0, &ChainErrorResponse{}, err
+	}
+	s.ErrorData = *tErrorData
 	return i, &s, nil
 }
 
@@ -5576,6 +5594,53 @@ func (n *GetChainIDParams) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
+//  Typedef: GetPendingTransactionsParams
+// ----------------------------------------
+
+// GetPendingTransactionsParams type
+type GetPendingTransactionsParams GetPendingTransactionsRequest
+
+// NewGetPendingTransactionsParams factory
+func NewGetPendingTransactionsParams() *GetPendingTransactionsParams {
+	o := GetPendingTransactionsParams(*NewGetPendingTransactionsRequest())
+	return &o
+}
+
+// Serialize GetPendingTransactionsParams
+func (n GetPendingTransactionsParams) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := GetPendingTransactionsRequest(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeGetPendingTransactionsParams function
+func DeserializeGetPendingTransactionsParams(vb *VariableBlob) (uint64,*GetPendingTransactionsParams,error) {
+	var ot GetPendingTransactionsParams
+	i,n,err := DeserializeGetPendingTransactionsRequest(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = GetPendingTransactionsParams(*n)
+	return i,&ot,nil}
+
+// MarshalJSON GetPendingTransactionsParams
+func (n GetPendingTransactionsParams) MarshalJSON() ([]byte, error) {
+	v := GetPendingTransactionsRequest(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *GetPendingTransactionsParams
+func (n *GetPendingTransactionsParams) UnmarshalJSON(data []byte) error {
+	v := GetPendingTransactionsRequest(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = GetPendingTransactionsParams(v)
+	return nil
+}
+
+
+// ----------------------------------------
 //  Variant: QueryParamItem
 // ----------------------------------------
 
@@ -5601,6 +5666,8 @@ func (n QueryParamItem) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 1
 		case *GetChainIDParams:
 			i = 2
+		case *GetPendingTransactionsParams:
+			i = 3
 		default:
 			panic("Unknown variant type")
 	}
@@ -5619,6 +5686,8 @@ func (n QueryParamItem) TypeToName() (string) {
 			return "koinos::types::rpc::get_head_info_params"
 		case *GetChainIDParams:
 			return "koinos::types::rpc::get_chain_id_params"
+		case *GetPendingTransactionsParams:
+			return "koinos::types::rpc::get_pending_transactions_params"
 		default:
 			panic("Variant type is not serializeable.")
 	}
@@ -5653,6 +5722,14 @@ func DeserializeQueryParamItem(vb *VariableBlob) (uint64,*QueryParamItem,error) 
 			v.Value = NewGetHeadInfoParams()
 		case 2:
 			v.Value = NewGetChainIDParams()
+		case 3:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetPendingTransactionsParams(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
 		default:
 			return 0, &v, errors.New("unknown variant tag")
 	}
@@ -5682,6 +5759,10 @@ func (n *QueryParamItem) UnmarshalJSON(data []byte) error {
 			n.Value = v
 		case "koinos::types::rpc::get_chain_id_params":
 			v := NewGetChainIDParams()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::types::rpc::get_pending_transactions_params":
+			v := NewGetPendingTransactionsParams()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
@@ -5923,6 +6004,53 @@ func (n *GetChainIDResult) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
+//  Typedef: GetPendingTransactionsResult
+// ----------------------------------------
+
+// GetPendingTransactionsResult type
+type GetPendingTransactionsResult GetPendingTransactionsResponse
+
+// NewGetPendingTransactionsResult factory
+func NewGetPendingTransactionsResult() *GetPendingTransactionsResult {
+	o := GetPendingTransactionsResult(*NewGetPendingTransactionsResponse())
+	return &o
+}
+
+// Serialize GetPendingTransactionsResult
+func (n GetPendingTransactionsResult) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := GetPendingTransactionsResponse(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeGetPendingTransactionsResult function
+func DeserializeGetPendingTransactionsResult(vb *VariableBlob) (uint64,*GetPendingTransactionsResult,error) {
+	var ot GetPendingTransactionsResult
+	i,n,err := DeserializeGetPendingTransactionsResponse(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = GetPendingTransactionsResult(*n)
+	return i,&ot,nil}
+
+// MarshalJSON GetPendingTransactionsResult
+func (n GetPendingTransactionsResult) MarshalJSON() ([]byte, error) {
+	v := GetPendingTransactionsResponse(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *GetPendingTransactionsResult
+func (n *GetPendingTransactionsResult) UnmarshalJSON(data []byte) error {
+	v := GetPendingTransactionsResponse(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = GetPendingTransactionsResult(v)
+	return nil
+}
+
+
+// ----------------------------------------
 //  Variant: QueryItemResult
 // ----------------------------------------
 
@@ -5950,6 +6078,8 @@ func (n QueryItemResult) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 2
 		case *GetChainIDResult:
 			i = 3
+		case *GetPendingTransactionsResult:
+			i = 4
 		default:
 			panic("Unknown variant type")
 	}
@@ -5970,6 +6100,8 @@ func (n QueryItemResult) TypeToName() (string) {
 			return "koinos::types::rpc::get_head_info_result"
 		case *GetChainIDResult:
 			return "koinos::types::rpc::get_chain_id_result"
+		case *GetPendingTransactionsResult:
+			return "koinos::types::rpc::get_pending_transactions_result"
 		default:
 			panic("Variant type is not serializeable.")
 	}
@@ -6024,6 +6156,14 @@ func DeserializeQueryItemResult(vb *VariableBlob) (uint64,*QueryItemResult,error
 			}
 			j = k
 			v.Value = x
+		case 4:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetPendingTransactionsResult(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
 		default:
 			return 0, &v, errors.New("unknown variant tag")
 	}
@@ -6057,6 +6197,10 @@ func (n *QueryItemResult) UnmarshalJSON(data []byte) error {
 			n.Value = v
 		case "koinos::types::rpc::get_chain_id_result":
 			v := NewGetChainIDResult()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::types::rpc::get_pending_transactions_result":
+			v := NewGetPendingTransactionsResult()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
