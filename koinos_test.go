@@ -163,6 +163,18 @@ func TestActiveTransactionData(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
+
+	var n uint64
+	// Test resource_limit
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeActiveTransactionData(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
 	v, jerr := json.Marshal(o)
 	if jerr != nil {
 		t.Error(jerr)
@@ -601,6 +613,7 @@ func TestThunkID(t *testing.T) {
 		koinos.ThunkIDVerifyMerkleRoot,
 		koinos.ThunkIDGetTransactionPayer,
 		koinos.ThunkIDGetMaxAccountResources,
+		koinos.ThunkIDGetTransactionResourceLimit,
 	}
 
 	// Make sure all types properly serialize
@@ -702,7 +715,7 @@ func TestThunkIDPanic(t *testing.T) {
 }
 
 func getInvalidThunkID() koinos.ThunkID {
-	w := koinos.ThunkIDGetMaxAccountResources
+	w := koinos.ThunkIDGetTransactionResourceLimit
 	for koinos.IsValidThunkID(w) {
 		w++
 	}
@@ -2916,6 +2929,7 @@ func TestSystemCallID(t *testing.T) {
 		koinos.SystemCallIDVerifyMerkleRoot,
 		koinos.SystemCallIDGetTransactionPayer,
 		koinos.SystemCallIDGetMaxAccountResources,
+		koinos.SystemCallIDGetTransactionResourceLimit,
 	}
 
 	// Make sure all types properly serialize
@@ -3017,7 +3031,7 @@ func TestSystemCallIDPanic(t *testing.T) {
 }
 
 func getInvalidSystemCallID() koinos.SystemCallID {
-	w := koinos.SystemCallIDGetMaxAccountResources
+	w := koinos.SystemCallIDGetTransactionResourceLimit
 	for koinos.IsValidSystemCallID(w) {
 		w++
 	}
@@ -5176,6 +5190,100 @@ func TestGetMaxAccountResourcesReturn(t *testing.T) {
 	}
 
 	jo := koinos.NewGetMaxAccountResourcesReturn()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
+//  Struct: GetTransactionResourceLimitArgs
+// ----------------------------------------
+
+func TestGetTransactionResourceLimitArgs(t *testing.T) {
+	o := koinos.NewGetTransactionResourceLimitArgs()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetTransactionResourceLimitArgs(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	var n uint64
+	// Test transaction
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeGetTransactionResourceLimitArgs(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetTransactionResourceLimitArgs()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
+//  Typedef: GetTransactionResourceLimitReturn
+// ----------------------------------------
+
+func TestGetTransactionResourceLimitReturn(t *testing.T) {
+	o := koinos.NewGetTransactionResourceLimitReturn()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetTransactionResourceLimitReturn(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeGetTransactionResourceLimitReturn(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if size != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetTransactionResourceLimitReturn()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -7733,7 +7841,7 @@ func TestOpaqueActiveBlockData(t *testing.T) {
 		t.Errorf("jerr == nil")
 	}
 
-	jerr = json.Unmarshal([]byte("{\"previous_block\":0,\"transaction_merkle_root\":0,\"passive_data_merkle_root\":0,\"height\":0,\"timestamp\":0}"), jo)
+	jerr = json.Unmarshal([]byte("{\"previous_block\":{\"bougsagdg\":\"adgagf\"},\"transaction_merkle_root\":{\"bougsagdg\":\"adgagf\"},\"passive_data_merkle_root\":{\"bougsagdg\":\"adgagf\"},\"height\":{\"bougsagdg\":\"adgagf\"},\"timestamp\":{\"bougsagdg\":\"adgagf\"}}"), jo)
 	if jerr == nil {
 		t.Errorf("jerr == nil")
 	}
@@ -7880,6 +7988,10 @@ func TestOpaqueActiveTransactionData(t *testing.T) {
 		t.Errorf("jerr == nil")
 	}
 
+	jerr = json.Unmarshal([]byte("{\"resource_limit\":{\"bougsagdg\":\"adgagf\"}}"), jo)
+	if jerr == nil {
+		t.Errorf("jerr == nil")
+	}
 
 	// Test alternative constructors
 	vb = koinos.NewVariableBlob()
@@ -8023,7 +8135,7 @@ func TestOpaqueBlock(t *testing.T) {
 		t.Errorf("jerr == nil")
 	}
 
-	jerr = json.Unmarshal([]byte("{\"active_data\":0,\"passive_data\":0,\"signature_data\":0,\"transactions\":0}"), jo)
+	jerr = json.Unmarshal([]byte("{\"active_data\":{\"bougsagdg\":\"adgagf\"},\"passive_data\":{\"bougsagdg\":\"adgagf\"},\"signature_data\":{\"bougsagdg\":\"adgagf\"},\"transactions\":{\"bougsagdg\":\"adgagf\"}}"), jo)
 	if jerr == nil {
 		t.Errorf("jerr == nil")
 	}
@@ -8893,7 +9005,7 @@ func TestOpaqueTransaction(t *testing.T) {
 		t.Errorf("jerr == nil")
 	}
 
-	jerr = json.Unmarshal([]byte("{\"active_data\":0,\"passive_data\":0,\"signature_data\":0,\"operations\":0}"), jo)
+	jerr = json.Unmarshal([]byte("{\"active_data\":{\"bougsagdg\":\"adgagf\"},\"passive_data\":{\"bougsagdg\":\"adgagf\"},\"signature_data\":{\"bougsagdg\":\"adgagf\"},\"operations\":{\"bougsagdg\":\"adgagf\"}}"), jo)
 	if jerr == nil {
 		t.Errorf("jerr == nil")
 	}

@@ -120,24 +120,33 @@ func DeserializePassiveBlockData(vb *VariableBlob) (uint64,*PassiveBlockData,err
 
 // ActiveTransactionData type
 type ActiveTransactionData struct {
+    ResourceLimit UInt128 `json:"resource_limit"`
 }
 
 // NewActiveTransactionData factory
 func NewActiveTransactionData() *ActiveTransactionData {
 	o := ActiveTransactionData{}
+	o.ResourceLimit = *NewUInt128()
 	return &o
 }
 
 // Serialize ActiveTransactionData
 func (n ActiveTransactionData) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ResourceLimit.Serialize(vb)
 	return vb
 }
 
 // DeserializeActiveTransactionData function
 func DeserializeActiveTransactionData(vb *VariableBlob) (uint64,*ActiveTransactionData,error) {
-	var i uint64 = 0
+	var i,j uint64 = 0,0
 	s := ActiveTransactionData{}
-	
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tResourceLimit,err := DeserializeUInt128(&ovb); i+=j
+	if err != nil {
+		return 0, &ActiveTransactionData{}, err
+	}
+	s.ResourceLimit = *tResourceLimit
 	return i, &s, nil
 }
 
@@ -438,7 +447,7 @@ func DeserializeSystemCallTargetReserved(vb *VariableBlob) (uint64,*SystemCallTa
 //  Enum: ThunkID
 // ----------------------------------------
 
-// {'name': 'thunk_id', 'entries': [{'name': 'prints', 'value': 2406348109, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_header', 'value': 2369936044, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_block', 'value': 2372743592, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_transaction', 'value': 2306978015, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_reserved_operation', 'value': 2335970550, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_upload_contract_operation', 'value': 2290263390, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_execute_contract_operation', 'value': 2246607595, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_set_system_call_operation', 'value': 2264476812, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_put_object', 'value': 2181271013, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_object', 'value': 2288165080, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_next_object', 'value': 2263109703, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_prev_object', 'value': 2371348733, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'execute_contract', 'value': 2319711875, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args_size', 'value': 2201456262, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args', 'value': 2383977862, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'set_contract_return', 'value': 2260230773, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'exit_contract', 'value': 2180390815, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_head_info', 'value': 2313106628, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'hash', 'value': 2326459719, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_signature', 'value': 2635873417, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_merkle_root', 'value': 2396642763, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_transaction_payer', 'value': 2645774470, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_max_account_resources', 'value': 2431733645, 'doc': '', 'info': {'type': 'EnumEntry'}}], 'tref': {'name': ['koinos', 'uint32'], 'targs': None, 'info': {'type': 'Typeref'}}, 'doc': '', 'info': {'type': 'EnumClass'}}
+// {'name': 'thunk_id', 'entries': [{'name': 'prints', 'value': 2406348109, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_header', 'value': 2369936044, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_block', 'value': 2372743592, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_transaction', 'value': 2306978015, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_reserved_operation', 'value': 2335970550, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_upload_contract_operation', 'value': 2290263390, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_execute_contract_operation', 'value': 2246607595, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_set_system_call_operation', 'value': 2264476812, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_put_object', 'value': 2181271013, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_object', 'value': 2288165080, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_next_object', 'value': 2263109703, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_prev_object', 'value': 2371348733, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'execute_contract', 'value': 2319711875, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args_size', 'value': 2201456262, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args', 'value': 2383977862, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'set_contract_return', 'value': 2260230773, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'exit_contract', 'value': 2180390815, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_head_info', 'value': 2313106628, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'hash', 'value': 2326459719, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_signature', 'value': 2635873417, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_merkle_root', 'value': 2396642763, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_transaction_payer', 'value': 2645774470, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_max_account_resources', 'value': 2431733645, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_transaction_resource_limit', 'value': 2346680737, 'doc': '', 'info': {'type': 'EnumEntry'}}], 'tref': {'name': ['koinos', 'uint32'], 'targs': None, 'info': {'type': 'Typeref'}}, 'doc': '', 'info': {'type': 'EnumClass'}}
 
 // ThunkID type
 type ThunkID UInt32
@@ -474,6 +483,7 @@ const (
 	ThunkIDVerifyMerkleRoot ThunkID = 2396642763
 	ThunkIDGetTransactionPayer ThunkID = 2645774470
 	ThunkIDGetMaxAccountResources ThunkID = 2431733645
+	ThunkIDGetTransactionResourceLimit ThunkID = 2346680737
 )
 
 // Serialize ThunkID
@@ -574,6 +584,8 @@ func IsValidThunkID(v ThunkID) bool {
 		case ThunkIDGetTransactionPayer:
 			return true
 		case ThunkIDGetMaxAccountResources:
+			return true
+		case ThunkIDGetTransactionResourceLimit:
 			return true
 		default:
 			return false
@@ -2376,7 +2388,7 @@ func DeserializeBlockAccepted(vb *VariableBlob) (uint64,*BlockAccepted,error) {
 //  Enum: SystemCallID
 // ----------------------------------------
 
-// {'name': 'system_call_id', 'entries': [{'name': 'prints', 'value': 2602735937, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_header', 'value': 2519027790, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_block', 'value': 2494255093, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_transaction', 'value': 2643154394, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_reserved_operation', 'value': 2594724132, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_upload_contract_operation', 'value': 2658052407, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_execute_contract_operation', 'value': 2451064454, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_set_system_call_operation', 'value': 2507777116, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_put_object', 'value': 2535376802, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_object', 'value': 2540087547, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_next_object', 'value': 2577635560, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_prev_object', 'value': 2614326908, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'execute_contract', 'value': 2562796798, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args_size', 'value': 2601357273, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args', 'value': 2679873944, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'set_contract_return', 'value': 2672414186, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'exit_contract', 'value': 2564781488, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_head_info', 'value': 2507125293, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'hash', 'value': 2574716420, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_signature', 'value': 2411308443, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_merkle_root', 'value': 2574132409, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_transaction_payer', 'value': 2259188725, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_max_account_resources', 'value': 2217503873, 'doc': '', 'info': {'type': 'EnumEntry'}}], 'tref': {'name': ['koinos', 'uint32'], 'targs': None, 'info': {'type': 'Typeref'}}, 'doc': '', 'info': {'type': 'EnumClass'}}
+// {'name': 'system_call_id', 'entries': [{'name': 'prints', 'value': 2602735937, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_header', 'value': 2519027790, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_block', 'value': 2494255093, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_transaction', 'value': 2643154394, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_reserved_operation', 'value': 2594724132, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_upload_contract_operation', 'value': 2658052407, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_execute_contract_operation', 'value': 2451064454, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_set_system_call_operation', 'value': 2507777116, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_put_object', 'value': 2535376802, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_object', 'value': 2540087547, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_next_object', 'value': 2577635560, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_prev_object', 'value': 2614326908, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'execute_contract', 'value': 2562796798, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args_size', 'value': 2601357273, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args', 'value': 2679873944, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'set_contract_return', 'value': 2672414186, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'exit_contract', 'value': 2564781488, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_head_info', 'value': 2507125293, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'hash', 'value': 2574716420, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_signature', 'value': 2411308443, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_merkle_root', 'value': 2574132409, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_transaction_payer', 'value': 2259188725, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_max_account_resources', 'value': 2217503873, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_transaction_resource_limit', 'value': 2571171461, 'doc': '', 'info': {'type': 'EnumEntry'}}], 'tref': {'name': ['koinos', 'uint32'], 'targs': None, 'info': {'type': 'Typeref'}}, 'doc': '', 'info': {'type': 'EnumClass'}}
 
 // SystemCallID type
 type SystemCallID UInt32
@@ -2412,6 +2424,7 @@ const (
 	SystemCallIDVerifyMerkleRoot SystemCallID = 2574132409
 	SystemCallIDGetTransactionPayer SystemCallID = 2259188725
 	SystemCallIDGetMaxAccountResources SystemCallID = 2217503873
+	SystemCallIDGetTransactionResourceLimit SystemCallID = 2571171461
 )
 
 // Serialize SystemCallID
@@ -2512,6 +2525,8 @@ func IsValidSystemCallID(v SystemCallID) bool {
 		case SystemCallIDGetTransactionPayer:
 			return true
 		case SystemCallIDGetMaxAccountResources:
+			return true
+		case SystemCallIDGetTransactionResourceLimit:
 			return true
 		default:
 			return false
@@ -4566,6 +4581,89 @@ func (n *GetMaxAccountResourcesReturn) UnmarshalJSON(data []byte) error {
 	}
 
 	*n = GetMaxAccountResourcesReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: GetTransactionResourceLimitArgs
+// ----------------------------------------
+
+// GetTransactionResourceLimitArgs type
+type GetTransactionResourceLimitArgs struct {
+    Transaction OpaqueTransaction `json:"transaction"`
+}
+
+// NewGetTransactionResourceLimitArgs factory
+func NewGetTransactionResourceLimitArgs() *GetTransactionResourceLimitArgs {
+	o := GetTransactionResourceLimitArgs{}
+	o.Transaction = *NewOpaqueTransaction()
+	return &o
+}
+
+// Serialize GetTransactionResourceLimitArgs
+func (n GetTransactionResourceLimitArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Transaction.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetTransactionResourceLimitArgs function
+func DeserializeGetTransactionResourceLimitArgs(vb *VariableBlob) (uint64,*GetTransactionResourceLimitArgs,error) {
+	var i,j uint64 = 0,0
+	s := GetTransactionResourceLimitArgs{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tTransaction,err := DeserializeOpaqueTransaction(&ovb); i+=j
+	if err != nil {
+		return 0, &GetTransactionResourceLimitArgs{}, err
+	}
+	s.Transaction = *tTransaction
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: GetTransactionResourceLimitReturn
+// ----------------------------------------
+
+// GetTransactionResourceLimitReturn type
+type GetTransactionResourceLimitReturn UInt128
+
+// NewGetTransactionResourceLimitReturn factory
+func NewGetTransactionResourceLimitReturn() *GetTransactionResourceLimitReturn {
+	o := GetTransactionResourceLimitReturn(*NewUInt128())
+	return &o
+}
+
+// Serialize GetTransactionResourceLimitReturn
+func (n GetTransactionResourceLimitReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := UInt128(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeGetTransactionResourceLimitReturn function
+func DeserializeGetTransactionResourceLimitReturn(vb *VariableBlob) (uint64,*GetTransactionResourceLimitReturn,error) {
+	var ot GetTransactionResourceLimitReturn
+	i,n,err := DeserializeUInt128(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = GetTransactionResourceLimitReturn(*n)
+	return i,&ot,nil}
+
+// MarshalJSON GetTransactionResourceLimitReturn
+func (n GetTransactionResourceLimitReturn) MarshalJSON() ([]byte, error) {
+	v := UInt128(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *GetTransactionResourceLimitReturn
+func (n *GetTransactionResourceLimitReturn) UnmarshalJSON(data []byte) error {
+	v := UInt128(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = GetTransactionResourceLimitReturn(v)
 	return nil
 }
 
