@@ -3064,8 +3064,28 @@ func TestHeadInfo(t *testing.T) {
 		t.Errorf("Bytes were consumed on error")
 	}
 
-	// Test height
+	// Test previous_id
 	vb = &koinos.VariableBlob{0x00, 0x00}
+	n, _, err = koinos.DeserializeHeadInfo(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	// Test height
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeHeadInfo(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	// Test last_irreversible_height
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 	n, _, err = koinos.DeserializeHeadInfo(vb)
 	if err == nil {
 		t.Errorf("err == nil")
@@ -5658,6 +5678,47 @@ func TestGetPendingTransactionsRequest(t *testing.T) {
 }
 
 // ----------------------------------------
+//  Struct: GetForkHeadsRequest
+// ----------------------------------------
+
+func TestGetForkHeadsRequest(t *testing.T) {
+	o := koinos.NewGetForkHeadsRequest()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetForkHeadsRequest(vb)
+	if err != nil {
+		t.Error(err)
+	}
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetForkHeadsRequest()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
 //  Variant: ChainRPCRequest
 // ----------------------------------------
 
@@ -5724,6 +5785,12 @@ func TestChainRPCRequest(t *testing.T) {
 			t.Errorf("Bytes were consumed on error")
 		}
 	}
+	{
+		v := koinos.NewChainRPCRequest()
+		v.Value = koinos.NewGetForkHeadsRequest()
+		exerciseChainRPCRequestSerialization(v, t)
+
+	}
 
 	// Test bad variant tag
 	vb := koinos.VariableBlob{0x80}
@@ -5736,7 +5803,7 @@ func TestChainRPCRequest(t *testing.T) {
 	}
 
 	// Test unknown tag
-	vb = koinos.VariableBlob{6}
+	vb = koinos.VariableBlob{7}
 	n, _, err = koinos.DeserializeChainRPCRequest(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
@@ -6158,6 +6225,69 @@ func TestGetPendingTransactionsResponse(t *testing.T) {
 }
 
 // ----------------------------------------
+//  Struct: GetForkHeadsResponse
+// ----------------------------------------
+
+func TestGetForkHeadsResponse(t *testing.T) {
+	o := koinos.NewGetForkHeadsResponse()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetForkHeadsResponse(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	var n uint64
+	// Test fork_heads
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeGetForkHeadsResponse(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	// Test last_irreversible_block
+	vb = &koinos.VariableBlob{0x00}
+	n, _, err = koinos.DeserializeGetForkHeadsResponse(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetForkHeadsResponse()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
 //  Variant: ChainRPCResponse
 // ----------------------------------------
 
@@ -6238,6 +6368,20 @@ func TestChainRPCResponse(t *testing.T) {
 			t.Errorf("Bytes were consumed on error")
 		}
 	}
+	{
+		v := koinos.NewChainRPCResponse()
+		v.Value = koinos.NewGetForkHeadsResponse()
+		exerciseChainRPCResponseSerialization(v, t)
+
+		vb := koinos.VariableBlob{7}
+		n, _, err := koinos.DeserializeChainRPCResponse(&vb)
+		if err == nil {
+			t.Errorf("err == nil")
+		}
+		if n != 0 {
+			t.Errorf("Bytes were consumed on error")
+		}
+	}
 
 	// Test bad variant tag
 	vb := koinos.VariableBlob{0x80}
@@ -6250,7 +6394,7 @@ func TestChainRPCResponse(t *testing.T) {
 	}
 
 	// Test unknown tag
-	vb = koinos.VariableBlob{7}
+	vb = koinos.VariableBlob{8}
 	n, _, err = koinos.DeserializeChainRPCResponse(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
@@ -7151,6 +7295,38 @@ func TestTransactionSubmission(t *testing.T) {
 }
 
 // ----------------------------------------
+//  Typedef: GetForkHeadsSubmission
+// ----------------------------------------
+
+func TestGetForkHeadsSubmission(t *testing.T) {
+	o := koinos.NewGetForkHeadsSubmission()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetForkHeadsSubmission(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetForkHeadsSubmission()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
 //  Variant: SubmissionItem
 // ----------------------------------------
 
@@ -7205,6 +7381,12 @@ func TestSubmissionItem(t *testing.T) {
 			t.Errorf("Bytes were consumed on error")
 		}
 	}
+	{
+		v := koinos.NewSubmissionItem()
+		v.Value = koinos.NewGetForkHeadsSubmission()
+		exerciseSubmissionItemSerialization(v, t)
+
+	}
 
 	// Test bad variant tag
 	vb := koinos.VariableBlob{0x80}
@@ -7217,7 +7399,7 @@ func TestSubmissionItem(t *testing.T) {
 	}
 
 	// Test unknown tag
-	vb = koinos.VariableBlob{4}
+	vb = koinos.VariableBlob{5}
 	n, _, err = koinos.DeserializeSubmissionItem(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
@@ -7380,6 +7562,47 @@ func TestTransactionSubmissionResult(t *testing.T) {
 }
 
 // ----------------------------------------
+//  Typedef: GetForkHeadsSubmissionResult
+// ----------------------------------------
+
+func TestGetForkHeadsSubmissionResult(t *testing.T) {
+	o := koinos.NewGetForkHeadsSubmissionResult()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetForkHeadsSubmissionResult(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeGetForkHeadsSubmissionResult(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if size != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetForkHeadsSubmissionResult()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
 //  Typedef: SubmissionErrorResult
 // ----------------------------------------
 
@@ -7461,10 +7684,24 @@ func TestSubmissionResult(t *testing.T) {
 	}
 	{
 		v := koinos.NewSubmissionResult()
-		v.Value = koinos.NewSubmissionErrorResult()
+		v.Value = koinos.NewGetForkHeadsSubmissionResult()
 		exerciseSubmissionResultSerialization(v, t)
 
 		vb := koinos.VariableBlob{4}
+		n, _, err := koinos.DeserializeSubmissionResult(&vb)
+		if err == nil {
+			t.Errorf("err == nil")
+		}
+		if n != 0 {
+			t.Errorf("Bytes were consumed on error")
+		}
+	}
+	{
+		v := koinos.NewSubmissionResult()
+		v.Value = koinos.NewSubmissionErrorResult()
+		exerciseSubmissionResultSerialization(v, t)
+
+		vb := koinos.VariableBlob{5}
 		n, _, err := koinos.DeserializeSubmissionResult(&vb)
 		if err == nil {
 			t.Errorf("err == nil")
@@ -7485,7 +7722,7 @@ func TestSubmissionResult(t *testing.T) {
 	}
 
 	// Test unknown tag
-	vb = koinos.VariableBlob{5}
+	vb = koinos.VariableBlob{6}
 	n, _, err = koinos.DeserializeSubmissionResult(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
@@ -9071,6 +9308,51 @@ func TestVectorBlockItem(t *testing.T) {
 	// Test no data in the vector
 	vb = &koinos.VariableBlob{0x01}
 	n, _, err := koinos.DeserializeVectorBlockItem(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+}
+
+// ----------------------------------------
+//  VectorBlockTopology
+// ----------------------------------------
+
+func TestVectorBlockTopology(t *testing.T) {
+	v := koinos.NewVectorBlockTopology()
+	for i := 0; i < 16; i++ {
+		no := koinos.NewBlockTopology()
+		*v = append(*v, *no)
+	}
+
+	vb := koinos.NewVariableBlob()
+	vb = v.Serialize(vb)
+
+	_, nv, err := koinos.DeserializeVectorBlockTopology(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if len(*nv) != len(*v) {
+		t.Errorf("Deserialized vector length does not match original.")
+	}
+
+	j, err := json.Marshal(v)
+	if err != nil {
+		t.Error(err)
+	}
+
+	jv := koinos.NewVectorBlockTopology()
+	err = json.Unmarshal(j, &jv)
+	if err != nil {
+		t.Error(err)
+	}
+
+	// Test no data in the vector
+	vb = &koinos.VariableBlob{0x01}
+	n, _, err := koinos.DeserializeVectorBlockTopology(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}

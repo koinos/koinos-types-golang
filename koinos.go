@@ -2541,21 +2541,27 @@ func IsValidSystemCallID(v SystemCallID) bool {
 // HeadInfo type
 type HeadInfo struct {
     ID Multihash `json:"id"`
+    PreviousID Multihash `json:"previous_id"`
     Height BlockHeightType `json:"height"`
+    LastIrreversibleHeight BlockHeightType `json:"last_irreversible_height"`
 }
 
 // NewHeadInfo factory
 func NewHeadInfo() *HeadInfo {
 	o := HeadInfo{}
 	o.ID = *NewMultihash()
+	o.PreviousID = *NewMultihash()
 	o.Height = *NewBlockHeightType()
+	o.LastIrreversibleHeight = *NewBlockHeightType()
 	return &o
 }
 
 // Serialize HeadInfo
 func (n HeadInfo) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.ID.Serialize(vb)
+	vb = n.PreviousID.Serialize(vb)
 	vb = n.Height.Serialize(vb)
+	vb = n.LastIrreversibleHeight.Serialize(vb)
 	return vb
 }
 
@@ -2571,11 +2577,23 @@ func DeserializeHeadInfo(vb *VariableBlob) (uint64,*HeadInfo,error) {
 	}
 	s.ID = *tID
 	ovb = (*vb)[i:]
+	j,tPreviousID,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &HeadInfo{}, err
+	}
+	s.PreviousID = *tPreviousID
+	ovb = (*vb)[i:]
 	j,tHeight,err := DeserializeBlockHeightType(&ovb); i+=j
 	if err != nil {
 		return 0, &HeadInfo{}, err
 	}
 	s.Height = *tHeight
+	ovb = (*vb)[i:]
+	j,tLastIrreversibleHeight,err := DeserializeBlockHeightType(&ovb); i+=j
+	if err != nil {
+		return 0, &HeadInfo{}, err
+	}
+	s.LastIrreversibleHeight = *tLastIrreversibleHeight
 	return i, &s, nil
 }
 
@@ -4930,6 +4948,33 @@ func DeserializeGetPendingTransactionsRequest(vb *VariableBlob) (uint64,*GetPend
 }
 
 // ----------------------------------------
+//  Struct: GetForkHeadsRequest
+// ----------------------------------------
+
+// GetForkHeadsRequest type
+type GetForkHeadsRequest struct {
+}
+
+// NewGetForkHeadsRequest factory
+func NewGetForkHeadsRequest() *GetForkHeadsRequest {
+	o := GetForkHeadsRequest{}
+	return &o
+}
+
+// Serialize GetForkHeadsRequest
+func (n GetForkHeadsRequest) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeGetForkHeadsRequest function
+func DeserializeGetForkHeadsRequest(vb *VariableBlob) (uint64,*GetForkHeadsRequest,error) {
+	var i uint64 = 0
+	s := GetForkHeadsRequest{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
 //  Variant: ChainRPCRequest
 // ----------------------------------------
 
@@ -4961,6 +5006,8 @@ func (n ChainRPCRequest) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 4
 		case *GetPendingTransactionsRequest:
 			i = 5
+		case *GetForkHeadsRequest:
+			i = 6
 		default:
 			panic("Unknown variant type")
 	}
@@ -4985,6 +5032,8 @@ func (n ChainRPCRequest) TypeToName() (string) {
 			return "koinos::rpc::chain::get_chain_id_request"
 		case *GetPendingTransactionsRequest:
 			return "koinos::rpc::chain::get_pending_transactions_request"
+		case *GetForkHeadsRequest:
+			return "koinos::rpc::chain::get_fork_heads_request"
 		default:
 			panic("Variant type is not serializeable.")
 	}
@@ -5043,6 +5092,8 @@ func DeserializeChainRPCRequest(vb *VariableBlob) (uint64,*ChainRPCRequest,error
 			}
 			j = k
 			v.Value = x
+		case 6:
+			v.Value = NewGetForkHeadsRequest()
 		default:
 			return 0, &v, errors.New("unknown variant tag")
 	}
@@ -5084,6 +5135,10 @@ func (n *ChainRPCRequest) UnmarshalJSON(data []byte) error {
 			n.Value = v
 		case "koinos::rpc::chain::get_pending_transactions_request":
 			v := NewGetPendingTransactionsRequest()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::chain::get_fork_heads_request":
+			v := NewGetForkHeadsRequest()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
@@ -5338,6 +5393,51 @@ func DeserializeGetPendingTransactionsResponse(vb *VariableBlob) (uint64,*GetPen
 }
 
 // ----------------------------------------
+//  Struct: GetForkHeadsResponse
+// ----------------------------------------
+
+// GetForkHeadsResponse type
+type GetForkHeadsResponse struct {
+    ForkHeads VectorBlockTopology `json:"fork_heads"`
+    LastIrreversibleBlock BlockTopology `json:"last_irreversible_block"`
+}
+
+// NewGetForkHeadsResponse factory
+func NewGetForkHeadsResponse() *GetForkHeadsResponse {
+	o := GetForkHeadsResponse{}
+	o.ForkHeads = *NewVectorBlockTopology()
+	o.LastIrreversibleBlock = *NewBlockTopology()
+	return &o
+}
+
+// Serialize GetForkHeadsResponse
+func (n GetForkHeadsResponse) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ForkHeads.Serialize(vb)
+	vb = n.LastIrreversibleBlock.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetForkHeadsResponse function
+func DeserializeGetForkHeadsResponse(vb *VariableBlob) (uint64,*GetForkHeadsResponse,error) {
+	var i,j uint64 = 0,0
+	s := GetForkHeadsResponse{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tForkHeads,err := DeserializeVectorBlockTopology(&ovb); i+=j
+	if err != nil {
+		return 0, &GetForkHeadsResponse{}, err
+	}
+	s.ForkHeads = *tForkHeads
+	ovb = (*vb)[i:]
+	j,tLastIrreversibleBlock,err := DeserializeBlockTopology(&ovb); i+=j
+	if err != nil {
+		return 0, &GetForkHeadsResponse{}, err
+	}
+	s.LastIrreversibleBlock = *tLastIrreversibleBlock
+	return i, &s, nil
+}
+
+// ----------------------------------------
 //  Variant: ChainRPCResponse
 // ----------------------------------------
 
@@ -5371,6 +5471,8 @@ func (n ChainRPCResponse) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 5
 		case *GetPendingTransactionsResponse:
 			i = 6
+		case *GetForkHeadsResponse:
+			i = 7
 		default:
 			panic("Unknown variant type")
 	}
@@ -5397,6 +5499,8 @@ func (n ChainRPCResponse) TypeToName() (string) {
 			return "koinos::rpc::chain::get_chain_id_response"
 		case *GetPendingTransactionsResponse:
 			return "koinos::rpc::chain::get_pending_transactions_response"
+		case *GetForkHeadsResponse:
+			return "koinos::rpc::chain::get_fork_heads_response"
 		default:
 			panic("Variant type is not serializeable.")
 	}
@@ -5463,6 +5567,14 @@ func DeserializeChainRPCResponse(vb *VariableBlob) (uint64,*ChainRPCResponse,err
 			}
 			j = k
 			v.Value = x
+		case 7:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetForkHeadsResponse(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
 		default:
 			return 0, &v, errors.New("unknown variant tag")
 	}
@@ -5508,6 +5620,10 @@ func (n *ChainRPCResponse) UnmarshalJSON(data []byte) error {
 			n.Value = v
 		case "koinos::rpc::chain::get_pending_transactions_response":
 			v := NewGetPendingTransactionsResponse()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::chain::get_fork_heads_response":
+			v := NewGetForkHeadsResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
@@ -6493,6 +6609,48 @@ func (n *TransactionSubmission) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
+//  Typedef: GetForkHeadsSubmission
+// ----------------------------------------
+
+// GetForkHeadsSubmission type
+type GetForkHeadsSubmission GetForkHeadsRequest
+
+// NewGetForkHeadsSubmission factory
+func NewGetForkHeadsSubmission() *GetForkHeadsSubmission {
+	o := GetForkHeadsSubmission(*NewGetForkHeadsRequest())
+	return &o
+}
+
+// Serialize GetForkHeadsSubmission
+func (n GetForkHeadsSubmission) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := GetForkHeadsRequest(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeGetForkHeadsSubmission function
+func DeserializeGetForkHeadsSubmission(vb *VariableBlob) (uint64,*GetForkHeadsSubmission,error) {
+	var ot GetForkHeadsSubmission
+	return 0,&ot,nil}
+
+// MarshalJSON GetForkHeadsSubmission
+func (n GetForkHeadsSubmission) MarshalJSON() ([]byte, error) {
+	v := GetForkHeadsRequest(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *GetForkHeadsSubmission
+func (n *GetForkHeadsSubmission) UnmarshalJSON(data []byte) error {
+	v := GetForkHeadsRequest(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = GetForkHeadsSubmission(v)
+	return nil
+}
+
+
+// ----------------------------------------
 //  Variant: SubmissionItem
 // ----------------------------------------
 
@@ -6520,6 +6678,8 @@ func (n SubmissionItem) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 2
 		case *QuerySubmission:
 			i = 3
+		case *GetForkHeadsSubmission:
+			i = 4
 		default:
 			panic("Unknown variant type")
 	}
@@ -6540,6 +6700,8 @@ func (n SubmissionItem) TypeToName() (string) {
 			return "koinos::types::rpc::transaction_submission"
 		case *QuerySubmission:
 			return "koinos::types::rpc::query_submission"
+		case *GetForkHeadsSubmission:
+			return "koinos::types::rpc::get_fork_heads_submission"
 		default:
 			panic("Variant type is not serializeable.")
 	}
@@ -6594,6 +6756,8 @@ func DeserializeSubmissionItem(vb *VariableBlob) (uint64,*SubmissionItem,error) 
 			}
 			j = k
 			v.Value = x
+		case 4:
+			v.Value = NewGetForkHeadsSubmission()
 		default:
 			return 0, &v, errors.New("unknown variant tag")
 	}
@@ -6627,6 +6791,10 @@ func (n *SubmissionItem) UnmarshalJSON(data []byte) error {
 			n.Value = v
 		case "koinos::types::rpc::query_submission":
 			v := NewQuerySubmission()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::types::rpc::get_fork_heads_submission":
+			v := NewGetForkHeadsSubmission()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
@@ -6764,6 +6932,53 @@ func (n *TransactionSubmissionResult) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
+//  Typedef: GetForkHeadsSubmissionResult
+// ----------------------------------------
+
+// GetForkHeadsSubmissionResult type
+type GetForkHeadsSubmissionResult GetForkHeadsResponse
+
+// NewGetForkHeadsSubmissionResult factory
+func NewGetForkHeadsSubmissionResult() *GetForkHeadsSubmissionResult {
+	o := GetForkHeadsSubmissionResult(*NewGetForkHeadsResponse())
+	return &o
+}
+
+// Serialize GetForkHeadsSubmissionResult
+func (n GetForkHeadsSubmissionResult) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := GetForkHeadsResponse(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeGetForkHeadsSubmissionResult function
+func DeserializeGetForkHeadsSubmissionResult(vb *VariableBlob) (uint64,*GetForkHeadsSubmissionResult,error) {
+	var ot GetForkHeadsSubmissionResult
+	i,n,err := DeserializeGetForkHeadsResponse(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = GetForkHeadsSubmissionResult(*n)
+	return i,&ot,nil}
+
+// MarshalJSON GetForkHeadsSubmissionResult
+func (n GetForkHeadsSubmissionResult) MarshalJSON() ([]byte, error) {
+	v := GetForkHeadsResponse(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *GetForkHeadsSubmissionResult
+func (n *GetForkHeadsSubmissionResult) UnmarshalJSON(data []byte) error {
+	v := GetForkHeadsResponse(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = GetForkHeadsSubmissionResult(v)
+	return nil
+}
+
+
+// ----------------------------------------
 //  Typedef: SubmissionErrorResult
 // ----------------------------------------
 
@@ -6838,8 +7053,10 @@ func (n SubmissionResult) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 2
 		case *QuerySubmissionResult:
 			i = 3
-		case *SubmissionErrorResult:
+		case *GetForkHeadsSubmissionResult:
 			i = 4
+		case *SubmissionErrorResult:
+			i = 5
 		default:
 			panic("Unknown variant type")
 	}
@@ -6860,6 +7077,8 @@ func (n SubmissionResult) TypeToName() (string) {
 			return "koinos::types::rpc::transaction_submission_result"
 		case *QuerySubmissionResult:
 			return "koinos::types::rpc::query_submission_result"
+		case *GetForkHeadsSubmissionResult:
+			return "koinos::types::rpc::get_fork_heads_submission_result"
 		case *SubmissionErrorResult:
 			return "koinos::types::rpc::submission_error_result"
 		default:
@@ -6906,6 +7125,14 @@ func DeserializeSubmissionResult(vb *VariableBlob) (uint64,*SubmissionResult,err
 			v.Value = x
 		case 4:
 			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetForkHeadsSubmissionResult(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		case 5:
+			ovb := (*vb)[i:]
 			k,x,err := DeserializeSubmissionErrorResult(&ovb)
 			if err != nil {
 				return 0, &v, err
@@ -6945,6 +7172,10 @@ func (n *SubmissionResult) UnmarshalJSON(data []byte) error {
 			n.Value = v
 		case "koinos::types::rpc::query_submission_result":
 			v := NewQuerySubmissionResult()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::types::rpc::get_fork_heads_submission_result":
+			v := NewGetForkHeadsSubmissionResult()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::types::rpc::submission_error_result":
@@ -8392,6 +8623,57 @@ func DeserializeVectorBlockItem(vb *VariableBlob) (uint64,*VectorBlockItem,error
 		j,item,err = DeserializeBlockItem(&ovb)
 		if nil != err {
 			var v VectorBlockItem
+			return 0,&v,err
+		}
+		i += j
+		result = append(result, *item)
+	}
+
+	return i, &result, nil
+}
+
+// ----------------------------------------
+//  VectorBlockTopology
+// ----------------------------------------
+
+// VectorBlockTopology type
+type VectorBlockTopology []BlockTopology
+
+// NewVectorBlockTopology factory
+func NewVectorBlockTopology() *VectorBlockTopology {
+	o := VectorBlockTopology(make([]BlockTopology, 0))
+	return &o
+}
+
+// Serialize VectorBlockTopology
+func (n VectorBlockTopology) Serialize(vb *VariableBlob) *VariableBlob {
+	header := make([]byte, binary.MaxVarintLen64)
+	bytes := binary.PutUvarint(header, uint64(len(n)))
+	ovb := append(*vb, header[:bytes]...)
+	vb = &ovb
+	for _, item := range n {
+		vb = item.Serialize(vb)
+	}
+
+	return vb
+}
+// DeserializeVectorBlockTopology function
+func DeserializeVectorBlockTopology(vb *VariableBlob) (uint64,*VectorBlockTopology,error) {
+	var result VectorBlockTopology
+	size,bytes := binary.Uvarint(*vb)
+	if bytes <= 0 {
+		return 0, &result, errors.New("could not deserialize multihash id")
+	}
+	result = VectorBlockTopology(make([]BlockTopology, 0, size))
+	i := uint64(bytes)
+	var j uint64
+	var item *BlockTopology
+	var err error
+	for num := uint64(0); num < size; num++ {
+		ovb := (*vb)[i:]
+		j,item,err = DeserializeBlockTopology(&ovb)
+		if nil != err {
+			var v VectorBlockTopology
 			return 0,&v,err
 		}
 		i += j
