@@ -614,6 +614,7 @@ func TestThunkID(t *testing.T) {
 		koinos.ThunkIDGetTransactionPayer,
 		koinos.ThunkIDGetMaxAccountResources,
 		koinos.ThunkIDGetTransactionResourceLimit,
+		koinos.ThunkIDGetLastIrreversibleBlock,
 	}
 
 	// Make sure all types properly serialize
@@ -715,7 +716,7 @@ func TestThunkIDPanic(t *testing.T) {
 }
 
 func getInvalidThunkID() koinos.ThunkID {
-	w := koinos.ThunkIDGetTransactionResourceLimit
+	w := koinos.ThunkIDGetLastIrreversibleBlock
 	for koinos.IsValidThunkID(w) {
 		w++
 	}
@@ -2930,6 +2931,7 @@ func TestSystemCallID(t *testing.T) {
 		koinos.SystemCallIDGetTransactionPayer,
 		koinos.SystemCallIDGetMaxAccountResources,
 		koinos.SystemCallIDGetTransactionResourceLimit,
+		koinos.SystemCallIDGetLastIrreversibleBlock,
 	}
 
 	// Make sure all types properly serialize
@@ -3031,7 +3033,7 @@ func TestSystemCallIDPanic(t *testing.T) {
 }
 
 func getInvalidSystemCallID() koinos.SystemCallID {
-	w := koinos.SystemCallIDGetTransactionResourceLimit
+	w := koinos.SystemCallIDGetLastIrreversibleBlock
 	for koinos.IsValidSystemCallID(w) {
 		w++
 	}
@@ -5316,6 +5318,88 @@ func TestGetTransactionResourceLimitReturn(t *testing.T) {
 }
 
 // ----------------------------------------
+//  Struct: GetLastIrreversibleBlockArgs
+// ----------------------------------------
+
+func TestGetLastIrreversibleBlockArgs(t *testing.T) {
+	o := koinos.NewGetLastIrreversibleBlockArgs()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetLastIrreversibleBlockArgs(vb)
+	if err != nil {
+		t.Error(err)
+	}
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetLastIrreversibleBlockArgs()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
+//  Typedef: GetLastIrreversibleBlockReturn
+// ----------------------------------------
+
+func TestGetLastIrreversibleBlockReturn(t *testing.T) {
+	o := koinos.NewGetLastIrreversibleBlockReturn()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetLastIrreversibleBlockReturn(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeGetLastIrreversibleBlockReturn(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if size != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetLastIrreversibleBlockReturn()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
 //  Struct: ChainReservedRequest
 // ----------------------------------------
 
@@ -6081,8 +6165,28 @@ func TestGetHeadInfoResponse(t *testing.T) {
 		t.Errorf("Bytes were consumed on error")
 	}
 
-	// Test height
+	// Test previous_id
 	vb = &koinos.VariableBlob{0x00, 0x00}
+	n, _, err = koinos.DeserializeGetHeadInfoResponse(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	// Test height
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeGetHeadInfoResponse(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	// Test last_irreversible_height
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 	n, _, err = koinos.DeserializeGetHeadInfoResponse(vb)
 	if err == nil {
 		t.Errorf("err == nil")
