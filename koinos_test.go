@@ -615,6 +615,9 @@ func TestThunkID(t *testing.T) {
 		koinos.ThunkIDGetMaxAccountResources,
 		koinos.ThunkIDGetTransactionResourceLimit,
 		koinos.ThunkIDGetLastIrreversibleBlock,
+		koinos.ThunkIDGetCaller,
+		koinos.ThunkIDRequireAuthority,
+		koinos.ThunkIDGetTransactionSignature,
 	}
 
 	// Make sure all types properly serialize
@@ -716,7 +719,7 @@ func TestThunkIDPanic(t *testing.T) {
 }
 
 func getInvalidThunkID() koinos.ThunkID {
-	w := koinos.ThunkIDGetLastIrreversibleBlock
+	w := koinos.ThunkIDGetTransactionSignature
 	for koinos.IsValidThunkID(w) {
 		w++
 	}
@@ -2932,6 +2935,9 @@ func TestSystemCallID(t *testing.T) {
 		koinos.SystemCallIDGetMaxAccountResources,
 		koinos.SystemCallIDGetTransactionResourceLimit,
 		koinos.SystemCallIDGetLastIrreversibleBlock,
+		koinos.SystemCallIDGetCaller,
+		koinos.SystemCallIDRequireAuthority,
+		koinos.SystemCallIDGetTransactionSignature,
 	}
 
 	// Make sure all types properly serialize
@@ -3033,7 +3039,7 @@ func TestSystemCallIDPanic(t *testing.T) {
 }
 
 func getInvalidSystemCallID() koinos.SystemCallID {
-	w := koinos.SystemCallIDGetLastIrreversibleBlock
+	w := koinos.SystemCallIDGetTransactionSignature
 	for koinos.IsValidSystemCallID(w) {
 		w++
 	}
@@ -5388,6 +5394,255 @@ func TestGetLastIrreversibleBlockReturn(t *testing.T) {
 	}
 
 	jo := koinos.NewGetLastIrreversibleBlockReturn()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
+//  Struct: GetCallerArgs
+// ----------------------------------------
+
+func TestGetCallerArgs(t *testing.T) {
+	o := koinos.NewGetCallerArgs()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetCallerArgs(vb)
+	if err != nil {
+		t.Error(err)
+	}
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetCallerArgs()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
+//  Typedef: GetCallerReturn
+// ----------------------------------------
+
+func TestGetCallerReturn(t *testing.T) {
+	o := koinos.NewGetCallerReturn()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetCallerReturn(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeGetCallerReturn(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if size != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetCallerReturn()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
+//  Struct: RequireAuthorityArgs
+// ----------------------------------------
+
+func TestRequireAuthorityArgs(t *testing.T) {
+	o := koinos.NewRequireAuthorityArgs()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeRequireAuthorityArgs(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	var n uint64
+	// Test account
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeRequireAuthorityArgs(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewRequireAuthorityArgs()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
+//  Typedef: RequireAuthorityReturn
+// ----------------------------------------
+
+func TestRequireAuthorityReturn(t *testing.T) {
+	o := koinos.NewRequireAuthorityReturn()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeRequireAuthorityReturn(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewRequireAuthorityReturn()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
+//  Struct: GetTransactionSignature
+// ----------------------------------------
+
+func TestGetTransactionSignature(t *testing.T) {
+	o := koinos.NewGetTransactionSignature()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetTransactionSignature(vb)
+	if err != nil {
+		t.Error(err)
+	}
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetTransactionSignature()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
+//  Typedef: GetTransactionSignatureReturn
+// ----------------------------------------
+
+func TestGetTransactionSignatureReturn(t *testing.T) {
+	o := koinos.NewGetTransactionSignatureReturn()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetTransactionSignatureReturn(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeGetTransactionSignatureReturn(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if size != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetTransactionSignatureReturn()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)

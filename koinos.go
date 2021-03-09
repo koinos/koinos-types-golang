@@ -447,7 +447,7 @@ func DeserializeSystemCallTargetReserved(vb *VariableBlob) (uint64,*SystemCallTa
 //  Enum: ThunkID
 // ----------------------------------------
 
-// {'name': 'thunk_id', 'entries': [{'name': 'prints', 'value': 2406348109, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_header', 'value': 2369936044, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_block', 'value': 2372743592, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_transaction', 'value': 2306978015, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_reserved_operation', 'value': 2335970550, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_upload_contract_operation', 'value': 2290263390, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_execute_contract_operation', 'value': 2246607595, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_set_system_call_operation', 'value': 2264476812, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_put_object', 'value': 2181271013, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_object', 'value': 2288165080, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_next_object', 'value': 2263109703, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_prev_object', 'value': 2371348733, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'execute_contract', 'value': 2319711875, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args_size', 'value': 2201456262, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args', 'value': 2383977862, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'set_contract_return', 'value': 2260230773, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'exit_contract', 'value': 2180390815, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_head_info', 'value': 2313106628, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'hash', 'value': 2326459719, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_signature', 'value': 2635873417, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_merkle_root', 'value': 2396642763, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_transaction_payer', 'value': 2645774470, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_max_account_resources', 'value': 2431733645, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_transaction_resource_limit', 'value': 2346680737, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_last_irreversible_block', 'value': 2160310419, 'doc': '', 'info': {'type': 'EnumEntry'}}], 'tref': {'name': ['koinos', 'uint32'], 'targs': None, 'info': {'type': 'Typeref'}}, 'doc': '', 'info': {'type': 'EnumClass'}}
+// {'name': 'thunk_id', 'entries': [{'name': 'prints', 'value': 2406348109, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_header', 'value': 2369936044, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_block', 'value': 2372743592, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_transaction', 'value': 2306978015, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_reserved_operation', 'value': 2335970550, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_upload_contract_operation', 'value': 2290263390, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_execute_contract_operation', 'value': 2246607595, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_set_system_call_operation', 'value': 2264476812, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_put_object', 'value': 2181271013, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_object', 'value': 2288165080, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_next_object', 'value': 2263109703, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_prev_object', 'value': 2371348733, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'execute_contract', 'value': 2319711875, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args_size', 'value': 2201456262, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args', 'value': 2383977862, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'set_contract_return', 'value': 2260230773, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'exit_contract', 'value': 2180390815, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_head_info', 'value': 2313106628, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'hash', 'value': 2326459719, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_signature', 'value': 2635873417, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_merkle_root', 'value': 2396642763, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_transaction_payer', 'value': 2645774470, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_max_account_resources', 'value': 2431733645, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_transaction_resource_limit', 'value': 2346680737, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_last_irreversible_block', 'value': 2160310419, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_caller', 'value': 2184258817, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'require_authority', 'value': 2315678077, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_transaction_signature', 'value': 2202278691, 'doc': '', 'info': {'type': 'EnumEntry'}}], 'tref': {'name': ['koinos', 'uint32'], 'targs': None, 'info': {'type': 'Typeref'}}, 'doc': '', 'info': {'type': 'EnumClass'}}
 
 // ThunkID type
 type ThunkID UInt32
@@ -485,6 +485,9 @@ const (
 	ThunkIDGetMaxAccountResources ThunkID = 2431733645
 	ThunkIDGetTransactionResourceLimit ThunkID = 2346680737
 	ThunkIDGetLastIrreversibleBlock ThunkID = 2160310419
+	ThunkIDGetCaller ThunkID = 2184258817
+	ThunkIDRequireAuthority ThunkID = 2315678077
+	ThunkIDGetTransactionSignature ThunkID = 2202278691
 )
 
 // Serialize ThunkID
@@ -589,6 +592,12 @@ func IsValidThunkID(v ThunkID) bool {
 		case ThunkIDGetTransactionResourceLimit:
 			return true
 		case ThunkIDGetLastIrreversibleBlock:
+			return true
+		case ThunkIDGetCaller:
+			return true
+		case ThunkIDRequireAuthority:
+			return true
+		case ThunkIDGetTransactionSignature:
 			return true
 		default:
 			return false
@@ -2391,7 +2400,7 @@ func DeserializeBlockAccepted(vb *VariableBlob) (uint64,*BlockAccepted,error) {
 //  Enum: SystemCallID
 // ----------------------------------------
 
-// {'name': 'system_call_id', 'entries': [{'name': 'prints', 'value': 2602735937, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_header', 'value': 2519027790, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_block', 'value': 2494255093, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_transaction', 'value': 2643154394, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_reserved_operation', 'value': 2594724132, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_upload_contract_operation', 'value': 2658052407, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_execute_contract_operation', 'value': 2451064454, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_set_system_call_operation', 'value': 2507777116, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_put_object', 'value': 2535376802, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_object', 'value': 2540087547, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_next_object', 'value': 2577635560, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_prev_object', 'value': 2614326908, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'execute_contract', 'value': 2562796798, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args_size', 'value': 2601357273, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args', 'value': 2679873944, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'set_contract_return', 'value': 2672414186, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'exit_contract', 'value': 2564781488, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_head_info', 'value': 2507125293, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'hash', 'value': 2574716420, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_signature', 'value': 2411308443, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_merkle_root', 'value': 2574132409, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_transaction_payer', 'value': 2259188725, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_max_account_resources', 'value': 2217503873, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_transaction_resource_limit', 'value': 2571171461, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_last_irreversible_block', 'value': 2503814711, 'doc': '', 'info': {'type': 'EnumEntry'}}], 'tref': {'name': ['koinos', 'uint32'], 'targs': None, 'info': {'type': 'Typeref'}}, 'doc': '', 'info': {'type': 'EnumClass'}}
+// {'name': 'system_call_id', 'entries': [{'name': 'prints', 'value': 2602735937, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_header', 'value': 2519027790, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_block', 'value': 2494255093, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_transaction', 'value': 2643154394, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_reserved_operation', 'value': 2594724132, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_upload_contract_operation', 'value': 2658052407, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_execute_contract_operation', 'value': 2451064454, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'apply_set_system_call_operation', 'value': 2507777116, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_put_object', 'value': 2535376802, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_object', 'value': 2540087547, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_next_object', 'value': 2577635560, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'db_get_prev_object', 'value': 2614326908, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'execute_contract', 'value': 2562796798, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args_size', 'value': 2601357273, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_contract_args', 'value': 2679873944, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'set_contract_return', 'value': 2672414186, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'exit_contract', 'value': 2564781488, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_head_info', 'value': 2507125293, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'hash', 'value': 2574716420, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_block_signature', 'value': 2411308443, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'verify_merkle_root', 'value': 2574132409, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_transaction_payer', 'value': 2259188725, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_max_account_resources', 'value': 2217503873, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_transaction_resource_limit', 'value': 2571171461, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_last_irreversible_block', 'value': 2503814711, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_caller', 'value': 2484563039, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'require_authority', 'value': 2492589352, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'get_transaction_signature', 'value': 2646862900, 'doc': '', 'info': {'type': 'EnumEntry'}}], 'tref': {'name': ['koinos', 'uint32'], 'targs': None, 'info': {'type': 'Typeref'}}, 'doc': '', 'info': {'type': 'EnumClass'}}
 
 // SystemCallID type
 type SystemCallID UInt32
@@ -2429,6 +2438,9 @@ const (
 	SystemCallIDGetMaxAccountResources SystemCallID = 2217503873
 	SystemCallIDGetTransactionResourceLimit SystemCallID = 2571171461
 	SystemCallIDGetLastIrreversibleBlock SystemCallID = 2503814711
+	SystemCallIDGetCaller SystemCallID = 2484563039
+	SystemCallIDRequireAuthority SystemCallID = 2492589352
+	SystemCallIDGetTransactionSignature SystemCallID = 2646862900
 )
 
 // Serialize SystemCallID
@@ -2533,6 +2545,12 @@ func IsValidSystemCallID(v SystemCallID) bool {
 		case SystemCallIDGetTransactionResourceLimit:
 			return true
 		case SystemCallIDGetLastIrreversibleBlock:
+			return true
+		case SystemCallIDGetCaller:
+			return true
+		case SystemCallIDRequireAuthority:
+			return true
+		case SystemCallIDGetTransactionSignature:
 			return true
 		default:
 			return false
@@ -4762,6 +4780,232 @@ func (n *GetLastIrreversibleBlockReturn) UnmarshalJSON(data []byte) error {
 	}
 
 	*n = GetLastIrreversibleBlockReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: GetCallerArgs
+// ----------------------------------------
+
+// GetCallerArgs type
+type GetCallerArgs struct {
+}
+
+// NewGetCallerArgs factory
+func NewGetCallerArgs() *GetCallerArgs {
+	o := GetCallerArgs{}
+	return &o
+}
+
+// Serialize GetCallerArgs
+func (n GetCallerArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeGetCallerArgs function
+func DeserializeGetCallerArgs(vb *VariableBlob) (uint64,*GetCallerArgs,error) {
+	var i uint64 = 0
+	s := GetCallerArgs{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: GetCallerReturn
+// ----------------------------------------
+
+// GetCallerReturn type
+type GetCallerReturn AccountType
+
+// NewGetCallerReturn factory
+func NewGetCallerReturn() *GetCallerReturn {
+	o := GetCallerReturn(*NewAccountType())
+	return &o
+}
+
+// Serialize GetCallerReturn
+func (n GetCallerReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := AccountType(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeGetCallerReturn function
+func DeserializeGetCallerReturn(vb *VariableBlob) (uint64,*GetCallerReturn,error) {
+	var ot GetCallerReturn
+	i,n,err := DeserializeAccountType(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = GetCallerReturn(*n)
+	return i,&ot,nil}
+
+// MarshalJSON GetCallerReturn
+func (n GetCallerReturn) MarshalJSON() ([]byte, error) {
+	v := AccountType(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *GetCallerReturn
+func (n *GetCallerReturn) UnmarshalJSON(data []byte) error {
+	v := AccountType(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = GetCallerReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: RequireAuthorityArgs
+// ----------------------------------------
+
+// RequireAuthorityArgs type
+type RequireAuthorityArgs struct {
+    Account AccountType `json:"account"`
+}
+
+// NewRequireAuthorityArgs factory
+func NewRequireAuthorityArgs() *RequireAuthorityArgs {
+	o := RequireAuthorityArgs{}
+	o.Account = *NewAccountType()
+	return &o
+}
+
+// Serialize RequireAuthorityArgs
+func (n RequireAuthorityArgs) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Account.Serialize(vb)
+	return vb
+}
+
+// DeserializeRequireAuthorityArgs function
+func DeserializeRequireAuthorityArgs(vb *VariableBlob) (uint64,*RequireAuthorityArgs,error) {
+	var i,j uint64 = 0,0
+	s := RequireAuthorityArgs{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tAccount,err := DeserializeAccountType(&ovb); i+=j
+	if err != nil {
+		return 0, &RequireAuthorityArgs{}, err
+	}
+	s.Account = *tAccount
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: RequireAuthorityReturn
+// ----------------------------------------
+
+// RequireAuthorityReturn type
+type RequireAuthorityReturn VoidType
+
+// NewRequireAuthorityReturn factory
+func NewRequireAuthorityReturn() *RequireAuthorityReturn {
+	o := RequireAuthorityReturn(*NewVoidType())
+	return &o
+}
+
+// Serialize RequireAuthorityReturn
+func (n RequireAuthorityReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := VoidType(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeRequireAuthorityReturn function
+func DeserializeRequireAuthorityReturn(vb *VariableBlob) (uint64,*RequireAuthorityReturn,error) {
+	var ot RequireAuthorityReturn
+	return 0,&ot,nil}
+
+// MarshalJSON RequireAuthorityReturn
+func (n RequireAuthorityReturn) MarshalJSON() ([]byte, error) {
+	v := VoidType(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *RequireAuthorityReturn
+func (n *RequireAuthorityReturn) UnmarshalJSON(data []byte) error {
+	v := VoidType(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = RequireAuthorityReturn(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: GetTransactionSignature
+// ----------------------------------------
+
+// GetTransactionSignature type
+type GetTransactionSignature struct {
+}
+
+// NewGetTransactionSignature factory
+func NewGetTransactionSignature() *GetTransactionSignature {
+	o := GetTransactionSignature{}
+	return &o
+}
+
+// Serialize GetTransactionSignature
+func (n GetTransactionSignature) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeGetTransactionSignature function
+func DeserializeGetTransactionSignature(vb *VariableBlob) (uint64,*GetTransactionSignature,error) {
+	var i uint64 = 0
+	s := GetTransactionSignature{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: GetTransactionSignatureReturn
+// ----------------------------------------
+
+// GetTransactionSignatureReturn type
+type GetTransactionSignatureReturn AccountType
+
+// NewGetTransactionSignatureReturn factory
+func NewGetTransactionSignatureReturn() *GetTransactionSignatureReturn {
+	o := GetTransactionSignatureReturn(*NewAccountType())
+	return &o
+}
+
+// Serialize GetTransactionSignatureReturn
+func (n GetTransactionSignatureReturn) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := AccountType(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeGetTransactionSignatureReturn function
+func DeserializeGetTransactionSignatureReturn(vb *VariableBlob) (uint64,*GetTransactionSignatureReturn,error) {
+	var ot GetTransactionSignatureReturn
+	i,n,err := DeserializeAccountType(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = GetTransactionSignatureReturn(*n)
+	return i,&ot,nil}
+
+// MarshalJSON GetTransactionSignatureReturn
+func (n GetTransactionSignatureReturn) MarshalJSON() ([]byte, error) {
+	v := AccountType(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *GetTransactionSignatureReturn
+func (n *GetTransactionSignatureReturn) UnmarshalJSON(data []byte) error {
+	v := AccountType(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = GetTransactionSignatureReturn(v)
 	return nil
 }
 
