@@ -1814,6 +1814,69 @@ func DeserializeGetTransactionsByIDResponse(vb *VariableBlob) (uint64,*GetTransa
 }
 
 // ----------------------------------------
+//  Struct: GetLastIrreversibleBlockRequest
+// ----------------------------------------
+
+// GetLastIrreversibleBlockRequest type
+type GetLastIrreversibleBlockRequest struct {
+}
+
+// NewGetLastIrreversibleBlockRequest factory
+func NewGetLastIrreversibleBlockRequest() *GetLastIrreversibleBlockRequest {
+	o := GetLastIrreversibleBlockRequest{}
+	return &o
+}
+
+// Serialize GetLastIrreversibleBlockRequest
+func (n GetLastIrreversibleBlockRequest) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeGetLastIrreversibleBlockRequest function
+func DeserializeGetLastIrreversibleBlockRequest(vb *VariableBlob) (uint64,*GetLastIrreversibleBlockRequest,error) {
+	var i uint64 = 0
+	s := GetLastIrreversibleBlockRequest{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: GetLastIrreversibleBlockResponse
+// ----------------------------------------
+
+// GetLastIrreversibleBlockResponse type
+type GetLastIrreversibleBlockResponse struct {
+    BlockID Multihash `json:"block_id"`
+}
+
+// NewGetLastIrreversibleBlockResponse factory
+func NewGetLastIrreversibleBlockResponse() *GetLastIrreversibleBlockResponse {
+	o := GetLastIrreversibleBlockResponse{}
+	o.BlockID = *NewMultihash()
+	return &o
+}
+
+// Serialize GetLastIrreversibleBlockResponse
+func (n GetLastIrreversibleBlockResponse) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.BlockID.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetLastIrreversibleBlockResponse function
+func DeserializeGetLastIrreversibleBlockResponse(vb *VariableBlob) (uint64,*GetLastIrreversibleBlockResponse,error) {
+	var i,j uint64 = 0,0
+	s := GetLastIrreversibleBlockResponse{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tBlockID,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &GetLastIrreversibleBlockResponse{}, err
+	}
+	s.BlockID = *tBlockID
+	return i, &s, nil
+}
+
+// ----------------------------------------
 //  Struct: BlockStoreErrorResponse
 // ----------------------------------------
 
@@ -1890,6 +1953,8 @@ func (n BlockStoreRequest) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 4
 		case *GetTransactionsByIDRequest:
 			i = 5
+		case *GetLastIrreversibleBlockRequest:
+			i = 6
 		default:
 			panic("Unknown variant type")
 	}
@@ -1914,6 +1979,8 @@ func (n BlockStoreRequest) TypeToName() (string) {
 			return "koinos::rpc::block_store::add_transaction_request"
 		case *GetTransactionsByIDRequest:
 			return "koinos::rpc::block_store::get_transactions_by_id_request"
+		case *GetLastIrreversibleBlockRequest:
+			return "koinos::rpc::block_store::get_last_irreversible_block_request"
 		default:
 			panic("Variant type is not serializeable.")
 	}
@@ -1984,6 +2051,8 @@ func DeserializeBlockStoreRequest(vb *VariableBlob) (uint64,*BlockStoreRequest,e
 			}
 			j = k
 			v.Value = x
+		case 6:
+			v.Value = NewGetLastIrreversibleBlockRequest()
 		default:
 			return 0, &v, errors.New("unknown variant tag")
 	}
@@ -2025,6 +2094,10 @@ func (n *BlockStoreRequest) UnmarshalJSON(data []byte) error {
 			n.Value = v
 		case "koinos::rpc::block_store::get_transactions_by_id_request":
 			v := NewGetTransactionsByIDRequest()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::block_store::get_last_irreversible_block_request":
+			v := NewGetLastIrreversibleBlockRequest()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
@@ -2069,6 +2142,8 @@ func (n BlockStoreResponse) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 5
 		case *GetTransactionsByIDResponse:
 			i = 6
+		case *GetLastIrreversibleBlockResponse:
+			i = 7
 		default:
 			panic("Unknown variant type")
 	}
@@ -2095,6 +2170,8 @@ func (n BlockStoreResponse) TypeToName() (string) {
 			return "koinos::rpc::block_store::add_transaction_response"
 		case *GetTransactionsByIDResponse:
 			return "koinos::rpc::block_store::get_transactions_by_id_response"
+		case *GetLastIrreversibleBlockResponse:
+			return "koinos::rpc::block_store::get_last_irreversible_block_response"
 		default:
 			panic("Variant type is not serializeable.")
 	}
@@ -2161,6 +2238,14 @@ func DeserializeBlockStoreResponse(vb *VariableBlob) (uint64,*BlockStoreResponse
 			}
 			j = k
 			v.Value = x
+		case 7:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetLastIrreversibleBlockResponse(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
 		default:
 			return 0, &v, errors.New("unknown variant tag")
 	}
@@ -2206,6 +2291,10 @@ func (n *BlockStoreResponse) UnmarshalJSON(data []byte) error {
 			n.Value = v
 		case "koinos::rpc::block_store::get_transactions_by_id_response":
 			v := NewGetTransactionsByIDResponse()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::block_store::get_last_irreversible_block_response":
+			v := NewGetLastIrreversibleBlockResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
@@ -2393,6 +2482,42 @@ func DeserializeBlockAccepted(vb *VariableBlob) (uint64,*BlockAccepted,error) {
 		return 0, &BlockAccepted{}, err
 	}
 	s.Block = *tBlock
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: BlockIrreversible
+// ----------------------------------------
+
+// BlockIrreversible type
+type BlockIrreversible struct {
+    Topology BlockTopology `json:"topology"`
+}
+
+// NewBlockIrreversible factory
+func NewBlockIrreversible() *BlockIrreversible {
+	o := BlockIrreversible{}
+	o.Topology = *NewBlockTopology()
+	return &o
+}
+
+// Serialize BlockIrreversible
+func (n BlockIrreversible) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Topology.Serialize(vb)
+	return vb
+}
+
+// DeserializeBlockIrreversible function
+func DeserializeBlockIrreversible(vb *VariableBlob) (uint64,*BlockIrreversible,error) {
+	var i,j uint64 = 0,0
+	s := BlockIrreversible{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tTopology,err := DeserializeBlockTopology(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockIrreversible{}, err
+	}
+	s.Topology = *tTopology
 	return i, &s, nil
 }
 

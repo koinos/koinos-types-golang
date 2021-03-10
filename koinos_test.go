@@ -2270,6 +2270,100 @@ func TestGetTransactionsByIDResponse(t *testing.T) {
 }
 
 // ----------------------------------------
+//  Struct: GetLastIrreversibleBlockRequest
+// ----------------------------------------
+
+func TestGetLastIrreversibleBlockRequest(t *testing.T) {
+	o := koinos.NewGetLastIrreversibleBlockRequest()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetLastIrreversibleBlockRequest(vb)
+	if err != nil {
+		t.Error(err)
+	}
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetLastIrreversibleBlockRequest()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
+//  Struct: GetLastIrreversibleBlockResponse
+// ----------------------------------------
+
+func TestGetLastIrreversibleBlockResponse(t *testing.T) {
+	o := koinos.NewGetLastIrreversibleBlockResponse()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetLastIrreversibleBlockResponse(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	var n uint64
+	// Test block_id
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeGetLastIrreversibleBlockResponse(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetLastIrreversibleBlockResponse()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
 //  Struct: BlockStoreErrorResponse
 // ----------------------------------------
 
@@ -2415,6 +2509,12 @@ func TestBlockStoreRequest(t *testing.T) {
 			t.Errorf("Bytes were consumed on error")
 		}
 	}
+	{
+		v := koinos.NewBlockStoreRequest()
+		v.Value = koinos.NewGetLastIrreversibleBlockRequest()
+		exerciseBlockStoreRequestSerialization(v, t)
+
+	}
 
 	// Test bad variant tag
 	vb := koinos.VariableBlob{0x80}
@@ -2427,7 +2527,7 @@ func TestBlockStoreRequest(t *testing.T) {
 	}
 
 	// Test unknown tag
-	vb = koinos.VariableBlob{6}
+	vb = koinos.VariableBlob{7}
 	n, _, err = koinos.DeserializeBlockStoreRequest(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
@@ -2574,6 +2674,20 @@ func TestBlockStoreResponse(t *testing.T) {
 			t.Errorf("Bytes were consumed on error")
 		}
 	}
+	{
+		v := koinos.NewBlockStoreResponse()
+		v.Value = koinos.NewGetLastIrreversibleBlockResponse()
+		exerciseBlockStoreResponseSerialization(v, t)
+
+		vb := koinos.VariableBlob{7}
+		n, _, err := koinos.DeserializeBlockStoreResponse(&vb)
+		if err == nil {
+			t.Errorf("err == nil")
+		}
+		if n != 0 {
+			t.Errorf("Bytes were consumed on error")
+		}
+	}
 
 	// Test bad variant tag
 	vb := koinos.VariableBlob{0x80}
@@ -2586,7 +2700,7 @@ func TestBlockStoreResponse(t *testing.T) {
 	}
 
 	// Test unknown tag
-	vb = koinos.VariableBlob{7}
+	vb = koinos.VariableBlob{8}
 	n, _, err = koinos.DeserializeBlockStoreResponse(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
@@ -2883,6 +2997,59 @@ func TestBlockAccepted(t *testing.T) {
 	}
 
 	jo := koinos.NewBlockAccepted()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
+//  Struct: BlockIrreversible
+// ----------------------------------------
+
+func TestBlockIrreversible(t *testing.T) {
+	o := koinos.NewBlockIrreversible()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeBlockIrreversible(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	var n uint64
+	// Test topology
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeBlockIrreversible(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewBlockIrreversible()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
