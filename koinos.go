@@ -5062,28 +5062,28 @@ func (n *RequireAuthorityReturn) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
-//  Struct: GetTransactionSignature
+//  Struct: GetTransactionSignatureArgs
 // ----------------------------------------
 
-// GetTransactionSignature type
-type GetTransactionSignature struct {
+// GetTransactionSignatureArgs type
+type GetTransactionSignatureArgs struct {
 }
 
-// NewGetTransactionSignature factory
-func NewGetTransactionSignature() *GetTransactionSignature {
-	o := GetTransactionSignature{}
+// NewGetTransactionSignatureArgs factory
+func NewGetTransactionSignatureArgs() *GetTransactionSignatureArgs {
+	o := GetTransactionSignatureArgs{}
 	return &o
 }
 
-// Serialize GetTransactionSignature
-func (n GetTransactionSignature) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize GetTransactionSignatureArgs
+func (n GetTransactionSignatureArgs) Serialize(vb *VariableBlob) *VariableBlob {
 	return vb
 }
 
-// DeserializeGetTransactionSignature function
-func DeserializeGetTransactionSignature(vb *VariableBlob) (uint64,*GetTransactionSignature,error) {
+// DeserializeGetTransactionSignatureArgs function
+func DeserializeGetTransactionSignatureArgs(vb *VariableBlob) (uint64,*GetTransactionSignatureArgs,error) {
 	var i uint64 = 0
-	s := GetTransactionSignature{}
+	s := GetTransactionSignatureArgs{}
 	
 	return i, &s, nil
 }
@@ -5093,24 +5093,24 @@ func DeserializeGetTransactionSignature(vb *VariableBlob) (uint64,*GetTransactio
 // ----------------------------------------
 
 // GetTransactionSignatureReturn type
-type GetTransactionSignatureReturn AccountType
+type GetTransactionSignatureReturn VariableBlob
 
 // NewGetTransactionSignatureReturn factory
 func NewGetTransactionSignatureReturn() *GetTransactionSignatureReturn {
-	o := GetTransactionSignatureReturn(*NewAccountType())
+	o := GetTransactionSignatureReturn(*NewVariableBlob())
 	return &o
 }
 
 // Serialize GetTransactionSignatureReturn
 func (n GetTransactionSignatureReturn) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := AccountType(n)
+	ox := VariableBlob(n)
 	return ox.Serialize(vb)
 }
 
 // DeserializeGetTransactionSignatureReturn function
 func DeserializeGetTransactionSignatureReturn(vb *VariableBlob) (uint64,*GetTransactionSignatureReturn,error) {
 	var ot GetTransactionSignatureReturn
-	i,n,err := DeserializeAccountType(vb)
+	i,n,err := DeserializeVariableBlob(vb)
 	if err != nil {
 		return 0,&ot,err
 	}
@@ -5119,13 +5119,13 @@ func DeserializeGetTransactionSignatureReturn(vb *VariableBlob) (uint64,*GetTran
 
 // MarshalJSON GetTransactionSignatureReturn
 func (n GetTransactionSignatureReturn) MarshalJSON() ([]byte, error) {
-	v := AccountType(n)
+	v := VariableBlob(n)
 	return json.Marshal(&v)
 }
 
 // UnmarshalJSON *GetTransactionSignatureReturn
 func (n *GetTransactionSignatureReturn) UnmarshalJSON(data []byte) error {
-	v := AccountType(*n);
+	v := VariableBlob(*n);
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}

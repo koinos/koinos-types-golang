@@ -5740,16 +5740,16 @@ func TestRequireAuthorityReturn(t *testing.T) {
 }
 
 // ----------------------------------------
-//  Struct: GetTransactionSignature
+//  Struct: GetTransactionSignatureArgs
 // ----------------------------------------
 
-func TestGetTransactionSignature(t *testing.T) {
-	o := koinos.NewGetTransactionSignature()
+func TestGetTransactionSignatureArgs(t *testing.T) {
+	o := koinos.NewGetTransactionSignatureArgs()
 
 	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := koinos.DeserializeGetTransactionSignature(vb)
+	_, _, err := koinos.DeserializeGetTransactionSignatureArgs(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -5758,7 +5758,7 @@ func TestGetTransactionSignature(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := koinos.NewGetTransactionSignature()
+	jo := koinos.NewGetTransactionSignatureArgs()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
