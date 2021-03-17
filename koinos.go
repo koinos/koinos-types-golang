@@ -1814,65 +1814,119 @@ func DeserializeGetTransactionsByIDResponse(vb *VariableBlob) (uint64,*GetTransa
 }
 
 // ----------------------------------------
-//  Struct: GetLastIrreversibleBlockRequest
+//  Struct: GetHighestBlockRequest
 // ----------------------------------------
 
-// GetLastIrreversibleBlockRequest type
-type GetLastIrreversibleBlockRequest struct {
+// GetHighestBlockRequest type
+type GetHighestBlockRequest struct {
 }
 
-// NewGetLastIrreversibleBlockRequest factory
-func NewGetLastIrreversibleBlockRequest() *GetLastIrreversibleBlockRequest {
-	o := GetLastIrreversibleBlockRequest{}
+// NewGetHighestBlockRequest factory
+func NewGetHighestBlockRequest() *GetHighestBlockRequest {
+	o := GetHighestBlockRequest{}
 	return &o
 }
 
-// Serialize GetLastIrreversibleBlockRequest
-func (n GetLastIrreversibleBlockRequest) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize GetHighestBlockRequest
+func (n GetHighestBlockRequest) Serialize(vb *VariableBlob) *VariableBlob {
 	return vb
 }
 
-// DeserializeGetLastIrreversibleBlockRequest function
-func DeserializeGetLastIrreversibleBlockRequest(vb *VariableBlob) (uint64,*GetLastIrreversibleBlockRequest,error) {
+// DeserializeGetHighestBlockRequest function
+func DeserializeGetHighestBlockRequest(vb *VariableBlob) (uint64,*GetHighestBlockRequest,error) {
 	var i uint64 = 0
-	s := GetLastIrreversibleBlockRequest{}
+	s := GetHighestBlockRequest{}
 	
 	return i, &s, nil
 }
 
 // ----------------------------------------
-//  Struct: GetLastIrreversibleBlockResponse
+//  Struct: BlockTopology
 // ----------------------------------------
 
-// GetLastIrreversibleBlockResponse type
-type GetLastIrreversibleBlockResponse struct {
-    BlockID Multihash `json:"block_id"`
+// BlockTopology type
+type BlockTopology struct {
+    ID Multihash `json:"id"`
+    Height BlockHeightType `json:"height"`
+    Previous Multihash `json:"previous"`
 }
 
-// NewGetLastIrreversibleBlockResponse factory
-func NewGetLastIrreversibleBlockResponse() *GetLastIrreversibleBlockResponse {
-	o := GetLastIrreversibleBlockResponse{}
-	o.BlockID = *NewMultihash()
+// NewBlockTopology factory
+func NewBlockTopology() *BlockTopology {
+	o := BlockTopology{}
+	o.ID = *NewMultihash()
+	o.Height = *NewBlockHeightType()
+	o.Previous = *NewMultihash()
 	return &o
 }
 
-// Serialize GetLastIrreversibleBlockResponse
-func (n GetLastIrreversibleBlockResponse) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.BlockID.Serialize(vb)
+// Serialize BlockTopology
+func (n BlockTopology) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ID.Serialize(vb)
+	vb = n.Height.Serialize(vb)
+	vb = n.Previous.Serialize(vb)
 	return vb
 }
 
-// DeserializeGetLastIrreversibleBlockResponse function
-func DeserializeGetLastIrreversibleBlockResponse(vb *VariableBlob) (uint64,*GetLastIrreversibleBlockResponse,error) {
+// DeserializeBlockTopology function
+func DeserializeBlockTopology(vb *VariableBlob) (uint64,*BlockTopology,error) {
 	var i,j uint64 = 0,0
-	s := GetLastIrreversibleBlockResponse{}
+	s := BlockTopology{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
-	j,tBlockID,err := DeserializeMultihash(&ovb); i+=j
+	j,tID,err := DeserializeMultihash(&ovb); i+=j
 	if err != nil {
-		return 0, &GetLastIrreversibleBlockResponse{}, err
+		return 0, &BlockTopology{}, err
 	}
-	s.BlockID = *tBlockID
+	s.ID = *tID
+	ovb = (*vb)[i:]
+	j,tHeight,err := DeserializeBlockHeightType(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockTopology{}, err
+	}
+	s.Height = *tHeight
+	ovb = (*vb)[i:]
+	j,tPrevious,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockTopology{}, err
+	}
+	s.Previous = *tPrevious
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: GetHighestBlockResponse
+// ----------------------------------------
+
+// GetHighestBlockResponse type
+type GetHighestBlockResponse struct {
+    Topology BlockTopology `json:"topology"`
+}
+
+// NewGetHighestBlockResponse factory
+func NewGetHighestBlockResponse() *GetHighestBlockResponse {
+	o := GetHighestBlockResponse{}
+	o.Topology = *NewBlockTopology()
+	return &o
+}
+
+// Serialize GetHighestBlockResponse
+func (n GetHighestBlockResponse) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Topology.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetHighestBlockResponse function
+func DeserializeGetHighestBlockResponse(vb *VariableBlob) (uint64,*GetHighestBlockResponse,error) {
+	var i,j uint64 = 0,0
+	s := GetHighestBlockResponse{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tTopology,err := DeserializeBlockTopology(&ovb); i+=j
+	if err != nil {
+		return 0, &GetHighestBlockResponse{}, err
+	}
+	s.Topology = *tTopology
 	return i, &s, nil
 }
 
@@ -1953,7 +2007,7 @@ func (n BlockStoreRequest) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 4
 		case *GetTransactionsByIDRequest:
 			i = 5
-		case *GetLastIrreversibleBlockRequest:
+		case *GetHighestBlockRequest:
 			i = 6
 		default:
 			panic("Unknown variant type")
@@ -1979,8 +2033,8 @@ func (n BlockStoreRequest) TypeToName() (string) {
 			return "koinos::rpc::block_store::add_transaction_request"
 		case *GetTransactionsByIDRequest:
 			return "koinos::rpc::block_store::get_transactions_by_id_request"
-		case *GetLastIrreversibleBlockRequest:
-			return "koinos::rpc::block_store::get_last_irreversible_block_request"
+		case *GetHighestBlockRequest:
+			return "koinos::rpc::block_store::get_highest_block_request"
 		default:
 			panic("Variant type is not serializeable.")
 	}
@@ -2052,7 +2106,7 @@ func DeserializeBlockStoreRequest(vb *VariableBlob) (uint64,*BlockStoreRequest,e
 			j = k
 			v.Value = x
 		case 6:
-			v.Value = NewGetLastIrreversibleBlockRequest()
+			v.Value = NewGetHighestBlockRequest()
 		default:
 			return 0, &v, errors.New("unknown variant tag")
 	}
@@ -2096,8 +2150,8 @@ func (n *BlockStoreRequest) UnmarshalJSON(data []byte) error {
 			v := NewGetTransactionsByIDRequest()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::rpc::block_store::get_last_irreversible_block_request":
-			v := NewGetLastIrreversibleBlockRequest()
+		case "koinos::rpc::block_store::get_highest_block_request":
+			v := NewGetHighestBlockRequest()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
@@ -2142,7 +2196,7 @@ func (n BlockStoreResponse) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 5
 		case *GetTransactionsByIDResponse:
 			i = 6
-		case *GetLastIrreversibleBlockResponse:
+		case *GetHighestBlockResponse:
 			i = 7
 		default:
 			panic("Unknown variant type")
@@ -2170,8 +2224,8 @@ func (n BlockStoreResponse) TypeToName() (string) {
 			return "koinos::rpc::block_store::add_transaction_response"
 		case *GetTransactionsByIDResponse:
 			return "koinos::rpc::block_store::get_transactions_by_id_response"
-		case *GetLastIrreversibleBlockResponse:
-			return "koinos::rpc::block_store::get_last_irreversible_block_response"
+		case *GetHighestBlockResponse:
+			return "koinos::rpc::block_store::get_highest_block_response"
 		default:
 			panic("Variant type is not serializeable.")
 	}
@@ -2240,7 +2294,7 @@ func DeserializeBlockStoreResponse(vb *VariableBlob) (uint64,*BlockStoreResponse
 			v.Value = x
 		case 7:
 			ovb := (*vb)[i:]
-			k,x,err := DeserializeGetLastIrreversibleBlockResponse(&ovb)
+			k,x,err := DeserializeGetHighestBlockResponse(&ovb)
 			if err != nil {
 				return 0, &v, err
 			}
@@ -2293,8 +2347,8 @@ func (n *BlockStoreResponse) UnmarshalJSON(data []byte) error {
 			v := NewGetTransactionsByIDResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::rpc::block_store::get_last_irreversible_block_response":
-			v := NewGetLastIrreversibleBlockResponse()
+		case "koinos::rpc::block_store::get_highest_block_response":
+			v := NewGetHighestBlockResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
@@ -2383,60 +2437,6 @@ func DeserializeTransactionAccepted(vb *VariableBlob) (uint64,*TransactionAccept
 		return 0, &TransactionAccepted{}, err
 	}
 	s.Transaction = *tTransaction
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: BlockTopology
-// ----------------------------------------
-
-// BlockTopology type
-type BlockTopology struct {
-    ID Multihash `json:"id"`
-    Height BlockHeightType `json:"height"`
-    Previous Multihash `json:"previous"`
-}
-
-// NewBlockTopology factory
-func NewBlockTopology() *BlockTopology {
-	o := BlockTopology{}
-	o.ID = *NewMultihash()
-	o.Height = *NewBlockHeightType()
-	o.Previous = *NewMultihash()
-	return &o
-}
-
-// Serialize BlockTopology
-func (n BlockTopology) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.ID.Serialize(vb)
-	vb = n.Height.Serialize(vb)
-	vb = n.Previous.Serialize(vb)
-	return vb
-}
-
-// DeserializeBlockTopology function
-func DeserializeBlockTopology(vb *VariableBlob) (uint64,*BlockTopology,error) {
-	var i,j uint64 = 0,0
-	s := BlockTopology{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tID,err := DeserializeMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &BlockTopology{}, err
-	}
-	s.ID = *tID
-	ovb = (*vb)[i:]
-	j,tHeight,err := DeserializeBlockHeightType(&ovb); i+=j
-	if err != nil {
-		return 0, &BlockTopology{}, err
-	}
-	s.Height = *tHeight
-	ovb = (*vb)[i:]
-	j,tPrevious,err := DeserializeMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &BlockTopology{}, err
-	}
-	s.Previous = *tPrevious
 	return i, &s, nil
 }
 

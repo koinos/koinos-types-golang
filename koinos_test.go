@@ -2270,16 +2270,16 @@ func TestGetTransactionsByIDResponse(t *testing.T) {
 }
 
 // ----------------------------------------
-//  Struct: GetLastIrreversibleBlockRequest
+//  Struct: GetHighestBlockRequest
 // ----------------------------------------
 
-func TestGetLastIrreversibleBlockRequest(t *testing.T) {
-	o := koinos.NewGetLastIrreversibleBlockRequest()
+func TestGetHighestBlockRequest(t *testing.T) {
+	o := koinos.NewGetHighestBlockRequest()
 
 	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := koinos.DeserializeGetLastIrreversibleBlockRequest(vb)
+	_, _, err := koinos.DeserializeGetHighestBlockRequest(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -2288,7 +2288,7 @@ func TestGetLastIrreversibleBlockRequest(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := koinos.NewGetLastIrreversibleBlockRequest()
+	jo := koinos.NewGetHighestBlockRequest()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -2311,24 +2311,44 @@ func TestGetLastIrreversibleBlockRequest(t *testing.T) {
 }
 
 // ----------------------------------------
-//  Struct: GetLastIrreversibleBlockResponse
+//  Struct: BlockTopology
 // ----------------------------------------
 
-func TestGetLastIrreversibleBlockResponse(t *testing.T) {
-	o := koinos.NewGetLastIrreversibleBlockResponse()
+func TestBlockTopology(t *testing.T) {
+	o := koinos.NewBlockTopology()
 
 	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := koinos.DeserializeGetLastIrreversibleBlockResponse(vb)
+	_, _, err := koinos.DeserializeBlockTopology(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	var n uint64
-	// Test block_id
+	// Test id
 	vb = &koinos.VariableBlob{}
-	n, _, err = koinos.DeserializeGetLastIrreversibleBlockResponse(vb)
+	n, _, err = koinos.DeserializeBlockTopology(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	// Test height
+	vb = &koinos.VariableBlob{0x00, 0x00}
+	n, _, err = koinos.DeserializeBlockTopology(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	// Test previous
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeBlockTopology(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -2341,7 +2361,60 @@ func TestGetLastIrreversibleBlockResponse(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := koinos.NewGetLastIrreversibleBlockResponse()
+	jo := koinos.NewBlockTopology()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
+//  Struct: GetHighestBlockResponse
+// ----------------------------------------
+
+func TestGetHighestBlockResponse(t *testing.T) {
+	o := koinos.NewGetHighestBlockResponse()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetHighestBlockResponse(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	var n uint64
+	// Test topology
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeGetHighestBlockResponse(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetHighestBlockResponse()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -2511,7 +2584,7 @@ func TestBlockStoreRequest(t *testing.T) {
 	}
 	{
 		v := koinos.NewBlockStoreRequest()
-		v.Value = koinos.NewGetLastIrreversibleBlockRequest()
+		v.Value = koinos.NewGetHighestBlockRequest()
 		exerciseBlockStoreRequestSerialization(v, t)
 
 	}
@@ -2676,7 +2749,7 @@ func TestBlockStoreResponse(t *testing.T) {
 	}
 	{
 		v := koinos.NewBlockStoreResponse()
-		v.Value = koinos.NewGetLastIrreversibleBlockResponse()
+		v.Value = koinos.NewGetHighestBlockResponse()
 		exerciseBlockStoreResponseSerialization(v, t)
 
 		vb := koinos.VariableBlob{7}
@@ -2861,79 +2934,6 @@ func TestTransactionAccepted(t *testing.T) {
 	}
 
 	jo := koinos.NewTransactionAccepted()
-	jerr = json.Unmarshal(v, jo)
-	if jerr != nil {
-		t.Error(jerr)
-	}
-
-	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
-	if jerr == nil {
-		t.Errorf("Unmarshaling nonsense JSON did not give error.")
-	}
-
-	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
-	if jerr == nil {
-		t.Errorf("Unmarshaling nonsense JSON did not give error.")
-	}
-
-	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
-	if jerr == nil {
-		t.Errorf("Unmarshaling nonsense JSON did not give error.")
-	}
-}
-
-// ----------------------------------------
-//  Struct: BlockTopology
-// ----------------------------------------
-
-func TestBlockTopology(t *testing.T) {
-	o := koinos.NewBlockTopology()
-
-	vb := koinos.NewVariableBlob()
-	vb = o.Serialize(vb)
-
-	_, _, err := koinos.DeserializeBlockTopology(vb)
-	if err != nil {
-		t.Error(err)
-	}
-
-	var n uint64
-	// Test id
-	vb = &koinos.VariableBlob{}
-	n, _, err = koinos.DeserializeBlockTopology(vb)
-	if err == nil {
-		t.Errorf("err == nil")
-	}
-	if n != 0 {
-		t.Errorf("Bytes were consumed on error")
-	}
-
-	// Test height
-	vb = &koinos.VariableBlob{0x00, 0x00}
-	n, _, err = koinos.DeserializeBlockTopology(vb)
-	if err == nil {
-		t.Errorf("err == nil")
-	}
-	if n != 0 {
-		t.Errorf("Bytes were consumed on error")
-	}
-
-	// Test previous
-	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = koinos.DeserializeBlockTopology(vb)
-	if err == nil {
-		t.Errorf("err == nil")
-	}
-	if n != 0 {
-		t.Errorf("Bytes were consumed on error")
-	}
-
-	v, jerr := json.Marshal(o)
-	if jerr != nil {
-		t.Error(jerr)
-	}
-
-	jo := koinos.NewBlockTopology()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
