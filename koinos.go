@@ -16,36 +16,84 @@ import (
 )
 
 // ----------------------------------------
-//  Struct: ActiveBlockData
+//  Struct: BlockHeader
 // ----------------------------------------
 
-// ActiveBlockData type
-type ActiveBlockData struct {
-    PreviousBlock Multihash `json:"previous_block"`
-    TransactionMerkleRoot Multihash `json:"transaction_merkle_root"`
-    PassiveDataMerkleRoot Multihash `json:"passive_data_merkle_root"`
+// BlockHeader type
+type BlockHeader struct {
+    Previous Multihash `json:"previous"`
     Height BlockHeightType `json:"height"`
     Timestamp TimestampType `json:"timestamp"`
 }
 
-// NewActiveBlockData factory
-func NewActiveBlockData() *ActiveBlockData {
-	o := ActiveBlockData{}
-	o.PreviousBlock = *NewMultihash()
-	o.TransactionMerkleRoot = *NewMultihash()
-	o.PassiveDataMerkleRoot = *NewMultihash()
+// NewBlockHeader factory
+func NewBlockHeader() *BlockHeader {
+	o := BlockHeader{}
+	o.Previous = *NewMultihash()
 	o.Height = *NewBlockHeightType()
 	o.Timestamp = *NewTimestampType()
 	return &o
 }
 
-// Serialize ActiveBlockData
-func (n ActiveBlockData) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.PreviousBlock.Serialize(vb)
-	vb = n.TransactionMerkleRoot.Serialize(vb)
-	vb = n.PassiveDataMerkleRoot.Serialize(vb)
+// Serialize BlockHeader
+func (n BlockHeader) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Previous.Serialize(vb)
 	vb = n.Height.Serialize(vb)
 	vb = n.Timestamp.Serialize(vb)
+	return vb
+}
+
+// DeserializeBlockHeader function
+func DeserializeBlockHeader(vb *VariableBlob) (uint64,*BlockHeader,error) {
+	var i,j uint64 = 0,0
+	s := BlockHeader{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tPrevious,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockHeader{}, err
+	}
+	s.Previous = *tPrevious
+	ovb = (*vb)[i:]
+	j,tHeight,err := DeserializeBlockHeightType(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockHeader{}, err
+	}
+	s.Height = *tHeight
+	ovb = (*vb)[i:]
+	j,tTimestamp,err := DeserializeTimestampType(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockHeader{}, err
+	}
+	s.Timestamp = *tTimestamp
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: ActiveBlockData
+// ----------------------------------------
+
+// ActiveBlockData type
+type ActiveBlockData struct {
+    TransactionMerkleRoot Multihash `json:"transaction_merkle_root"`
+    PassiveDataMerkleRoot Multihash `json:"passive_data_merkle_root"`
+    SignerAddress Multihash `json:"signer_address"`
+}
+
+// NewActiveBlockData factory
+func NewActiveBlockData() *ActiveBlockData {
+	o := ActiveBlockData{}
+	o.TransactionMerkleRoot = *NewMultihash()
+	o.PassiveDataMerkleRoot = *NewMultihash()
+	o.SignerAddress = *NewMultihash()
+	return &o
+}
+
+// Serialize ActiveBlockData
+func (n ActiveBlockData) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.TransactionMerkleRoot.Serialize(vb)
+	vb = n.PassiveDataMerkleRoot.Serialize(vb)
+	vb = n.SignerAddress.Serialize(vb)
 	return vb
 }
 
@@ -54,12 +102,6 @@ func DeserializeActiveBlockData(vb *VariableBlob) (uint64,*ActiveBlockData,error
 	var i,j uint64 = 0,0
 	s := ActiveBlockData{}
 	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tPreviousBlock,err := DeserializeMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &ActiveBlockData{}, err
-	}
-	s.PreviousBlock = *tPreviousBlock
 	ovb = (*vb)[i:]
 	j,tTransactionMerkleRoot,err := DeserializeMultihash(&ovb); i+=j
 	if err != nil {
@@ -73,17 +115,11 @@ func DeserializeActiveBlockData(vb *VariableBlob) (uint64,*ActiveBlockData,error
 	}
 	s.PassiveDataMerkleRoot = *tPassiveDataMerkleRoot
 	ovb = (*vb)[i:]
-	j,tHeight,err := DeserializeBlockHeightType(&ovb); i+=j
+	j,tSignerAddress,err := DeserializeMultihash(&ovb); i+=j
 	if err != nil {
 		return 0, &ActiveBlockData{}, err
 	}
-	s.Height = *tHeight
-	ovb = (*vb)[i:]
-	j,tTimestamp,err := DeserializeTimestampType(&ovb); i+=j
-	if err != nil {
-		return 0, &ActiveBlockData{}, err
-	}
-	s.Timestamp = *tTimestamp
+	s.SignerAddress = *tSignerAddress
 	return i, &s, nil
 }
 
@@ -110,69 +146,6 @@ func (n PassiveBlockData) Serialize(vb *VariableBlob) *VariableBlob {
 func DeserializePassiveBlockData(vb *VariableBlob) (uint64,*PassiveBlockData,error) {
 	var i uint64 = 0
 	s := PassiveBlockData{}
-	
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: ActiveTransactionData
-// ----------------------------------------
-
-// ActiveTransactionData type
-type ActiveTransactionData struct {
-    ResourceLimit UInt128 `json:"resource_limit"`
-}
-
-// NewActiveTransactionData factory
-func NewActiveTransactionData() *ActiveTransactionData {
-	o := ActiveTransactionData{}
-	o.ResourceLimit = *NewUInt128()
-	return &o
-}
-
-// Serialize ActiveTransactionData
-func (n ActiveTransactionData) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.ResourceLimit.Serialize(vb)
-	return vb
-}
-
-// DeserializeActiveTransactionData function
-func DeserializeActiveTransactionData(vb *VariableBlob) (uint64,*ActiveTransactionData,error) {
-	var i,j uint64 = 0,0
-	s := ActiveTransactionData{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tResourceLimit,err := DeserializeUInt128(&ovb); i+=j
-	if err != nil {
-		return 0, &ActiveTransactionData{}, err
-	}
-	s.ResourceLimit = *tResourceLimit
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: PassiveTransactionData
-// ----------------------------------------
-
-// PassiveTransactionData type
-type PassiveTransactionData struct {
-}
-
-// NewPassiveTransactionData factory
-func NewPassiveTransactionData() *PassiveTransactionData {
-	o := PassiveTransactionData{}
-	return &o
-}
-
-// Serialize PassiveTransactionData
-func (n PassiveTransactionData) Serialize(vb *VariableBlob) *VariableBlob {
-	return vb
-}
-
-// DeserializePassiveTransactionData function
-func DeserializePassiveTransactionData(vb *VariableBlob) (uint64,*PassiveTransactionData,error) {
-	var i uint64 = 0
-	s := PassiveTransactionData{}
 	
 	return i, &s, nil
 }
@@ -983,33 +956,105 @@ func (n *Operation) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
+//  Struct: ActiveTransactionData
+// ----------------------------------------
+
+// ActiveTransactionData type
+type ActiveTransactionData struct {
+    ResourceLimit UInt128 `json:"resource_limit"`
+    Operations VectorOperation `json:"operations"`
+}
+
+// NewActiveTransactionData factory
+func NewActiveTransactionData() *ActiveTransactionData {
+	o := ActiveTransactionData{}
+	o.ResourceLimit = *NewUInt128()
+	o.Operations = *NewVectorOperation()
+	return &o
+}
+
+// Serialize ActiveTransactionData
+func (n ActiveTransactionData) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ResourceLimit.Serialize(vb)
+	vb = n.Operations.Serialize(vb)
+	return vb
+}
+
+// DeserializeActiveTransactionData function
+func DeserializeActiveTransactionData(vb *VariableBlob) (uint64,*ActiveTransactionData,error) {
+	var i,j uint64 = 0,0
+	s := ActiveTransactionData{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tResourceLimit,err := DeserializeUInt128(&ovb); i+=j
+	if err != nil {
+		return 0, &ActiveTransactionData{}, err
+	}
+	s.ResourceLimit = *tResourceLimit
+	ovb = (*vb)[i:]
+	j,tOperations,err := DeserializeVectorOperation(&ovb); i+=j
+	if err != nil {
+		return 0, &ActiveTransactionData{}, err
+	}
+	s.Operations = *tOperations
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: PassiveTransactionData
+// ----------------------------------------
+
+// PassiveTransactionData type
+type PassiveTransactionData struct {
+}
+
+// NewPassiveTransactionData factory
+func NewPassiveTransactionData() *PassiveTransactionData {
+	o := PassiveTransactionData{}
+	return &o
+}
+
+// Serialize PassiveTransactionData
+func (n PassiveTransactionData) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializePassiveTransactionData function
+func DeserializePassiveTransactionData(vb *VariableBlob) (uint64,*PassiveTransactionData,error) {
+	var i uint64 = 0
+	s := PassiveTransactionData{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
 //  Struct: Transaction
 // ----------------------------------------
 
 // Transaction type
 type Transaction struct {
+    ID Multihash `json:"id"`
     ActiveData OpaqueActiveTransactionData `json:"active_data"`
     PassiveData OpaquePassiveTransactionData `json:"passive_data"`
     SignatureData VariableBlob `json:"signature_data"`
-    Operations VectorOperation `json:"operations"`
 }
 
 // NewTransaction factory
 func NewTransaction() *Transaction {
 	o := Transaction{}
+	o.ID = *NewMultihash()
 	o.ActiveData = *NewOpaqueActiveTransactionData()
 	o.PassiveData = *NewOpaquePassiveTransactionData()
 	o.SignatureData = *NewVariableBlob()
-	o.Operations = *NewVectorOperation()
 	return &o
 }
 
 // Serialize Transaction
 func (n Transaction) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ID.Serialize(vb)
 	vb = n.ActiveData.Serialize(vb)
 	vb = n.PassiveData.Serialize(vb)
 	vb = n.SignatureData.Serialize(vb)
-	vb = n.Operations.Serialize(vb)
 	return vb
 }
 
@@ -1018,6 +1063,12 @@ func DeserializeTransaction(vb *VariableBlob) (uint64,*Transaction,error) {
 	var i,j uint64 = 0,0
 	s := Transaction{}
 	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tID,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &Transaction{}, err
+	}
+	s.ID = *tID
 	ovb = (*vb)[i:]
 	j,tActiveData,err := DeserializeOpaqueActiveTransactionData(&ovb); i+=j
 	if err != nil {
@@ -1036,17 +1087,8 @@ func DeserializeTransaction(vb *VariableBlob) (uint64,*Transaction,error) {
 		return 0, &Transaction{}, err
 	}
 	s.SignatureData = *tSignatureData
-	ovb = (*vb)[i:]
-	j,tOperations,err := DeserializeVectorOperation(&ovb); i+=j
-	if err != nil {
-		return 0, &Transaction{}, err
-	}
-	s.Operations = *tOperations
 	return i, &s, nil
 }
-
-
-
 
 // ----------------------------------------
 //  Struct: Block
@@ -1054,24 +1096,30 @@ func DeserializeTransaction(vb *VariableBlob) (uint64,*Transaction,error) {
 
 // Block type
 type Block struct {
+    ID Multihash `json:"id"`
+    Header BlockHeader `json:"header"`
     ActiveData OpaqueActiveBlockData `json:"active_data"`
     PassiveData OpaquePassiveBlockData `json:"passive_data"`
     SignatureData VariableBlob `json:"signature_data"`
-    Transactions VectorOpaqueTransaction `json:"transactions"`
+    Transactions VectorTransaction `json:"transactions"`
 }
 
 // NewBlock factory
 func NewBlock() *Block {
 	o := Block{}
+	o.ID = *NewMultihash()
+	o.Header = *NewBlockHeader()
 	o.ActiveData = *NewOpaqueActiveBlockData()
 	o.PassiveData = *NewOpaquePassiveBlockData()
 	o.SignatureData = *NewVariableBlob()
-	o.Transactions = *NewVectorOpaqueTransaction()
+	o.Transactions = *NewVectorTransaction()
 	return &o
 }
 
 // Serialize Block
 func (n Block) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ID.Serialize(vb)
+	vb = n.Header.Serialize(vb)
 	vb = n.ActiveData.Serialize(vb)
 	vb = n.PassiveData.Serialize(vb)
 	vb = n.SignatureData.Serialize(vb)
@@ -1084,6 +1132,18 @@ func DeserializeBlock(vb *VariableBlob) (uint64,*Block,error) {
 	var i,j uint64 = 0,0
 	s := Block{}
 	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tID,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &Block{}, err
+	}
+	s.ID = *tID
+	ovb = (*vb)[i:]
+	j,tHeader,err := DeserializeBlockHeader(&ovb); i+=j
+	if err != nil {
+		return 0, &Block{}, err
+	}
+	s.Header = *tHeader
 	ovb = (*vb)[i:]
 	j,tActiveData,err := DeserializeOpaqueActiveBlockData(&ovb); i+=j
 	if err != nil {
@@ -1103,7 +1163,7 @@ func DeserializeBlock(vb *VariableBlob) (uint64,*Block,error) {
 	}
 	s.SignatureData = *tSignatureData
 	ovb = (*vb)[i:]
-	j,tTransactions,err := DeserializeVectorOpaqueTransaction(&ovb); i+=j
+	j,tTransactions,err := DeserializeVectorTransaction(&ovb); i+=j
 	if err != nil {
 		return 0, &Block{}, err
 	}
@@ -1144,26 +1204,20 @@ func DeserializeBlockReceipt(vb *VariableBlob) (uint64,*BlockReceipt,error) {
 
 // BlockItem type
 type BlockItem struct {
-    BlockID Multihash `json:"block_id"`
-    BlockHeight BlockHeightType `json:"block_height"`
-    Block OpaqueBlock `json:"block"`
+    Block Block `json:"block"`
     BlockReceipt OpaqueBlockReceipt `json:"block_receipt"`
 }
 
 // NewBlockItem factory
 func NewBlockItem() *BlockItem {
 	o := BlockItem{}
-	o.BlockID = *NewMultihash()
-	o.BlockHeight = *NewBlockHeightType()
-	o.Block = *NewOpaqueBlock()
+	o.Block = *NewBlock()
 	o.BlockReceipt = *NewOpaqueBlockReceipt()
 	return &o
 }
 
 // Serialize BlockItem
 func (n BlockItem) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.BlockID.Serialize(vb)
-	vb = n.BlockHeight.Serialize(vb)
 	vb = n.Block.Serialize(vb)
 	vb = n.BlockReceipt.Serialize(vb)
 	return vb
@@ -1175,19 +1229,7 @@ func DeserializeBlockItem(vb *VariableBlob) (uint64,*BlockItem,error) {
 	s := BlockItem{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
-	j,tBlockID,err := DeserializeMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &BlockItem{}, err
-	}
-	s.BlockID = *tBlockID
-	ovb = (*vb)[i:]
-	j,tBlockHeight,err := DeserializeBlockHeightType(&ovb); i+=j
-	if err != nil {
-		return 0, &BlockItem{}, err
-	}
-	s.BlockHeight = *tBlockHeight
-	ovb = (*vb)[i:]
-	j,tBlock,err := DeserializeOpaqueBlock(&ovb); i+=j
+	j,tBlock,err := DeserializeBlock(&ovb); i+=j
 	if err != nil {
 		return 0, &BlockItem{}, err
 	}
@@ -1210,7 +1252,7 @@ type BlockRecord struct {
     BlockID Multihash `json:"block_id"`
     BlockHeight BlockHeightType `json:"block_height"`
     PreviousBlockIds VectorMultihash `json:"previous_block_ids"`
-    Block OpaqueBlock `json:"block"`
+    Block Block `json:"block"`
     BlockReceipt OpaqueBlockReceipt `json:"block_receipt"`
 }
 
@@ -1220,7 +1262,7 @@ func NewBlockRecord() *BlockRecord {
 	o.BlockID = *NewMultihash()
 	o.BlockHeight = *NewBlockHeightType()
 	o.PreviousBlockIds = *NewVectorMultihash()
-	o.Block = *NewOpaqueBlock()
+	o.Block = *NewBlock()
 	o.BlockReceipt = *NewOpaqueBlockReceipt()
 	return &o
 }
@@ -1259,7 +1301,7 @@ func DeserializeBlockRecord(vb *VariableBlob) (uint64,*BlockRecord,error) {
 	}
 	s.PreviousBlockIds = *tPreviousBlockIds
 	ovb = (*vb)[i:]
-	j,tBlock,err := DeserializeOpaqueBlock(&ovb); i+=j
+	j,tBlock,err := DeserializeBlock(&ovb); i+=j
 	if err != nil {
 		return 0, &BlockRecord{}, err
 	}
@@ -1279,13 +1321,13 @@ func DeserializeBlockRecord(vb *VariableBlob) (uint64,*BlockRecord,error) {
 
 // TransactionItem type
 type TransactionItem struct {
-    Transaction OpaqueTransaction `json:"transaction"`
+    Transaction Transaction `json:"transaction"`
 }
 
 // NewTransactionItem factory
 func NewTransactionItem() *TransactionItem {
 	o := TransactionItem{}
-	o.Transaction = *NewOpaqueTransaction()
+	o.Transaction = *NewTransaction()
 	return &o
 }
 
@@ -1301,7 +1343,7 @@ func DeserializeTransactionItem(vb *VariableBlob) (uint64,*TransactionItem,error
 	s := TransactionItem{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
-	j,tTransaction,err := DeserializeOpaqueTransaction(&ovb); i+=j
+	j,tTransaction,err := DeserializeTransaction(&ovb); i+=j
 	if err != nil {
 		return 0, &TransactionItem{}, err
 	}
@@ -1315,13 +1357,13 @@ func DeserializeTransactionItem(vb *VariableBlob) (uint64,*TransactionItem,error
 
 // TransactionRecord type
 type TransactionRecord struct {
-    Transaction OpaqueTransaction `json:"transaction"`
+    Transaction Transaction `json:"transaction"`
 }
 
 // NewTransactionRecord factory
 func NewTransactionRecord() *TransactionRecord {
 	o := TransactionRecord{}
-	o.Transaction = *NewOpaqueTransaction()
+	o.Transaction = *NewTransaction()
 	return &o
 }
 
@@ -1337,7 +1379,7 @@ func DeserializeTransactionRecord(vb *VariableBlob) (uint64,*TransactionRecord,e
 	s := TransactionRecord{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
-	j,tTransaction,err := DeserializeOpaqueTransaction(&ovb); i+=j
+	j,tTransaction,err := DeserializeTransaction(&ovb); i+=j
 	if err != nil {
 		return 0, &TransactionRecord{}, err
 	}
@@ -1604,21 +1646,18 @@ func DeserializeGetBlocksByHeightResponse(vb *VariableBlob) (uint64,*GetBlocksBy
 // AddBlockRequest type
 type AddBlockRequest struct {
     BlockToAdd BlockItem `json:"block_to_add"`
-    PreviousBlockID Multihash `json:"previous_block_id"`
 }
 
 // NewAddBlockRequest factory
 func NewAddBlockRequest() *AddBlockRequest {
 	o := AddBlockRequest{}
 	o.BlockToAdd = *NewBlockItem()
-	o.PreviousBlockID = *NewMultihash()
 	return &o
 }
 
 // Serialize AddBlockRequest
 func (n AddBlockRequest) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.BlockToAdd.Serialize(vb)
-	vb = n.PreviousBlockID.Serialize(vb)
 	return vb
 }
 
@@ -1633,12 +1672,6 @@ func DeserializeAddBlockRequest(vb *VariableBlob) (uint64,*AddBlockRequest,error
 		return 0, &AddBlockRequest{}, err
 	}
 	s.BlockToAdd = *tBlockToAdd
-	ovb = (*vb)[i:]
-	j,tPreviousBlockID,err := DeserializeMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &AddBlockRequest{}, err
-	}
-	s.PreviousBlockID = *tPreviousBlockID
 	return i, &s, nil
 }
 
@@ -1675,21 +1708,18 @@ func DeserializeAddBlockResponse(vb *VariableBlob) (uint64,*AddBlockResponse,err
 
 // AddTransactionRequest type
 type AddTransactionRequest struct {
-    TransactionID Multihash `json:"transaction_id"`
-    Transaction OpaqueTransaction `json:"transaction"`
+    Transaction Transaction `json:"transaction"`
 }
 
 // NewAddTransactionRequest factory
 func NewAddTransactionRequest() *AddTransactionRequest {
 	o := AddTransactionRequest{}
-	o.TransactionID = *NewMultihash()
-	o.Transaction = *NewOpaqueTransaction()
+	o.Transaction = *NewTransaction()
 	return &o
 }
 
 // Serialize AddTransactionRequest
 func (n AddTransactionRequest) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.TransactionID.Serialize(vb)
 	vb = n.Transaction.Serialize(vb)
 	return vb
 }
@@ -1700,13 +1730,7 @@ func DeserializeAddTransactionRequest(vb *VariableBlob) (uint64,*AddTransactionR
 	s := AddTransactionRequest{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
-	j,tTransactionID,err := DeserializeMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &AddTransactionRequest{}, err
-	}
-	s.TransactionID = *tTransactionID
-	ovb = (*vb)[i:]
-	j,tTransaction,err := DeserializeOpaqueTransaction(&ovb); i+=j
+	j,tTransaction,err := DeserializeTransaction(&ovb); i+=j
 	if err != nil {
 		return 0, &AddTransactionRequest{}, err
 	}
@@ -2360,62 +2384,23 @@ func (n *BlockStoreResponse) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
-//  Struct: TransactionTopology
-// ----------------------------------------
-
-// TransactionTopology type
-type TransactionTopology struct {
-    ID Multihash `json:"id"`
-}
-
-// NewTransactionTopology factory
-func NewTransactionTopology() *TransactionTopology {
-	o := TransactionTopology{}
-	o.ID = *NewMultihash()
-	return &o
-}
-
-// Serialize TransactionTopology
-func (n TransactionTopology) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.ID.Serialize(vb)
-	return vb
-}
-
-// DeserializeTransactionTopology function
-func DeserializeTransactionTopology(vb *VariableBlob) (uint64,*TransactionTopology,error) {
-	var i,j uint64 = 0,0
-	s := TransactionTopology{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tID,err := DeserializeMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &TransactionTopology{}, err
-	}
-	s.ID = *tID
-	return i, &s, nil
-}
-
-// ----------------------------------------
 //  Struct: TransactionAccepted
 // ----------------------------------------
 
 // TransactionAccepted type
 type TransactionAccepted struct {
-    Topology TransactionTopology `json:"topology"`
     Transaction Transaction `json:"transaction"`
 }
 
 // NewTransactionAccepted factory
 func NewTransactionAccepted() *TransactionAccepted {
 	o := TransactionAccepted{}
-	o.Topology = *NewTransactionTopology()
 	o.Transaction = *NewTransaction()
 	return &o
 }
 
 // Serialize TransactionAccepted
 func (n TransactionAccepted) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Topology.Serialize(vb)
 	vb = n.Transaction.Serialize(vb)
 	return vb
 }
@@ -2425,12 +2410,6 @@ func DeserializeTransactionAccepted(vb *VariableBlob) (uint64,*TransactionAccept
 	var i,j uint64 = 0,0
 	s := TransactionAccepted{}
 	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tTopology,err := DeserializeTransactionTopology(&ovb); i+=j
-	if err != nil {
-		return 0, &TransactionAccepted{}, err
-	}
-	s.Topology = *tTopology
 	ovb = (*vb)[i:]
 	j,tTransaction,err := DeserializeTransaction(&ovb); i+=j
 	if err != nil {
@@ -2446,21 +2425,18 @@ func DeserializeTransactionAccepted(vb *VariableBlob) (uint64,*TransactionAccept
 
 // BlockAccepted type
 type BlockAccepted struct {
-    Topology BlockTopology `json:"topology"`
     Block Block `json:"block"`
 }
 
 // NewBlockAccepted factory
 func NewBlockAccepted() *BlockAccepted {
 	o := BlockAccepted{}
-	o.Topology = *NewBlockTopology()
 	o.Block = *NewBlock()
 	return &o
 }
 
 // Serialize BlockAccepted
 func (n BlockAccepted) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Topology.Serialize(vb)
 	vb = n.Block.Serialize(vb)
 	return vb
 }
@@ -2470,12 +2446,6 @@ func DeserializeBlockAccepted(vb *VariableBlob) (uint64,*BlockAccepted,error) {
 	var i,j uint64 = 0,0
 	s := BlockAccepted{}
 	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tTopology,err := DeserializeBlockTopology(&ovb); i+=j
-	if err != nil {
-		return 0, &BlockAccepted{}, err
-	}
-	s.Topology = *tTopology
 	ovb = (*vb)[i:]
 	j,tBlock,err := DeserializeBlock(&ovb); i+=j
 	if err != nil {
@@ -2689,27 +2659,21 @@ func IsValidSystemCallID(v SystemCallID) bool {
 
 // HeadInfo type
 type HeadInfo struct {
-    ID Multihash `json:"id"`
-    PreviousID Multihash `json:"previous_id"`
-    Height BlockHeightType `json:"height"`
+    HeadTopology BlockTopology `json:"head_topology"`
     LastIrreversibleHeight BlockHeightType `json:"last_irreversible_height"`
 }
 
 // NewHeadInfo factory
 func NewHeadInfo() *HeadInfo {
 	o := HeadInfo{}
-	o.ID = *NewMultihash()
-	o.PreviousID = *NewMultihash()
-	o.Height = *NewBlockHeightType()
+	o.HeadTopology = *NewBlockTopology()
 	o.LastIrreversibleHeight = *NewBlockHeightType()
 	return &o
 }
 
 // Serialize HeadInfo
 func (n HeadInfo) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.ID.Serialize(vb)
-	vb = n.PreviousID.Serialize(vb)
-	vb = n.Height.Serialize(vb)
+	vb = n.HeadTopology.Serialize(vb)
 	vb = n.LastIrreversibleHeight.Serialize(vb)
 	return vb
 }
@@ -2720,23 +2684,11 @@ func DeserializeHeadInfo(vb *VariableBlob) (uint64,*HeadInfo,error) {
 	s := HeadInfo{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
-	j,tID,err := DeserializeMultihash(&ovb); i+=j
+	j,tHeadTopology,err := DeserializeBlockTopology(&ovb); i+=j
 	if err != nil {
 		return 0, &HeadInfo{}, err
 	}
-	s.ID = *tID
-	ovb = (*vb)[i:]
-	j,tPreviousID,err := DeserializeMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &HeadInfo{}, err
-	}
-	s.PreviousID = *tPreviousID
-	ovb = (*vb)[i:]
-	j,tHeight,err := DeserializeBlockHeightType(&ovb); i+=j
-	if err != nil {
-		return 0, &HeadInfo{}, err
-	}
-	s.Height = *tHeight
+	s.HeadTopology = *tHeadTopology
 	ovb = (*vb)[i:]
 	j,tLastIrreversibleHeight,err := DeserializeBlockHeightType(&ovb); i+=j
 	if err != nil {
@@ -3089,27 +3041,27 @@ func (n *VerifyMerkleRootReturn) UnmarshalJSON(data []byte) error {
 // ApplyBlockArgs type
 type ApplyBlockArgs struct {
     Block Block `json:"block"`
-    EnableCheckPassiveData Boolean `json:"enable_check_passive_data"`
-    EnableCheckBlockSignature Boolean `json:"enable_check_block_signature"`
-    EnableCheckTransactionSignatures Boolean `json:"enable_check_transaction_signatures"`
+    CheckPassiveData Boolean `json:"check_passive_data"`
+    CheckBlockSignature Boolean `json:"check_block_signature"`
+    CheckTransactionSignatures Boolean `json:"check_transaction_signatures"`
 }
 
 // NewApplyBlockArgs factory
 func NewApplyBlockArgs() *ApplyBlockArgs {
 	o := ApplyBlockArgs{}
 	o.Block = *NewBlock()
-	o.EnableCheckPassiveData = *NewBoolean()
-	o.EnableCheckBlockSignature = *NewBoolean()
-	o.EnableCheckTransactionSignatures = *NewBoolean()
+	o.CheckPassiveData = *NewBoolean()
+	o.CheckBlockSignature = *NewBoolean()
+	o.CheckTransactionSignatures = *NewBoolean()
 	return &o
 }
 
 // Serialize ApplyBlockArgs
 func (n ApplyBlockArgs) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.Block.Serialize(vb)
-	vb = n.EnableCheckPassiveData.Serialize(vb)
-	vb = n.EnableCheckBlockSignature.Serialize(vb)
-	vb = n.EnableCheckTransactionSignatures.Serialize(vb)
+	vb = n.CheckPassiveData.Serialize(vb)
+	vb = n.CheckBlockSignature.Serialize(vb)
+	vb = n.CheckTransactionSignatures.Serialize(vb)
 	return vb
 }
 
@@ -3125,23 +3077,23 @@ func DeserializeApplyBlockArgs(vb *VariableBlob) (uint64,*ApplyBlockArgs,error) 
 	}
 	s.Block = *tBlock
 	ovb = (*vb)[i:]
-	j,tEnableCheckPassiveData,err := DeserializeBoolean(&ovb); i+=j
+	j,tCheckPassiveData,err := DeserializeBoolean(&ovb); i+=j
 	if err != nil {
 		return 0, &ApplyBlockArgs{}, err
 	}
-	s.EnableCheckPassiveData = *tEnableCheckPassiveData
+	s.CheckPassiveData = *tCheckPassiveData
 	ovb = (*vb)[i:]
-	j,tEnableCheckBlockSignature,err := DeserializeBoolean(&ovb); i+=j
+	j,tCheckBlockSignature,err := DeserializeBoolean(&ovb); i+=j
 	if err != nil {
 		return 0, &ApplyBlockArgs{}, err
 	}
-	s.EnableCheckBlockSignature = *tEnableCheckBlockSignature
+	s.CheckBlockSignature = *tCheckBlockSignature
 	ovb = (*vb)[i:]
-	j,tEnableCheckTransactionSignatures,err := DeserializeBoolean(&ovb); i+=j
+	j,tCheckTransactionSignatures,err := DeserializeBoolean(&ovb); i+=j
 	if err != nil {
 		return 0, &ApplyBlockArgs{}, err
 	}
-	s.EnableCheckTransactionSignatures = *tEnableCheckTransactionSignatures
+	s.CheckTransactionSignatures = *tCheckTransactionSignatures
 	return i, &s, nil
 }
 
@@ -3193,19 +3145,19 @@ func (n *ApplyBlockReturn) UnmarshalJSON(data []byte) error {
 
 // ApplyTransactionArgs type
 type ApplyTransactionArgs struct {
-    Trx OpaqueTransaction `json:"trx"`
+    Transaction Transaction `json:"transaction"`
 }
 
 // NewApplyTransactionArgs factory
 func NewApplyTransactionArgs() *ApplyTransactionArgs {
 	o := ApplyTransactionArgs{}
-	o.Trx = *NewOpaqueTransaction()
+	o.Transaction = *NewTransaction()
 	return &o
 }
 
 // Serialize ApplyTransactionArgs
 func (n ApplyTransactionArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Trx.Serialize(vb)
+	vb = n.Transaction.Serialize(vb)
 	return vb
 }
 
@@ -3215,11 +3167,11 @@ func DeserializeApplyTransactionArgs(vb *VariableBlob) (uint64,*ApplyTransaction
 	s := ApplyTransactionArgs{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
-	j,tTrx,err := DeserializeOpaqueTransaction(&ovb); i+=j
+	j,tTransaction,err := DeserializeTransaction(&ovb); i+=j
 	if err != nil {
 		return 0, &ApplyTransactionArgs{}, err
 	}
-	s.Trx = *tTrx
+	s.Transaction = *tTransaction
 	return i, &s, nil
 }
 
@@ -4592,13 +4544,13 @@ func (n *HashReturn) UnmarshalJSON(data []byte) error {
 
 // GetTransactionPayerArgs type
 type GetTransactionPayerArgs struct {
-    Transaction OpaqueTransaction `json:"transaction"`
+    Transaction Transaction `json:"transaction"`
 }
 
 // NewGetTransactionPayerArgs factory
 func NewGetTransactionPayerArgs() *GetTransactionPayerArgs {
 	o := GetTransactionPayerArgs{}
-	o.Transaction = *NewOpaqueTransaction()
+	o.Transaction = *NewTransaction()
 	return &o
 }
 
@@ -4614,7 +4566,7 @@ func DeserializeGetTransactionPayerArgs(vb *VariableBlob) (uint64,*GetTransactio
 	s := GetTransactionPayerArgs{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
-	j,tTransaction,err := DeserializeOpaqueTransaction(&ovb); i+=j
+	j,tTransaction,err := DeserializeTransaction(&ovb); i+=j
 	if err != nil {
 		return 0, &GetTransactionPayerArgs{}, err
 	}
@@ -4758,13 +4710,13 @@ func (n *GetMaxAccountResourcesReturn) UnmarshalJSON(data []byte) error {
 
 // GetTransactionResourceLimitArgs type
 type GetTransactionResourceLimitArgs struct {
-    Transaction OpaqueTransaction `json:"transaction"`
+    Transaction Transaction `json:"transaction"`
 }
 
 // NewGetTransactionResourceLimitArgs factory
 func NewGetTransactionResourceLimitArgs() *GetTransactionResourceLimitArgs {
 	o := GetTransactionResourceLimitArgs{}
-	o.Transaction = *NewOpaqueTransaction()
+	o.Transaction = *NewTransaction()
 	return &o
 }
 
@@ -4780,7 +4732,7 @@ func DeserializeGetTransactionResourceLimitArgs(vb *VariableBlob) (uint64,*GetTr
 	s := GetTransactionResourceLimitArgs{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
-	j,tTransaction,err := DeserializeOpaqueTransaction(&ovb); i+=j
+	j,tTransaction,err := DeserializeTransaction(&ovb); i+=j
 	if err != nil {
 		return 0, &GetTransactionResourceLimitArgs{}, err
 	}
@@ -5168,7 +5120,6 @@ func DeserializeChainReservedRequest(vb *VariableBlob) (uint64,*ChainReservedReq
 
 // SubmitBlockRequest type
 type SubmitBlockRequest struct {
-    Topology BlockTopology `json:"topology"`
     Block Block `json:"block"`
     VerifyPassiveData Boolean `json:"verify_passive_data"`
     VerifyBlockSignature Boolean `json:"verify_block_signature"`
@@ -5178,7 +5129,6 @@ type SubmitBlockRequest struct {
 // NewSubmitBlockRequest factory
 func NewSubmitBlockRequest() *SubmitBlockRequest {
 	o := SubmitBlockRequest{}
-	o.Topology = *NewBlockTopology()
 	o.Block = *NewBlock()
 	o.VerifyPassiveData = *NewBoolean()
 	o.VerifyBlockSignature = *NewBoolean()
@@ -5188,7 +5138,6 @@ func NewSubmitBlockRequest() *SubmitBlockRequest {
 
 // Serialize SubmitBlockRequest
 func (n SubmitBlockRequest) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Topology.Serialize(vb)
 	vb = n.Block.Serialize(vb)
 	vb = n.VerifyPassiveData.Serialize(vb)
 	vb = n.VerifyBlockSignature.Serialize(vb)
@@ -5201,12 +5150,6 @@ func DeserializeSubmitBlockRequest(vb *VariableBlob) (uint64,*SubmitBlockRequest
 	var i,j uint64 = 0,0
 	s := SubmitBlockRequest{}
 	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tTopology,err := DeserializeBlockTopology(&ovb); i+=j
-	if err != nil {
-		return 0, &SubmitBlockRequest{}, err
-	}
-	s.Topology = *tTopology
 	ovb = (*vb)[i:]
 	j,tBlock,err := DeserializeBlock(&ovb); i+=j
 	if err != nil {
@@ -5240,7 +5183,6 @@ func DeserializeSubmitBlockRequest(vb *VariableBlob) (uint64,*SubmitBlockRequest
 
 // SubmitTransactionRequest type
 type SubmitTransactionRequest struct {
-    Topology TransactionTopology `json:"topology"`
     Transaction Transaction `json:"transaction"`
     VerifyPassiveData Boolean `json:"verify_passive_data"`
     VerifyTransactionSignatures Boolean `json:"verify_transaction_signatures"`
@@ -5249,7 +5191,6 @@ type SubmitTransactionRequest struct {
 // NewSubmitTransactionRequest factory
 func NewSubmitTransactionRequest() *SubmitTransactionRequest {
 	o := SubmitTransactionRequest{}
-	o.Topology = *NewTransactionTopology()
 	o.Transaction = *NewTransaction()
 	o.VerifyPassiveData = *NewBoolean()
 	o.VerifyTransactionSignatures = *NewBoolean()
@@ -5258,7 +5199,6 @@ func NewSubmitTransactionRequest() *SubmitTransactionRequest {
 
 // Serialize SubmitTransactionRequest
 func (n SubmitTransactionRequest) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Topology.Serialize(vb)
 	vb = n.Transaction.Serialize(vb)
 	vb = n.VerifyPassiveData.Serialize(vb)
 	vb = n.VerifyTransactionSignatures.Serialize(vb)
@@ -5270,12 +5210,6 @@ func DeserializeSubmitTransactionRequest(vb *VariableBlob) (uint64,*SubmitTransa
 	var i,j uint64 = 0,0
 	s := SubmitTransactionRequest{}
 	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tTopology,err := DeserializeTransactionTopology(&ovb); i+=j
-	if err != nil {
-		return 0, &SubmitTransactionRequest{}, err
-	}
-	s.Topology = *tTopology
 	ovb = (*vb)[i:]
 	j,tTransaction,err := DeserializeTransaction(&ovb); i+=j
 	if err != nil {
@@ -5730,27 +5664,21 @@ func DeserializeSubmitTransactionResponse(vb *VariableBlob) (uint64,*SubmitTrans
 
 // GetHeadInfoResponse type
 type GetHeadInfoResponse struct {
-    ID Multihash `json:"id"`
-    PreviousID Multihash `json:"previous_id"`
-    Height BlockHeightType `json:"height"`
+    HeadTopology BlockTopology `json:"head_topology"`
     LastIrreversibleHeight BlockHeightType `json:"last_irreversible_height"`
 }
 
 // NewGetHeadInfoResponse factory
 func NewGetHeadInfoResponse() *GetHeadInfoResponse {
 	o := GetHeadInfoResponse{}
-	o.ID = *NewMultihash()
-	o.PreviousID = *NewMultihash()
-	o.Height = *NewBlockHeightType()
+	o.HeadTopology = *NewBlockTopology()
 	o.LastIrreversibleHeight = *NewBlockHeightType()
 	return &o
 }
 
 // Serialize GetHeadInfoResponse
 func (n GetHeadInfoResponse) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.ID.Serialize(vb)
-	vb = n.PreviousID.Serialize(vb)
-	vb = n.Height.Serialize(vb)
+	vb = n.HeadTopology.Serialize(vb)
 	vb = n.LastIrreversibleHeight.Serialize(vb)
 	return vb
 }
@@ -5761,23 +5689,11 @@ func DeserializeGetHeadInfoResponse(vb *VariableBlob) (uint64,*GetHeadInfoRespon
 	s := GetHeadInfoResponse{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
-	j,tID,err := DeserializeMultihash(&ovb); i+=j
+	j,tHeadTopology,err := DeserializeBlockTopology(&ovb); i+=j
 	if err != nil {
 		return 0, &GetHeadInfoResponse{}, err
 	}
-	s.ID = *tID
-	ovb = (*vb)[i:]
-	j,tPreviousID,err := DeserializeMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &GetHeadInfoResponse{}, err
-	}
-	s.PreviousID = *tPreviousID
-	ovb = (*vb)[i:]
-	j,tHeight,err := DeserializeBlockHeightType(&ovb); i+=j
-	if err != nil {
-		return 0, &GetHeadInfoResponse{}, err
-	}
-	s.Height = *tHeight
+	s.HeadTopology = *tHeadTopology
 	ovb = (*vb)[i:]
 	j,tLastIrreversibleHeight,err := DeserializeBlockHeightType(&ovb); i+=j
 	if err != nil {
@@ -6100,6 +6016,42 @@ func (n *ChainRPCResponse) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
+
+// ----------------------------------------
+//  Struct: TransactionTopology
+// ----------------------------------------
+
+// TransactionTopology type
+type TransactionTopology struct {
+    ID Multihash `json:"id"`
+}
+
+// NewTransactionTopology factory
+func NewTransactionTopology() *TransactionTopology {
+	o := TransactionTopology{}
+	o.ID = *NewMultihash()
+	return &o
+}
+
+// Serialize TransactionTopology
+func (n TransactionTopology) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ID.Serialize(vb)
+	return vb
+}
+
+// DeserializeTransactionTopology function
+func DeserializeTransactionTopology(vb *VariableBlob) (uint64,*TransactionTopology,error) {
+	var i,j uint64 = 0,0
+	s := TransactionTopology{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tID,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &TransactionTopology{}, err
+	}
+	s.ID = *tID
+	return i, &s, nil
+}
 
 // ----------------------------------------
 //  Typedef: SignatureType
@@ -8068,146 +8020,6 @@ func (n *OpaqueActiveTransactionData) UnmarshalJSON(data []byte) (error) {
 }
 
 // ----------------------------------------
-//  OpaqueBlock
-// ----------------------------------------
-
-// OpaqueBlock type
-type OpaqueBlock struct {
-	blob *VariableBlob
-	native *Block
-}
-
-// NewOpaqueBlock factory
-func NewOpaqueBlock() *OpaqueBlock {
-	o := OpaqueBlock{}
-	o.native = NewBlock()
-	return &o
-}
-
-// NewOpaqueBlockFromBlob factory
-func NewOpaqueBlockFromBlob(vb *VariableBlob) *OpaqueBlock {
-	o := OpaqueBlock{}
-	o.blob = vb
-	return &o
-}
-
-// NewOpaqueBlockFromNative factory
-func NewOpaqueBlockFromNative(n Block) *OpaqueBlock {
-	o := OpaqueBlock{}
-	o.native = &n
-	return &o
-}
-
-// GetBlob *OpaqueBlock
-func (n *OpaqueBlock) GetBlob() *VariableBlob {
-	if !n.IsBoxed() {
-		n.Box()
-	}
-
-	return n.blob
-}
-
-// GetNative *OpaqueBlock
-func (n *OpaqueBlock) GetNative() (*Block,error) {
-	if( n.native == nil ) {
-		return nil,errors.New("opaque type not unboxed")
-	}
-
-	return n.native,nil;
-}
-
-// Box *OpaqueBlock
-func (n *OpaqueBlock) Box() {
-	if (n.native != nil) {
-		n.serializeNative()
-		n.native = nil
-	}
-}
-
-// Unbox *OpaqueBlock
-func (n *OpaqueBlock) Unbox() {
-	if (n.native == nil && n.blob != nil) {
-		var err error
-		var b uint64
-		b,n.native,err = DeserializeBlock(n.blob)
-
-		if err != nil || b != uint64(len(*n.blob)) {
-			n.native = nil
-		}
-	}
-}
-
-// IsBoxed *OpaqueBlock
-func (n *OpaqueBlock) IsBoxed() bool {
-	return n.native == nil;
-}
-
-func (n *OpaqueBlock) serializeNative() {
-	vb := NewVariableBlob()
-	n.blob = n.native.Serialize(vb)
-}
-
-// Serialize OpaqueBlock
-func (n OpaqueBlock) Serialize(vb *VariableBlob) *VariableBlob {
-	n.Box()
-	return n.blob.Serialize(vb)
-}
-
-// DeserializeOpaqueBlock function
-func DeserializeOpaqueBlock(vb *VariableBlob) (uint64,*OpaqueBlock,error) {
-	size,nv,err := DeserializeVariableBlob(vb)
-	var o OpaqueBlock
-	if err != nil {
-		return 0, &o, err
-	}
-	o = OpaqueBlock{blob:nv, native:nil}
-	return size,&o,nil
-}
-
-// MarshalJSON OpaqueBlock
-func (n OpaqueBlock) MarshalJSON() ([]byte, error) {
-	n.Unbox()
-
-	if !n.IsBoxed() {
-		return json.Marshal(&n.native)
-	}
-
-	v := opaqueJSON{}
-	v.Opaque.Type = "koinos::protocol::block"
-	v.Opaque.Value = *n.blob
-
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *OpaqueBlock
-func (n *OpaqueBlock) UnmarshalJSON(data []byte) (error) {
-	var j map[string]interface{}
-	if err := json.Unmarshal(data, &j); err != nil {
-		return err
-	}
-	_, isOpaque := j["opaque"]
-
-	if isOpaque {
-		var obj opaqueJSON
-
-		if err := json.Unmarshal(data, &obj); err != nil {
-			return err
-		}
-		if strings.Compare(obj.Opaque.Type, "koinos::protocol::block") != 0 {
-			return errors.New("unexpected opaque type name")
-		}
-		n.blob = &obj.Opaque.Value
-		n.native = nil
-	} else {
-		if err := json.Unmarshal(data, &n.native); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-// ----------------------------------------
 //  OpaqueBlockReceipt
 // ----------------------------------------
 
@@ -8907,146 +8719,6 @@ func (n *OpaqueQueryParamItem) UnmarshalJSON(data []byte) (error) {
 	return nil
 }
 
-// ----------------------------------------
-//  OpaqueTransaction
-// ----------------------------------------
-
-// OpaqueTransaction type
-type OpaqueTransaction struct {
-	blob *VariableBlob
-	native *Transaction
-}
-
-// NewOpaqueTransaction factory
-func NewOpaqueTransaction() *OpaqueTransaction {
-	o := OpaqueTransaction{}
-	o.native = NewTransaction()
-	return &o
-}
-
-// NewOpaqueTransactionFromBlob factory
-func NewOpaqueTransactionFromBlob(vb *VariableBlob) *OpaqueTransaction {
-	o := OpaqueTransaction{}
-	o.blob = vb
-	return &o
-}
-
-// NewOpaqueTransactionFromNative factory
-func NewOpaqueTransactionFromNative(n Transaction) *OpaqueTransaction {
-	o := OpaqueTransaction{}
-	o.native = &n
-	return &o
-}
-
-// GetBlob *OpaqueTransaction
-func (n *OpaqueTransaction) GetBlob() *VariableBlob {
-	if !n.IsBoxed() {
-		n.Box()
-	}
-
-	return n.blob
-}
-
-// GetNative *OpaqueTransaction
-func (n *OpaqueTransaction) GetNative() (*Transaction,error) {
-	if( n.native == nil ) {
-		return nil,errors.New("opaque type not unboxed")
-	}
-
-	return n.native,nil;
-}
-
-// Box *OpaqueTransaction
-func (n *OpaqueTransaction) Box() {
-	if (n.native != nil) {
-		n.serializeNative()
-		n.native = nil
-	}
-}
-
-// Unbox *OpaqueTransaction
-func (n *OpaqueTransaction) Unbox() {
-	if (n.native == nil && n.blob != nil) {
-		var err error
-		var b uint64
-		b,n.native,err = DeserializeTransaction(n.blob)
-
-		if err != nil || b != uint64(len(*n.blob)) {
-			n.native = nil
-		}
-	}
-}
-
-// IsBoxed *OpaqueTransaction
-func (n *OpaqueTransaction) IsBoxed() bool {
-	return n.native == nil;
-}
-
-func (n *OpaqueTransaction) serializeNative() {
-	vb := NewVariableBlob()
-	n.blob = n.native.Serialize(vb)
-}
-
-// Serialize OpaqueTransaction
-func (n OpaqueTransaction) Serialize(vb *VariableBlob) *VariableBlob {
-	n.Box()
-	return n.blob.Serialize(vb)
-}
-
-// DeserializeOpaqueTransaction function
-func DeserializeOpaqueTransaction(vb *VariableBlob) (uint64,*OpaqueTransaction,error) {
-	size,nv,err := DeserializeVariableBlob(vb)
-	var o OpaqueTransaction
-	if err != nil {
-		return 0, &o, err
-	}
-	o = OpaqueTransaction{blob:nv, native:nil}
-	return size,&o,nil
-}
-
-// MarshalJSON OpaqueTransaction
-func (n OpaqueTransaction) MarshalJSON() ([]byte, error) {
-	n.Unbox()
-
-	if !n.IsBoxed() {
-		return json.Marshal(&n.native)
-	}
-
-	v := opaqueJSON{}
-	v.Opaque.Type = "koinos::protocol::transaction"
-	v.Opaque.Value = *n.blob
-
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *OpaqueTransaction
-func (n *OpaqueTransaction) UnmarshalJSON(data []byte) (error) {
-	var j map[string]interface{}
-	if err := json.Unmarshal(data, &j); err != nil {
-		return err
-	}
-	_, isOpaque := j["opaque"]
-
-	if isOpaque {
-		var obj opaqueJSON
-
-		if err := json.Unmarshal(data, &obj); err != nil {
-			return err
-		}
-		if strings.Compare(obj.Opaque.Type, "koinos::protocol::transaction") != 0 {
-			return errors.New("unexpected opaque type name")
-		}
-		n.blob = &obj.Opaque.Value
-		n.native = nil
-	} else {
-		if err := json.Unmarshal(data, &n.native); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
 
 // ----------------------------------------
 //  VectorBlockItem
@@ -9192,57 +8864,6 @@ func DeserializeVectorMultihash(vb *VariableBlob) (uint64,*VectorMultihash,error
 		j,item,err = DeserializeMultihash(&ovb)
 		if nil != err {
 			var v VectorMultihash
-			return 0,&v,err
-		}
-		i += j
-		result = append(result, *item)
-	}
-
-	return i, &result, nil
-}
-
-// ----------------------------------------
-//  VectorOpaqueTransaction
-// ----------------------------------------
-
-// VectorOpaqueTransaction type
-type VectorOpaqueTransaction []OpaqueTransaction
-
-// NewVectorOpaqueTransaction factory
-func NewVectorOpaqueTransaction() *VectorOpaqueTransaction {
-	o := VectorOpaqueTransaction(make([]OpaqueTransaction, 0))
-	return &o
-}
-
-// Serialize VectorOpaqueTransaction
-func (n VectorOpaqueTransaction) Serialize(vb *VariableBlob) *VariableBlob {
-	header := make([]byte, binary.MaxVarintLen64)
-	bytes := binary.PutUvarint(header, uint64(len(n)))
-	ovb := append(*vb, header[:bytes]...)
-	vb = &ovb
-	for _, item := range n {
-		vb = item.Serialize(vb)
-	}
-
-	return vb
-}
-// DeserializeVectorOpaqueTransaction function
-func DeserializeVectorOpaqueTransaction(vb *VariableBlob) (uint64,*VectorOpaqueTransaction,error) {
-	var result VectorOpaqueTransaction
-	size,bytes := binary.Uvarint(*vb)
-	if bytes <= 0 {
-		return 0, &result, errors.New("could not deserialize multihash id")
-	}
-	result = VectorOpaqueTransaction(make([]OpaqueTransaction, 0, size))
-	i := uint64(bytes)
-	var j uint64
-	var item *OpaqueTransaction
-	var err error
-	for num := uint64(0); num < size; num++ {
-		ovb := (*vb)[i:]
-		j,item,err = DeserializeOpaqueTransaction(&ovb)
-		if nil != err {
-			var v VectorOpaqueTransaction
 			return 0,&v,err
 		}
 		i += j
