@@ -2384,24 +2384,80 @@ func (n *BlockStoreResponse) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
+//  Typedef: AccountType
+// ----------------------------------------
+
+// AccountType type
+type AccountType VariableBlob
+
+// NewAccountType factory
+func NewAccountType() *AccountType {
+	o := AccountType(*NewVariableBlob())
+	return &o
+}
+
+// Serialize AccountType
+func (n AccountType) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := VariableBlob(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeAccountType function
+func DeserializeAccountType(vb *VariableBlob) (uint64,*AccountType,error) {
+	var ot AccountType
+	i,n,err := DeserializeVariableBlob(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = AccountType(*n)
+	return i,&ot,nil}
+
+// MarshalJSON AccountType
+func (n AccountType) MarshalJSON() ([]byte, error) {
+	v := VariableBlob(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *AccountType
+func (n *AccountType) UnmarshalJSON(data []byte) error {
+	v := VariableBlob(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = AccountType(v)
+	return nil
+}
+
+
+// ----------------------------------------
 //  Struct: TransactionAccepted
 // ----------------------------------------
 
 // TransactionAccepted type
 type TransactionAccepted struct {
     Transaction Transaction `json:"transaction"`
+    Payer AccountType `json:"payer"`
+    MaxPayerResources UInt128 `json:"max_payer_resources"`
+    TrxResourceLimit UInt128 `json:"trx_resource_limit"`
 }
 
 // NewTransactionAccepted factory
 func NewTransactionAccepted() *TransactionAccepted {
 	o := TransactionAccepted{}
 	o.Transaction = *NewTransaction()
+	o.Payer = *NewAccountType()
+	o.MaxPayerResources = *NewUInt128()
+	o.TrxResourceLimit = *NewUInt128()
 	return &o
 }
 
 // Serialize TransactionAccepted
 func (n TransactionAccepted) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.Transaction.Serialize(vb)
+	vb = n.Payer.Serialize(vb)
+	vb = n.MaxPayerResources.Serialize(vb)
+	vb = n.TrxResourceLimit.Serialize(vb)
 	return vb
 }
 
@@ -2416,6 +2472,24 @@ func DeserializeTransactionAccepted(vb *VariableBlob) (uint64,*TransactionAccept
 		return 0, &TransactionAccepted{}, err
 	}
 	s.Transaction = *tTransaction
+	ovb = (*vb)[i:]
+	j,tPayer,err := DeserializeAccountType(&ovb); i+=j
+	if err != nil {
+		return 0, &TransactionAccepted{}, err
+	}
+	s.Payer = *tPayer
+	ovb = (*vb)[i:]
+	j,tMaxPayerResources,err := DeserializeUInt128(&ovb); i+=j
+	if err != nil {
+		return 0, &TransactionAccepted{}, err
+	}
+	s.MaxPayerResources = *tMaxPayerResources
+	ovb = (*vb)[i:]
+	j,tTrxResourceLimit,err := DeserializeUInt128(&ovb); i+=j
+	if err != nil {
+		return 0, &TransactionAccepted{}, err
+	}
+	s.TrxResourceLimit = *tTrxResourceLimit
 	return i, &s, nil
 }
 
@@ -2697,53 +2771,6 @@ func DeserializeHeadInfo(vb *VariableBlob) (uint64,*HeadInfo,error) {
 	s.LastIrreversibleHeight = *tLastIrreversibleHeight
 	return i, &s, nil
 }
-
-// ----------------------------------------
-//  Typedef: AccountType
-// ----------------------------------------
-
-// AccountType type
-type AccountType VariableBlob
-
-// NewAccountType factory
-func NewAccountType() *AccountType {
-	o := AccountType(*NewVariableBlob())
-	return &o
-}
-
-// Serialize AccountType
-func (n AccountType) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := VariableBlob(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeAccountType function
-func DeserializeAccountType(vb *VariableBlob) (uint64,*AccountType,error) {
-	var ot AccountType
-	i,n,err := DeserializeVariableBlob(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = AccountType(*n)
-	return i,&ot,nil}
-
-// MarshalJSON AccountType
-func (n AccountType) MarshalJSON() ([]byte, error) {
-	v := VariableBlob(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *AccountType
-func (n *AccountType) UnmarshalJSON(data []byte) error {
-	v := VariableBlob(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = AccountType(v)
-	return nil
-}
-
 
 // ----------------------------------------
 //  Struct: VoidType
@@ -5286,51 +5313,6 @@ func DeserializeGetChainIDRequest(vb *VariableBlob) (uint64,*GetChainIDRequest,e
 }
 
 // ----------------------------------------
-//  Struct: GetPendingTransactionsRequest
-// ----------------------------------------
-
-// GetPendingTransactionsRequest type
-type GetPendingTransactionsRequest struct {
-    Start Multihash `json:"start"`
-    Limit UInt64 `json:"limit"`
-}
-
-// NewGetPendingTransactionsRequest factory
-func NewGetPendingTransactionsRequest() *GetPendingTransactionsRequest {
-	o := GetPendingTransactionsRequest{}
-	o.Start = *NewMultihash()
-	o.Limit = *NewUInt64()
-	return &o
-}
-
-// Serialize GetPendingTransactionsRequest
-func (n GetPendingTransactionsRequest) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Start.Serialize(vb)
-	vb = n.Limit.Serialize(vb)
-	return vb
-}
-
-// DeserializeGetPendingTransactionsRequest function
-func DeserializeGetPendingTransactionsRequest(vb *VariableBlob) (uint64,*GetPendingTransactionsRequest,error) {
-	var i,j uint64 = 0,0
-	s := GetPendingTransactionsRequest{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tStart,err := DeserializeMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &GetPendingTransactionsRequest{}, err
-	}
-	s.Start = *tStart
-	ovb = (*vb)[i:]
-	j,tLimit,err := DeserializeUInt64(&ovb); i+=j
-	if err != nil {
-		return 0, &GetPendingTransactionsRequest{}, err
-	}
-	s.Limit = *tLimit
-	return i, &s, nil
-}
-
-// ----------------------------------------
 //  Struct: GetForkHeadsRequest
 // ----------------------------------------
 
@@ -5387,10 +5369,8 @@ func (n ChainRPCRequest) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 3
 		case *GetChainIDRequest:
 			i = 4
-		case *GetPendingTransactionsRequest:
-			i = 5
 		case *GetForkHeadsRequest:
-			i = 6
+			i = 5
 		default:
 			panic("Unknown variant type")
 	}
@@ -5413,8 +5393,6 @@ func (n ChainRPCRequest) TypeToName() (string) {
 			return "koinos::rpc::chain::get_head_info_request"
 		case *GetChainIDRequest:
 			return "koinos::rpc::chain::get_chain_id_request"
-		case *GetPendingTransactionsRequest:
-			return "koinos::rpc::chain::get_pending_transactions_request"
 		case *GetForkHeadsRequest:
 			return "koinos::rpc::chain::get_fork_heads_request"
 		default:
@@ -5468,14 +5446,6 @@ func DeserializeChainRPCRequest(vb *VariableBlob) (uint64,*ChainRPCRequest,error
 		case 4:
 			v.Value = NewGetChainIDRequest()
 		case 5:
-			ovb := (*vb)[i:]
-			k,x,err := DeserializeGetPendingTransactionsRequest(&ovb)
-			if err != nil {
-				return 0, &v, err
-			}
-			j = k
-			v.Value = x
-		case 6:
 			v.Value = NewGetForkHeadsRequest()
 		default:
 			return 0, &v, errors.New("unknown variant tag")
@@ -5514,10 +5484,6 @@ func (n *ChainRPCRequest) UnmarshalJSON(data []byte) error {
 			n.Value = v
 		case "koinos::rpc::chain::get_chain_id_request":
 			v := NewGetChainIDRequest()
-			json.Unmarshal(variant.Value, &v)
-			n.Value = v
-		case "koinos::rpc::chain::get_pending_transactions_request":
-			v := NewGetPendingTransactionsRequest()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::rpc::chain::get_fork_heads_request":
@@ -5740,42 +5706,6 @@ func DeserializeGetChainIDResponse(vb *VariableBlob) (uint64,*GetChainIDResponse
 }
 
 // ----------------------------------------
-//  Struct: GetPendingTransactionsResponse
-// ----------------------------------------
-
-// GetPendingTransactionsResponse type
-type GetPendingTransactionsResponse struct {
-    Transactions VectorTransaction `json:"transactions"`
-}
-
-// NewGetPendingTransactionsResponse factory
-func NewGetPendingTransactionsResponse() *GetPendingTransactionsResponse {
-	o := GetPendingTransactionsResponse{}
-	o.Transactions = *NewVectorTransaction()
-	return &o
-}
-
-// Serialize GetPendingTransactionsResponse
-func (n GetPendingTransactionsResponse) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Transactions.Serialize(vb)
-	return vb
-}
-
-// DeserializeGetPendingTransactionsResponse function
-func DeserializeGetPendingTransactionsResponse(vb *VariableBlob) (uint64,*GetPendingTransactionsResponse,error) {
-	var i,j uint64 = 0,0
-	s := GetPendingTransactionsResponse{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tTransactions,err := DeserializeVectorTransaction(&ovb); i+=j
-	if err != nil {
-		return 0, &GetPendingTransactionsResponse{}, err
-	}
-	s.Transactions = *tTransactions
-	return i, &s, nil
-}
-
-// ----------------------------------------
 //  Struct: GetForkHeadsResponse
 // ----------------------------------------
 
@@ -5852,10 +5782,8 @@ func (n ChainRPCResponse) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 4
 		case *GetChainIDResponse:
 			i = 5
-		case *GetPendingTransactionsResponse:
-			i = 6
 		case *GetForkHeadsResponse:
-			i = 7
+			i = 6
 		default:
 			panic("Unknown variant type")
 	}
@@ -5880,8 +5808,6 @@ func (n ChainRPCResponse) TypeToName() (string) {
 			return "koinos::rpc::chain::get_head_info_response"
 		case *GetChainIDResponse:
 			return "koinos::rpc::chain::get_chain_id_response"
-		case *GetPendingTransactionsResponse:
-			return "koinos::rpc::chain::get_pending_transactions_response"
 		case *GetForkHeadsResponse:
 			return "koinos::rpc::chain::get_fork_heads_response"
 		default:
@@ -5944,14 +5870,6 @@ func DeserializeChainRPCResponse(vb *VariableBlob) (uint64,*ChainRPCResponse,err
 			v.Value = x
 		case 6:
 			ovb := (*vb)[i:]
-			k,x,err := DeserializeGetPendingTransactionsResponse(&ovb)
-			if err != nil {
-				return 0, &v, err
-			}
-			j = k
-			v.Value = x
-		case 7:
-			ovb := (*vb)[i:]
 			k,x,err := DeserializeGetForkHeadsResponse(&ovb)
 			if err != nil {
 				return 0, &v, err
@@ -5999,10 +5917,6 @@ func (n *ChainRPCResponse) UnmarshalJSON(data []byte) error {
 			n.Value = v
 		case "koinos::rpc::chain::get_chain_id_response":
 			v := NewGetChainIDResponse()
-			json.Unmarshal(variant.Value, &v)
-			n.Value = v
-		case "koinos::rpc::chain::get_pending_transactions_response":
-			v := NewGetPendingTransactionsResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::rpc::chain::get_fork_heads_response":
@@ -6096,6 +6010,541 @@ func (n *SignatureType) UnmarshalJSON(data []byte) error {
 	}
 
 	*n = SignatureType(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: MempoolReservedRequest
+// ----------------------------------------
+
+// MempoolReservedRequest type
+type MempoolReservedRequest struct {
+}
+
+// NewMempoolReservedRequest factory
+func NewMempoolReservedRequest() *MempoolReservedRequest {
+	o := MempoolReservedRequest{}
+	return &o
+}
+
+// Serialize MempoolReservedRequest
+func (n MempoolReservedRequest) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeMempoolReservedRequest function
+func DeserializeMempoolReservedRequest(vb *VariableBlob) (uint64,*MempoolReservedRequest,error) {
+	var i uint64 = 0
+	s := MempoolReservedRequest{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: CheckPendingAccountResourcesRequest
+// ----------------------------------------
+
+// CheckPendingAccountResourcesRequest type
+type CheckPendingAccountResourcesRequest struct {
+    Payer AccountType `json:"payer"`
+    MaxPayerResources UInt128 `json:"max_payer_resources"`
+    TrxResourceLimit UInt128 `json:"trx_resource_limit"`
+}
+
+// NewCheckPendingAccountResourcesRequest factory
+func NewCheckPendingAccountResourcesRequest() *CheckPendingAccountResourcesRequest {
+	o := CheckPendingAccountResourcesRequest{}
+	o.Payer = *NewAccountType()
+	o.MaxPayerResources = *NewUInt128()
+	o.TrxResourceLimit = *NewUInt128()
+	return &o
+}
+
+// Serialize CheckPendingAccountResourcesRequest
+func (n CheckPendingAccountResourcesRequest) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Payer.Serialize(vb)
+	vb = n.MaxPayerResources.Serialize(vb)
+	vb = n.TrxResourceLimit.Serialize(vb)
+	return vb
+}
+
+// DeserializeCheckPendingAccountResourcesRequest function
+func DeserializeCheckPendingAccountResourcesRequest(vb *VariableBlob) (uint64,*CheckPendingAccountResourcesRequest,error) {
+	var i,j uint64 = 0,0
+	s := CheckPendingAccountResourcesRequest{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tPayer,err := DeserializeAccountType(&ovb); i+=j
+	if err != nil {
+		return 0, &CheckPendingAccountResourcesRequest{}, err
+	}
+	s.Payer = *tPayer
+	ovb = (*vb)[i:]
+	j,tMaxPayerResources,err := DeserializeUInt128(&ovb); i+=j
+	if err != nil {
+		return 0, &CheckPendingAccountResourcesRequest{}, err
+	}
+	s.MaxPayerResources = *tMaxPayerResources
+	ovb = (*vb)[i:]
+	j,tTrxResourceLimit,err := DeserializeUInt128(&ovb); i+=j
+	if err != nil {
+		return 0, &CheckPendingAccountResourcesRequest{}, err
+	}
+	s.TrxResourceLimit = *tTrxResourceLimit
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: GetPendingTransactionsRequest
+// ----------------------------------------
+
+// GetPendingTransactionsRequest type
+type GetPendingTransactionsRequest struct {
+    Limit UInt64 `json:"limit"`
+}
+
+// NewGetPendingTransactionsRequest factory
+func NewGetPendingTransactionsRequest() *GetPendingTransactionsRequest {
+	o := GetPendingTransactionsRequest{}
+	o.Limit = *NewUInt64()
+	return &o
+}
+
+// Serialize GetPendingTransactionsRequest
+func (n GetPendingTransactionsRequest) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Limit.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetPendingTransactionsRequest function
+func DeserializeGetPendingTransactionsRequest(vb *VariableBlob) (uint64,*GetPendingTransactionsRequest,error) {
+	var i,j uint64 = 0,0
+	s := GetPendingTransactionsRequest{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tLimit,err := DeserializeUInt64(&ovb); i+=j
+	if err != nil {
+		return 0, &GetPendingTransactionsRequest{}, err
+	}
+	s.Limit = *tLimit
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Variant: MempoolRPCRequest
+// ----------------------------------------
+
+// MempoolRPCRequest type
+type MempoolRPCRequest struct {
+	Value interface{}
+}
+
+// NewMempoolRPCRequest factory
+func NewMempoolRPCRequest() *MempoolRPCRequest {
+	v := MempoolRPCRequest{}
+	v.Value = NewMempoolReservedRequest()
+	return &v
+}
+
+// Serialize MempoolRPCRequest
+func (n MempoolRPCRequest) Serialize(vb *VariableBlob) *VariableBlob {
+	var i uint64
+	switch n.Value.(type) {
+		case *MempoolReservedRequest:
+			i = 0
+		case *CheckPendingAccountResourcesRequest:
+			i = 1
+		case *GetPendingTransactionsRequest:
+			i = 2
+		default:
+			panic("Unknown variant type")
+	}
+
+	vb = EncodeVarint(vb, i)
+	ser,_ := n.Value.(Serializeable)
+	return ser.Serialize(vb)
+}
+
+// TypeToName MempoolRPCRequest
+func (n MempoolRPCRequest) TypeToName() (string) {
+	switch n.Value.(type) {
+		case *MempoolReservedRequest:
+			return "koinos::rpc::mempool::mempool_reserved_request"
+		case *CheckPendingAccountResourcesRequest:
+			return "koinos::rpc::mempool::check_pending_account_resources_request"
+		case *GetPendingTransactionsRequest:
+			return "koinos::rpc::mempool::get_pending_transactions_request"
+		default:
+			panic("Variant type is not serializeable.")
+	}
+}
+
+// MarshalJSON MempoolRPCRequest
+func (n MempoolRPCRequest) MarshalJSON() ([]byte, error) {
+	variant := struct {
+		Type string `json:"type"`
+		Value *interface{} `json:"value"`
+	}{
+		n.TypeToName(),
+		&n.Value,
+	}
+
+	return json.Marshal(&variant)
+}
+
+// DeserializeMempoolRPCRequest function
+func DeserializeMempoolRPCRequest(vb *VariableBlob) (uint64,*MempoolRPCRequest,error) {
+	var v MempoolRPCRequest
+	typeID,i := binary.Uvarint(*vb)
+	if i <= 0 {
+		return 0, &v, errors.New("could not deserialize variant tag")
+	}
+	var j uint64
+
+	switch( typeID ) {
+		case 0:
+			v.Value = NewMempoolReservedRequest()
+		case 1:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeCheckPendingAccountResourcesRequest(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		case 2:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetPendingTransactionsRequest(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		default:
+			return 0, &v, errors.New("unknown variant tag")
+	}
+	return uint64(i)+j,&v,nil
+}
+
+// UnmarshalJSON *MempoolRPCRequest
+func (n *MempoolRPCRequest) UnmarshalJSON(data []byte) error {
+	variant := struct {
+		Type  string          `json:"type"`
+		Value json.RawMessage `json:"value"`
+	}{}
+
+	err := json.Unmarshal(data, &variant)
+	if err != nil {
+		return err
+	}
+
+	switch variant.Type {
+		case "koinos::rpc::mempool::mempool_reserved_request":
+			v := NewMempoolReservedRequest()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::mempool::check_pending_account_resources_request":
+			v := NewCheckPendingAccountResourcesRequest()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::mempool::get_pending_transactions_request":
+			v := NewGetPendingTransactionsRequest()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		default:
+			return errors.New("unknown variant type: " + variant.Type)
+	}
+
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: MempoolReservedResponse
+// ----------------------------------------
+
+// MempoolReservedResponse type
+type MempoolReservedResponse struct {
+}
+
+// NewMempoolReservedResponse factory
+func NewMempoolReservedResponse() *MempoolReservedResponse {
+	o := MempoolReservedResponse{}
+	return &o
+}
+
+// Serialize MempoolReservedResponse
+func (n MempoolReservedResponse) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeMempoolReservedResponse function
+func DeserializeMempoolReservedResponse(vb *VariableBlob) (uint64,*MempoolReservedResponse,error) {
+	var i uint64 = 0
+	s := MempoolReservedResponse{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: MempoolErrorResponse
+// ----------------------------------------
+
+// MempoolErrorResponse type
+type MempoolErrorResponse struct {
+    ErrorText String `json:"error_text"`
+    ErrorData String `json:"error_data"`
+}
+
+// NewMempoolErrorResponse factory
+func NewMempoolErrorResponse() *MempoolErrorResponse {
+	o := MempoolErrorResponse{}
+	o.ErrorText = *NewString()
+	o.ErrorData = *NewString()
+	return &o
+}
+
+// Serialize MempoolErrorResponse
+func (n MempoolErrorResponse) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ErrorText.Serialize(vb)
+	vb = n.ErrorData.Serialize(vb)
+	return vb
+}
+
+// DeserializeMempoolErrorResponse function
+func DeserializeMempoolErrorResponse(vb *VariableBlob) (uint64,*MempoolErrorResponse,error) {
+	var i,j uint64 = 0,0
+	s := MempoolErrorResponse{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tErrorText,err := DeserializeString(&ovb); i+=j
+	if err != nil {
+		return 0, &MempoolErrorResponse{}, err
+	}
+	s.ErrorText = *tErrorText
+	ovb = (*vb)[i:]
+	j,tErrorData,err := DeserializeString(&ovb); i+=j
+	if err != nil {
+		return 0, &MempoolErrorResponse{}, err
+	}
+	s.ErrorData = *tErrorData
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: CheckPendingAccountResourcesResponse
+// ----------------------------------------
+
+// CheckPendingAccountResourcesResponse type
+type CheckPendingAccountResourcesResponse struct {
+    Success Boolean `json:"success"`
+}
+
+// NewCheckPendingAccountResourcesResponse factory
+func NewCheckPendingAccountResourcesResponse() *CheckPendingAccountResourcesResponse {
+	o := CheckPendingAccountResourcesResponse{}
+	o.Success = *NewBoolean()
+	return &o
+}
+
+// Serialize CheckPendingAccountResourcesResponse
+func (n CheckPendingAccountResourcesResponse) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Success.Serialize(vb)
+	return vb
+}
+
+// DeserializeCheckPendingAccountResourcesResponse function
+func DeserializeCheckPendingAccountResourcesResponse(vb *VariableBlob) (uint64,*CheckPendingAccountResourcesResponse,error) {
+	var i,j uint64 = 0,0
+	s := CheckPendingAccountResourcesResponse{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tSuccess,err := DeserializeBoolean(&ovb); i+=j
+	if err != nil {
+		return 0, &CheckPendingAccountResourcesResponse{}, err
+	}
+	s.Success = *tSuccess
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: GetPendingTransactionsResponse
+// ----------------------------------------
+
+// GetPendingTransactionsResponse type
+type GetPendingTransactionsResponse struct {
+    Transactions VectorTransaction `json:"transactions"`
+}
+
+// NewGetPendingTransactionsResponse factory
+func NewGetPendingTransactionsResponse() *GetPendingTransactionsResponse {
+	o := GetPendingTransactionsResponse{}
+	o.Transactions = *NewVectorTransaction()
+	return &o
+}
+
+// Serialize GetPendingTransactionsResponse
+func (n GetPendingTransactionsResponse) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Transactions.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetPendingTransactionsResponse function
+func DeserializeGetPendingTransactionsResponse(vb *VariableBlob) (uint64,*GetPendingTransactionsResponse,error) {
+	var i,j uint64 = 0,0
+	s := GetPendingTransactionsResponse{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tTransactions,err := DeserializeVectorTransaction(&ovb); i+=j
+	if err != nil {
+		return 0, &GetPendingTransactionsResponse{}, err
+	}
+	s.Transactions = *tTransactions
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Variant: MempoolRPCResponse
+// ----------------------------------------
+
+// MempoolRPCResponse type
+type MempoolRPCResponse struct {
+	Value interface{}
+}
+
+// NewMempoolRPCResponse factory
+func NewMempoolRPCResponse() *MempoolRPCResponse {
+	v := MempoolRPCResponse{}
+	v.Value = NewMempoolReservedResponse()
+	return &v
+}
+
+// Serialize MempoolRPCResponse
+func (n MempoolRPCResponse) Serialize(vb *VariableBlob) *VariableBlob {
+	var i uint64
+	switch n.Value.(type) {
+		case *MempoolReservedResponse:
+			i = 0
+		case *MempoolErrorResponse:
+			i = 1
+		case *CheckPendingAccountResourcesResponse:
+			i = 2
+		case *GetPendingTransactionsResponse:
+			i = 3
+		default:
+			panic("Unknown variant type")
+	}
+
+	vb = EncodeVarint(vb, i)
+	ser,_ := n.Value.(Serializeable)
+	return ser.Serialize(vb)
+}
+
+// TypeToName MempoolRPCResponse
+func (n MempoolRPCResponse) TypeToName() (string) {
+	switch n.Value.(type) {
+		case *MempoolReservedResponse:
+			return "koinos::rpc::mempool::mempool_reserved_response"
+		case *MempoolErrorResponse:
+			return "koinos::rpc::mempool::mempool_error_response"
+		case *CheckPendingAccountResourcesResponse:
+			return "koinos::rpc::mempool::check_pending_account_resources_response"
+		case *GetPendingTransactionsResponse:
+			return "koinos::rpc::mempool::get_pending_transactions_response"
+		default:
+			panic("Variant type is not serializeable.")
+	}
+}
+
+// MarshalJSON MempoolRPCResponse
+func (n MempoolRPCResponse) MarshalJSON() ([]byte, error) {
+	variant := struct {
+		Type string `json:"type"`
+		Value *interface{} `json:"value"`
+	}{
+		n.TypeToName(),
+		&n.Value,
+	}
+
+	return json.Marshal(&variant)
+}
+
+// DeserializeMempoolRPCResponse function
+func DeserializeMempoolRPCResponse(vb *VariableBlob) (uint64,*MempoolRPCResponse,error) {
+	var v MempoolRPCResponse
+	typeID,i := binary.Uvarint(*vb)
+	if i <= 0 {
+		return 0, &v, errors.New("could not deserialize variant tag")
+	}
+	var j uint64
+
+	switch( typeID ) {
+		case 0:
+			v.Value = NewMempoolReservedResponse()
+		case 1:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeMempoolErrorResponse(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		case 2:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeCheckPendingAccountResourcesResponse(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		case 3:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetPendingTransactionsResponse(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		default:
+			return 0, &v, errors.New("unknown variant tag")
+	}
+	return uint64(i)+j,&v,nil
+}
+
+// UnmarshalJSON *MempoolRPCResponse
+func (n *MempoolRPCResponse) UnmarshalJSON(data []byte) error {
+	variant := struct {
+		Type  string          `json:"type"`
+		Value json.RawMessage `json:"value"`
+	}{}
+
+	err := json.Unmarshal(data, &variant)
+	if err != nil {
+		return err
+	}
+
+	switch variant.Type {
+		case "koinos::rpc::mempool::mempool_reserved_response":
+			v := NewMempoolReservedResponse()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::mempool::mempool_error_response":
+			v := NewMempoolErrorResponse()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::mempool::check_pending_account_resources_response":
+			v := NewCheckPendingAccountResourcesResponse()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::mempool::get_pending_transactions_response":
+			v := NewGetPendingTransactionsResponse()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		default:
+			return errors.New("unknown variant type: " + variant.Type)
+	}
+
 	return nil
 }
 
@@ -6227,53 +6676,6 @@ func (n *GetChainIDParams) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
-//  Typedef: GetPendingTransactionsParams
-// ----------------------------------------
-
-// GetPendingTransactionsParams type
-type GetPendingTransactionsParams GetPendingTransactionsRequest
-
-// NewGetPendingTransactionsParams factory
-func NewGetPendingTransactionsParams() *GetPendingTransactionsParams {
-	o := GetPendingTransactionsParams(*NewGetPendingTransactionsRequest())
-	return &o
-}
-
-// Serialize GetPendingTransactionsParams
-func (n GetPendingTransactionsParams) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := GetPendingTransactionsRequest(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeGetPendingTransactionsParams function
-func DeserializeGetPendingTransactionsParams(vb *VariableBlob) (uint64,*GetPendingTransactionsParams,error) {
-	var ot GetPendingTransactionsParams
-	i,n,err := DeserializeGetPendingTransactionsRequest(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = GetPendingTransactionsParams(*n)
-	return i,&ot,nil}
-
-// MarshalJSON GetPendingTransactionsParams
-func (n GetPendingTransactionsParams) MarshalJSON() ([]byte, error) {
-	v := GetPendingTransactionsRequest(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *GetPendingTransactionsParams
-func (n *GetPendingTransactionsParams) UnmarshalJSON(data []byte) error {
-	v := GetPendingTransactionsRequest(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = GetPendingTransactionsParams(v)
-	return nil
-}
-
-
-// ----------------------------------------
 //  Variant: QueryParamItem
 // ----------------------------------------
 
@@ -6299,8 +6701,6 @@ func (n QueryParamItem) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 1
 		case *GetChainIDParams:
 			i = 2
-		case *GetPendingTransactionsParams:
-			i = 3
 		default:
 			panic("Unknown variant type")
 	}
@@ -6319,8 +6719,6 @@ func (n QueryParamItem) TypeToName() (string) {
 			return "koinos::types::rpc::get_head_info_params"
 		case *GetChainIDParams:
 			return "koinos::types::rpc::get_chain_id_params"
-		case *GetPendingTransactionsParams:
-			return "koinos::types::rpc::get_pending_transactions_params"
 		default:
 			panic("Variant type is not serializeable.")
 	}
@@ -6355,14 +6753,6 @@ func DeserializeQueryParamItem(vb *VariableBlob) (uint64,*QueryParamItem,error) 
 			v.Value = NewGetHeadInfoParams()
 		case 2:
 			v.Value = NewGetChainIDParams()
-		case 3:
-			ovb := (*vb)[i:]
-			k,x,err := DeserializeGetPendingTransactionsParams(&ovb)
-			if err != nil {
-				return 0, &v, err
-			}
-			j = k
-			v.Value = x
 		default:
 			return 0, &v, errors.New("unknown variant tag")
 	}
@@ -6392,10 +6782,6 @@ func (n *QueryParamItem) UnmarshalJSON(data []byte) error {
 			n.Value = v
 		case "koinos::types::rpc::get_chain_id_params":
 			v := NewGetChainIDParams()
-			json.Unmarshal(variant.Value, &v)
-			n.Value = v
-		case "koinos::types::rpc::get_pending_transactions_params":
-			v := NewGetPendingTransactionsParams()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
@@ -6637,53 +7023,6 @@ func (n *GetChainIDResult) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
-//  Typedef: GetPendingTransactionsResult
-// ----------------------------------------
-
-// GetPendingTransactionsResult type
-type GetPendingTransactionsResult GetPendingTransactionsResponse
-
-// NewGetPendingTransactionsResult factory
-func NewGetPendingTransactionsResult() *GetPendingTransactionsResult {
-	o := GetPendingTransactionsResult(*NewGetPendingTransactionsResponse())
-	return &o
-}
-
-// Serialize GetPendingTransactionsResult
-func (n GetPendingTransactionsResult) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := GetPendingTransactionsResponse(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeGetPendingTransactionsResult function
-func DeserializeGetPendingTransactionsResult(vb *VariableBlob) (uint64,*GetPendingTransactionsResult,error) {
-	var ot GetPendingTransactionsResult
-	i,n,err := DeserializeGetPendingTransactionsResponse(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = GetPendingTransactionsResult(*n)
-	return i,&ot,nil}
-
-// MarshalJSON GetPendingTransactionsResult
-func (n GetPendingTransactionsResult) MarshalJSON() ([]byte, error) {
-	v := GetPendingTransactionsResponse(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *GetPendingTransactionsResult
-func (n *GetPendingTransactionsResult) UnmarshalJSON(data []byte) error {
-	v := GetPendingTransactionsResponse(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = GetPendingTransactionsResult(v)
-	return nil
-}
-
-
-// ----------------------------------------
 //  Variant: QueryItemResult
 // ----------------------------------------
 
@@ -6711,8 +7050,6 @@ func (n QueryItemResult) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 2
 		case *GetChainIDResult:
 			i = 3
-		case *GetPendingTransactionsResult:
-			i = 4
 		default:
 			panic("Unknown variant type")
 	}
@@ -6733,8 +7070,6 @@ func (n QueryItemResult) TypeToName() (string) {
 			return "koinos::types::rpc::get_head_info_result"
 		case *GetChainIDResult:
 			return "koinos::types::rpc::get_chain_id_result"
-		case *GetPendingTransactionsResult:
-			return "koinos::types::rpc::get_pending_transactions_result"
 		default:
 			panic("Variant type is not serializeable.")
 	}
@@ -6789,14 +7124,6 @@ func DeserializeQueryItemResult(vb *VariableBlob) (uint64,*QueryItemResult,error
 			}
 			j = k
 			v.Value = x
-		case 4:
-			ovb := (*vb)[i:]
-			k,x,err := DeserializeGetPendingTransactionsResult(&ovb)
-			if err != nil {
-				return 0, &v, err
-			}
-			j = k
-			v.Value = x
 		default:
 			return 0, &v, errors.New("unknown variant tag")
 	}
@@ -6830,10 +7157,6 @@ func (n *QueryItemResult) UnmarshalJSON(data []byte) error {
 			n.Value = v
 		case "koinos::types::rpc::get_chain_id_result":
 			v := NewGetChainIDResult()
-			json.Unmarshal(variant.Value, &v)
-			n.Value = v
-		case "koinos::types::rpc::get_pending_transactions_result":
-			v := NewGetPendingTransactionsResult()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
