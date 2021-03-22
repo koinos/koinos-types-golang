@@ -2440,6 +2440,7 @@ type TransactionAccepted struct {
     Payer AccountType `json:"payer"`
     MaxPayerResources UInt128 `json:"max_payer_resources"`
     TrxResourceLimit UInt128 `json:"trx_resource_limit"`
+    Height BlockHeightType `json:"height"`
 }
 
 // NewTransactionAccepted factory
@@ -2449,6 +2450,7 @@ func NewTransactionAccepted() *TransactionAccepted {
 	o.Payer = *NewAccountType()
 	o.MaxPayerResources = *NewUInt128()
 	o.TrxResourceLimit = *NewUInt128()
+	o.Height = *NewBlockHeightType()
 	return &o
 }
 
@@ -2458,6 +2460,7 @@ func (n TransactionAccepted) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.Payer.Serialize(vb)
 	vb = n.MaxPayerResources.Serialize(vb)
 	vb = n.TrxResourceLimit.Serialize(vb)
+	vb = n.Height.Serialize(vb)
 	return vb
 }
 
@@ -2490,6 +2493,12 @@ func DeserializeTransactionAccepted(vb *VariableBlob) (uint64,*TransactionAccept
 		return 0, &TransactionAccepted{}, err
 	}
 	s.TrxResourceLimit = *tTrxResourceLimit
+	ovb = (*vb)[i:]
+	j,tHeight,err := DeserializeBlockHeightType(&ovb); i+=j
+	if err != nil {
+		return 0, &TransactionAccepted{}, err
+	}
+	s.Height = *tHeight
 	return i, &s, nil
 }
 
