@@ -1213,6 +1213,8 @@ func DeserializeBlockReceipt(vb *VariableBlob) (uint64,*BlockReceipt,error) {
 
 // BlockItem type
 type BlockItem struct {
+    BlockID Multihash `json:"block_id"`
+    BlockHeight BlockHeightType `json:"block_height"`
     Block OpaqueBlock `json:"block"`
     BlockReceipt OpaqueBlockReceipt `json:"block_receipt"`
 }
@@ -1220,6 +1222,8 @@ type BlockItem struct {
 // NewBlockItem factory
 func NewBlockItem() *BlockItem {
 	o := BlockItem{}
+	o.BlockID = *NewMultihash()
+	o.BlockHeight = *NewBlockHeightType()
 	o.Block = *NewOpaqueBlock()
 	o.BlockReceipt = *NewOpaqueBlockReceipt()
 	return &o
@@ -1227,6 +1231,8 @@ func NewBlockItem() *BlockItem {
 
 // Serialize BlockItem
 func (n BlockItem) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.BlockID.Serialize(vb)
+	vb = n.BlockHeight.Serialize(vb)
 	vb = n.Block.Serialize(vb)
 	vb = n.BlockReceipt.Serialize(vb)
 	return vb
@@ -1237,6 +1243,18 @@ func DeserializeBlockItem(vb *VariableBlob) (uint64,*BlockItem,error) {
 	var i,j uint64 = 0,0
 	s := BlockItem{}
 	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tBlockID,err := DeserializeMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockItem{}, err
+	}
+	s.BlockID = *tBlockID
+	ovb = (*vb)[i:]
+	j,tBlockHeight,err := DeserializeBlockHeightType(&ovb); i+=j
+	if err != nil {
+		return 0, &BlockItem{}, err
+	}
+	s.BlockHeight = *tBlockHeight
 	ovb = (*vb)[i:]
 	j,tBlock,err := DeserializeOpaqueBlock(&ovb); i+=j
 	if err != nil {

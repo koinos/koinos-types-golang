@@ -1426,7 +1426,7 @@ func TestBlockItem(t *testing.T) {
 	}
 
 	var n uint64
-	// Test block
+	// Test block_id
 	vb = &koinos.VariableBlob{}
 	n, _, err = koinos.DeserializeBlockItem(vb)
 	if err == nil {
@@ -1436,8 +1436,28 @@ func TestBlockItem(t *testing.T) {
 		t.Errorf("Bytes were consumed on error")
 	}
 
+	// Test block_height
+	vb = &koinos.VariableBlob{0x00, 0x00}
+	n, _, err = koinos.DeserializeBlockItem(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	// Test block
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeBlockItem(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
 	// Test block_receipt
-	vb = &koinos.VariableBlob{0x00}
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 	n, _, err = koinos.DeserializeBlockItem(vb)
 	if err == nil {
 		t.Errorf("err == nil")
