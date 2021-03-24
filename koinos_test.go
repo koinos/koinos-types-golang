@@ -1095,8 +1095,18 @@ func TestActiveTransactionData(t *testing.T) {
 		t.Errorf("Bytes were consumed on error")
 	}
 
-	// Test operations
+	// Test nonce
 	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	n, _, err = koinos.DeserializeActiveTransactionData(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	// Test operations
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
 	n, _, err = koinos.DeserializeActiveTransactionData(vb)
 	if err == nil {
 		t.Errorf("err == nil")
@@ -9127,7 +9137,7 @@ func TestOpaqueActiveTransactionData(t *testing.T) {
 		t.Errorf("jerr == nil")
 	}
 
-	jerr = json.Unmarshal([]byte("{\"resource_limit\":[14314,123515,1341234],\"operations\":[14314,123515,1341234]}"), jo)
+	jerr = json.Unmarshal([]byte("{\"resource_limit\":[14314,123515,1341234],\"nonce\":[14314,123515,1341234],\"operations\":[14314,123515,1341234]}"), jo)
 	if jerr == nil {
 		t.Errorf("jerr == nil")
 	}

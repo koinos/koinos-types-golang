@@ -962,6 +962,7 @@ func (n *Operation) UnmarshalJSON(data []byte) error {
 // ActiveTransactionData type
 type ActiveTransactionData struct {
     ResourceLimit UInt128 `json:"resource_limit"`
+    Nonce UInt64 `json:"nonce"`
     Operations VectorOperation `json:"operations"`
 }
 
@@ -969,6 +970,7 @@ type ActiveTransactionData struct {
 func NewActiveTransactionData() *ActiveTransactionData {
 	o := ActiveTransactionData{}
 	o.ResourceLimit = *NewUInt128()
+	o.Nonce = *NewUInt64()
 	o.Operations = *NewVectorOperation()
 	return &o
 }
@@ -976,6 +978,7 @@ func NewActiveTransactionData() *ActiveTransactionData {
 // Serialize ActiveTransactionData
 func (n ActiveTransactionData) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.ResourceLimit.Serialize(vb)
+	vb = n.Nonce.Serialize(vb)
 	vb = n.Operations.Serialize(vb)
 	return vb
 }
@@ -991,6 +994,12 @@ func DeserializeActiveTransactionData(vb *VariableBlob) (uint64,*ActiveTransacti
 		return 0, &ActiveTransactionData{}, err
 	}
 	s.ResourceLimit = *tResourceLimit
+	ovb = (*vb)[i:]
+	j,tNonce,err := DeserializeUInt64(&ovb); i+=j
+	if err != nil {
+		return 0, &ActiveTransactionData{}, err
+	}
+	s.Nonce = *tNonce
 	ovb = (*vb)[i:]
 	j,tOperations,err := DeserializeVectorOperation(&ovb); i+=j
 	if err != nil {
