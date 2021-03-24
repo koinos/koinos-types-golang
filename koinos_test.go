@@ -1427,7 +1427,7 @@ func TestBlockItem(t *testing.T) {
 	}
 
 	// Test block_receipt
-	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
+	vb = &koinos.VariableBlob{0x00}
 	n, _, err = koinos.DeserializeBlockItem(vb)
 	if err == nil {
 		t.Errorf("err == nil")
@@ -9148,6 +9148,153 @@ func TestOpaqueActiveTransactionData(t *testing.T) {
 
 	n := koinos.NewActiveTransactionData()
 	o = koinos.NewOpaqueActiveTransactionDataFromNative(*n)
+	nativePtr, _ := o.GetNative()
+
+	if o.IsBoxed() || nativePtr == n {
+		t.Errorf("Create opaque from native failed.")
+	}
+}
+
+// ----------------------------------------
+//  OpaqueBlock
+// ----------------------------------------
+
+func TestOpaqueBlock(t *testing.T) {
+	o := koinos.NewOpaqueBlock()
+
+	o.Box()
+	if !o.IsBoxed() {
+		t.Errorf("Opaque is unboxed but should not be.")
+	}
+
+	// Test getting native on Boxed
+	_, err := o.GetNative()
+	if err == nil {
+		t.Errorf("Getting native on boxed should fail.")
+	}
+
+	o.Box() // Call Box() on Boxed
+	if !o.IsBoxed() {
+		t.Errorf("Boxed -> Boxed failed.")
+	}
+
+	o.Unbox() // Call Unbox() on Boxed
+	if o.IsBoxed() {
+		t.Errorf("Boxed -> Uboxed failed.")
+	}
+
+	// Test getting native on Unboxed
+	_, err = o.GetNative()
+	if err != nil {
+		t.Errorf("Getting native on boxed should not fail.")
+	}
+
+	o.Unbox() // Call Unbox() on Unboxed
+	if o.IsBoxed() {
+		t.Errorf("Unboxed -> Unboxed failed.")
+	}
+
+	o.Box() // Call Box() on Unboxed
+	if !o.IsBoxed() {
+		t.Errorf("Unboxed -> Boxed failed.")
+	}
+
+	o.Unbox()
+	vb := o.GetBlob() // Implicit Box() on Unboxed
+	if !o.IsBoxed() {
+		t.Errorf("GetBlob did not cause boxing.")
+	}
+
+	o.Box()
+
+	// Test serialization
+
+	vb = koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+	b := o.GetBlob()
+
+	o.Box()
+	if !bytes.Equal(*b, (*vb)[1:]) {
+		t.Errorf("GetBlob and Serialization do not match")
+	}
+
+	o.Unbox()
+	b = o.GetBlob()
+	if !bytes.Equal(*b, (*vb)[1:]) {
+		t.Errorf("GetBlob and Serialization do not match")
+	}
+
+	_, _, err2 := koinos.DeserializeOpaqueBlock(vb)
+	if err2 != nil {
+		t.Error(err2)
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewOpaqueBlock()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"koinos::protocol::block\",\"value\":\"zt1Zv2yaZ\"}}"), jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo.Unbox()
+	if !jo.IsBoxed() {
+		t.Errorf("Unboxed incompatible serialization")
+	}
+
+	expected := []byte("{\"opaque\":{\"type\":\"koinos::protocol::block\",\"value\":\"zt1Zv2yaZ\"}}")
+	v, jerr = json.Marshal(jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+	if !bytes.Equal(v, expected) {
+		t.Errorf("Marshal unknown data to json failed. Expected: %s, Was: %s", expected, v)
+	}
+
+	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"foobar\",\"value\":\"zt1Zv2yaZ\"}}"), jo)
+	if jerr == nil {
+		t.Errorf("jerr == nil")
+	}
+
+	jerr = json.Unmarshal([]byte("{\"opaque\":10}"), jo)
+	if jerr == nil {
+		t.Errorf("jerr == nil")
+	}
+
+	jerr = json.Unmarshal([]byte("{\"id\":[14314,123515,1341234],\"header\":[14314,123515,1341234],\"active_data\":[14314,123515,1341234],\"passive_data\":[14314,123515,1341234],\"signature_data\":[14314,123515,1341234],\"transactions\":[14314,123515,1341234]}"), jo)
+	if jerr == nil {
+		t.Errorf("jerr == nil")
+	}
+
+	// Test alternative constructors
+	vb = koinos.NewVariableBlob()
+	o = koinos.NewOpaqueBlockFromBlob(vb)
+
+	if !o.IsBoxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("Create opaque from blob failed.")
+	}
+
+	slice := append([]byte(*vb), 0)
+	vb = (*koinos.VariableBlob)(&slice)
+	if bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
+		t.Errorf("Opaque blob pointer leaked")
+	}
+
+	n := koinos.NewBlock()
+	o = koinos.NewOpaqueBlockFromNative(*n)
 	nativePtr, _ := o.GetNative()
 
 	if o.IsBoxed() || nativePtr == n {
