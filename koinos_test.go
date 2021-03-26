@@ -6821,59 +6821,6 @@ func exerciseChainRPCResponseSerialization(v *koinos.ChainRPCResponse, t *testin
 }
 
 // ----------------------------------------
-//  Struct: TransactionTopology
-// ----------------------------------------
-
-func TestTransactionTopology(t *testing.T) {
-	o := koinos.NewTransactionTopology()
-
-	vb := koinos.NewVariableBlob()
-	vb = o.Serialize(vb)
-
-	_, _, err := koinos.DeserializeTransactionTopology(vb)
-	if err != nil {
-		t.Error(err)
-	}
-
-	var n uint64
-	// Test id
-	vb = &koinos.VariableBlob{}
-	n, _, err = koinos.DeserializeTransactionTopology(vb)
-	if err == nil {
-		t.Errorf("err == nil")
-	}
-	if n != 0 {
-		t.Errorf("Bytes were consumed on error")
-	}
-
-	v, jerr := json.Marshal(o)
-	if jerr != nil {
-		t.Error(jerr)
-	}
-
-	jo := koinos.NewTransactionTopology()
-	jerr = json.Unmarshal(v, jo)
-	if jerr != nil {
-		t.Error(jerr)
-	}
-
-	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
-	if jerr == nil {
-		t.Errorf("Unmarshaling nonsense JSON did not give error.")
-	}
-
-	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
-	if jerr == nil {
-		t.Errorf("Unmarshaling nonsense JSON did not give error.")
-	}
-
-	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
-	if jerr == nil {
-		t.Errorf("Unmarshaling nonsense JSON did not give error.")
-	}
-}
-
-// ----------------------------------------
 //  Typedef: SignatureType
 // ----------------------------------------
 

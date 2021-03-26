@@ -5968,42 +5968,6 @@ func (n *ChainRPCResponse) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
-//  Struct: TransactionTopology
-// ----------------------------------------
-
-// TransactionTopology type
-type TransactionTopology struct {
-    ID Multihash `json:"id"`
-}
-
-// NewTransactionTopology factory
-func NewTransactionTopology() *TransactionTopology {
-	o := TransactionTopology{}
-	o.ID = *NewMultihash()
-	return &o
-}
-
-// Serialize TransactionTopology
-func (n TransactionTopology) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.ID.Serialize(vb)
-	return vb
-}
-
-// DeserializeTransactionTopology function
-func DeserializeTransactionTopology(vb *VariableBlob) (uint64,*TransactionTopology,error) {
-	var i,j uint64 = 0,0
-	s := TransactionTopology{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tID,err := DeserializeMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &TransactionTopology{}, err
-	}
-	s.ID = *tID
-	return i, &s, nil
-}
-
-// ----------------------------------------
 //  Typedef: SignatureType
 // ----------------------------------------
 
