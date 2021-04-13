@@ -3157,7 +3157,6 @@ func TestBlockIrreversible(t *testing.T) {
 func TestSystemCallID(t *testing.T) {
 	vals := []koinos.SystemCallID{
 		koinos.SystemCallIDPrints,
-		koinos.SystemCallIDVerifyBlockHeader,
 		koinos.SystemCallIDApplyBlock,
 		koinos.SystemCallIDApplyTransaction,
 		koinos.SystemCallIDApplyReservedOperation,
