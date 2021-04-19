@@ -3151,6 +3151,69 @@ func TestBlockIrreversible(t *testing.T) {
 }
 
 // ----------------------------------------
+//  Struct: ForkHeads
+// ----------------------------------------
+
+func TestForkHeads(t *testing.T) {
+	o := koinos.NewForkHeads()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeForkHeads(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	var n uint64
+	// Test fork_heads
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeForkHeads(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	// Test last_irreversible_block
+	vb = &koinos.VariableBlob{0x00}
+	n, _, err = koinos.DeserializeForkHeads(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewForkHeads()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
 //  Enum: SystemCallID
 // ----------------------------------------
 

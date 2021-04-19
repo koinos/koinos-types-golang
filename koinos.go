@@ -2602,6 +2602,51 @@ func DeserializeBlockIrreversible(vb *VariableBlob) (uint64,*BlockIrreversible,e
 }
 
 // ----------------------------------------
+//  Struct: ForkHeads
+// ----------------------------------------
+
+// ForkHeads type
+type ForkHeads struct {
+    ForkHeads VectorBlockTopology `json:"fork_heads"`
+    LastIrreversibleBlock BlockTopology `json:"last_irreversible_block"`
+}
+
+// NewForkHeads factory
+func NewForkHeads() *ForkHeads {
+	o := ForkHeads{}
+	o.ForkHeads = *NewVectorBlockTopology()
+	o.LastIrreversibleBlock = *NewBlockTopology()
+	return &o
+}
+
+// Serialize ForkHeads
+func (n ForkHeads) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ForkHeads.Serialize(vb)
+	vb = n.LastIrreversibleBlock.Serialize(vb)
+	return vb
+}
+
+// DeserializeForkHeads function
+func DeserializeForkHeads(vb *VariableBlob) (uint64,*ForkHeads,error) {
+	var i,j uint64 = 0,0
+	s := ForkHeads{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tForkHeads,err := DeserializeVectorBlockTopology(&ovb); i+=j
+	if err != nil {
+		return 0, &ForkHeads{}, err
+	}
+	s.ForkHeads = *tForkHeads
+	ovb = (*vb)[i:]
+	j,tLastIrreversibleBlock,err := DeserializeBlockTopology(&ovb); i+=j
+	if err != nil {
+		return 0, &ForkHeads{}, err
+	}
+	s.LastIrreversibleBlock = *tLastIrreversibleBlock
+	return i, &s, nil
+}
+
+// ----------------------------------------
 //  Enum: SystemCallID
 // ----------------------------------------
 
