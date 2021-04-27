@@ -5418,6 +5418,60 @@ func DeserializeGetForkHeadsRequest(vb *VariableBlob) (uint64,*GetForkHeadsReque
 }
 
 // ----------------------------------------
+//  Struct: ReadContractRequest
+// ----------------------------------------
+
+// ReadContractRequest type
+type ReadContractRequest struct {
+    ContractID ContractIDType `json:"contract_id"`
+    EntryPoint UInt32 `json:"entry_point"`
+    Args VariableBlob `json:"args"`
+}
+
+// NewReadContractRequest factory
+func NewReadContractRequest() *ReadContractRequest {
+	o := ReadContractRequest{}
+	o.ContractID = *NewContractIDType()
+	o.EntryPoint = *NewUInt32()
+	o.Args = *NewVariableBlob()
+	return &o
+}
+
+// Serialize ReadContractRequest
+func (n ReadContractRequest) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ContractID.Serialize(vb)
+	vb = n.EntryPoint.Serialize(vb)
+	vb = n.Args.Serialize(vb)
+	return vb
+}
+
+// DeserializeReadContractRequest function
+func DeserializeReadContractRequest(vb *VariableBlob) (uint64,*ReadContractRequest,error) {
+	var i,j uint64 = 0,0
+	s := ReadContractRequest{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tContractID,err := DeserializeContractIDType(&ovb); i+=j
+	if err != nil {
+		return 0, &ReadContractRequest{}, err
+	}
+	s.ContractID = *tContractID
+	ovb = (*vb)[i:]
+	j,tEntryPoint,err := DeserializeUInt32(&ovb); i+=j
+	if err != nil {
+		return 0, &ReadContractRequest{}, err
+	}
+	s.EntryPoint = *tEntryPoint
+	ovb = (*vb)[i:]
+	j,tArgs,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &ReadContractRequest{}, err
+	}
+	s.Args = *tArgs
+	return i, &s, nil
+}
+
+// ----------------------------------------
 //  Variant: ChainRPCRequest
 // ----------------------------------------
 
@@ -5449,6 +5503,8 @@ func (n ChainRPCRequest) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 4
 		case *GetForkHeadsRequest:
 			i = 5
+		case *ReadContractRequest:
+			i = 6
 		default:
 			panic("Unknown variant type")
 	}
@@ -5473,6 +5529,8 @@ func (n ChainRPCRequest) TypeToName() (string) {
 			return "koinos::rpc::chain::get_chain_id_request"
 		case *GetForkHeadsRequest:
 			return "koinos::rpc::chain::get_fork_heads_request"
+		case *ReadContractRequest:
+			return "koinos::rpc::chain::read_contract_request"
 		default:
 			panic("Variant type is not serializeable.")
 	}
@@ -5525,6 +5583,14 @@ func DeserializeChainRPCRequest(vb *VariableBlob) (uint64,*ChainRPCRequest,error
 			v.Value = NewGetChainIDRequest()
 		case 5:
 			v.Value = NewGetForkHeadsRequest()
+		case 6:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeReadContractRequest(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
 		default:
 			return 0, &v, errors.New("unknown variant tag")
 	}
@@ -5566,6 +5632,10 @@ func (n *ChainRPCRequest) UnmarshalJSON(data []byte) error {
 			n.Value = v
 		case "koinos::rpc::chain::get_fork_heads_request":
 			v := NewGetForkHeadsRequest()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::chain::read_contract_request":
+			v := NewReadContractRequest()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
@@ -5829,6 +5899,51 @@ func DeserializeGetForkHeadsResponse(vb *VariableBlob) (uint64,*GetForkHeadsResp
 }
 
 // ----------------------------------------
+//  Struct: ReadContractResponse
+// ----------------------------------------
+
+// ReadContractResponse type
+type ReadContractResponse struct {
+    Result VariableBlob `json:"result"`
+    Logs String `json:"logs"`
+}
+
+// NewReadContractResponse factory
+func NewReadContractResponse() *ReadContractResponse {
+	o := ReadContractResponse{}
+	o.Result = *NewVariableBlob()
+	o.Logs = *NewString()
+	return &o
+}
+
+// Serialize ReadContractResponse
+func (n ReadContractResponse) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Result.Serialize(vb)
+	vb = n.Logs.Serialize(vb)
+	return vb
+}
+
+// DeserializeReadContractResponse function
+func DeserializeReadContractResponse(vb *VariableBlob) (uint64,*ReadContractResponse,error) {
+	var i,j uint64 = 0,0
+	s := ReadContractResponse{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tResult,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &ReadContractResponse{}, err
+	}
+	s.Result = *tResult
+	ovb = (*vb)[i:]
+	j,tLogs,err := DeserializeString(&ovb); i+=j
+	if err != nil {
+		return 0, &ReadContractResponse{}, err
+	}
+	s.Logs = *tLogs
+	return i, &s, nil
+}
+
+// ----------------------------------------
 //  Variant: ChainRPCResponse
 // ----------------------------------------
 
@@ -5862,6 +5977,8 @@ func (n ChainRPCResponse) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 5
 		case *GetForkHeadsResponse:
 			i = 6
+		case *ReadContractResponse:
+			i = 7
 		default:
 			panic("Unknown variant type")
 	}
@@ -5888,6 +6005,8 @@ func (n ChainRPCResponse) TypeToName() (string) {
 			return "koinos::rpc::chain::get_chain_id_response"
 		case *GetForkHeadsResponse:
 			return "koinos::rpc::chain::get_fork_heads_response"
+		case *ReadContractResponse:
+			return "koinos::rpc::chain::read_contract_response"
 		default:
 			panic("Variant type is not serializeable.")
 	}
@@ -5954,6 +6073,14 @@ func DeserializeChainRPCResponse(vb *VariableBlob) (uint64,*ChainRPCResponse,err
 			}
 			j = k
 			v.Value = x
+		case 7:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeReadContractResponse(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
 		default:
 			return 0, &v, errors.New("unknown variant tag")
 	}
@@ -5999,6 +6126,10 @@ func (n *ChainRPCResponse) UnmarshalJSON(data []byte) error {
 			n.Value = v
 		case "koinos::rpc::chain::get_fork_heads_response":
 			v := NewGetForkHeadsResponse()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::chain::read_contract_response":
+			v := NewReadContractResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		default:
