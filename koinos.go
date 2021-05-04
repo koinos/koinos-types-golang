@@ -333,20 +333,20 @@ func DeserializeCreateSystemContractOperation(vb *VariableBlob) (uint64,*CreateS
 }
 
 // ----------------------------------------
-//  Struct: ContractCallOperation
+//  Struct: CallContractOperation
 // ----------------------------------------
 
-// ContractCallOperation type
-type ContractCallOperation struct {
+// CallContractOperation type
+type CallContractOperation struct {
     ContractID ContractIDType `json:"contract_id"`
     EntryPoint UInt32 `json:"entry_point"`
     Args VariableBlob `json:"args"`
     Extensions UnusedExtensionsType `json:"extensions"`
 }
 
-// NewContractCallOperation factory
-func NewContractCallOperation() *ContractCallOperation {
-	o := ContractCallOperation{}
+// NewCallContractOperation factory
+func NewCallContractOperation() *CallContractOperation {
+	o := CallContractOperation{}
 	o.ContractID = *NewContractIDType()
 	o.EntryPoint = *NewUInt32()
 	o.Args = *NewVariableBlob()
@@ -354,8 +354,8 @@ func NewContractCallOperation() *ContractCallOperation {
 	return &o
 }
 
-// Serialize ContractCallOperation
-func (n ContractCallOperation) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize CallContractOperation
+func (n CallContractOperation) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.ContractID.Serialize(vb)
 	vb = n.EntryPoint.Serialize(vb)
 	vb = n.Args.Serialize(vb)
@@ -363,27 +363,27 @@ func (n ContractCallOperation) Serialize(vb *VariableBlob) *VariableBlob {
 	return vb
 }
 
-// DeserializeContractCallOperation function
-func DeserializeContractCallOperation(vb *VariableBlob) (uint64,*ContractCallOperation,error) {
+// DeserializeCallContractOperation function
+func DeserializeCallContractOperation(vb *VariableBlob) (uint64,*CallContractOperation,error) {
 	var i,j uint64 = 0,0
-	s := ContractCallOperation{}
+	s := CallContractOperation{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
 	j,tContractID,err := DeserializeContractIDType(&ovb); i+=j
 	if err != nil {
-		return 0, &ContractCallOperation{}, err
+		return 0, &CallContractOperation{}, err
 	}
 	s.ContractID = *tContractID
 	ovb = (*vb)[i:]
 	j,tEntryPoint,err := DeserializeUInt32(&ovb); i+=j
 	if err != nil {
-		return 0, &ContractCallOperation{}, err
+		return 0, &CallContractOperation{}, err
 	}
 	s.EntryPoint = *tEntryPoint
 	ovb = (*vb)[i:]
 	j,tArgs,err := DeserializeVariableBlob(&ovb); i+=j
 	if err != nil {
-		return 0, &ContractCallOperation{}, err
+		return 0, &CallContractOperation{}, err
 	}
 	s.Args = *tArgs
 	return i, &s, nil
@@ -826,7 +826,7 @@ func (n Operation) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 1
 		case *CreateSystemContractOperation:
 			i = 2
-		case *ContractCallOperation:
+		case *CallContractOperation:
 			i = 3
 		case *SetSystemCallOperation:
 			i = 4
@@ -848,8 +848,8 @@ func (n Operation) TypeToName() (string) {
 			return "koinos::protocol::nop_operation"
 		case *CreateSystemContractOperation:
 			return "koinos::protocol::create_system_contract_operation"
-		case *ContractCallOperation:
-			return "koinos::protocol::contract_call_operation"
+		case *CallContractOperation:
+			return "koinos::protocol::call_contract_operation"
 		case *SetSystemCallOperation:
 			return "koinos::protocol::set_system_call_operation"
 		default:
@@ -894,7 +894,7 @@ func DeserializeOperation(vb *VariableBlob) (uint64,*Operation,error) {
 			v.Value = x
 		case 3:
 			ovb := (*vb)[i:]
-			k,x,err := DeserializeContractCallOperation(&ovb)
+			k,x,err := DeserializeCallContractOperation(&ovb)
 			if err != nil {
 				return 0, &v, err
 			}
@@ -939,8 +939,8 @@ func (n *Operation) UnmarshalJSON(data []byte) error {
 			v := NewCreateSystemContractOperation()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::protocol::contract_call_operation":
-			v := NewContractCallOperation()
+		case "koinos::protocol::call_contract_operation":
+			v := NewCallContractOperation()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::protocol::set_system_call_operation":
@@ -3478,13 +3478,13 @@ func (n *ApplyReservedOperationReturn) UnmarshalJSON(data []byte) error {
 
 // ApplyExecuteContractOperationArgs type
 type ApplyExecuteContractOperationArgs struct {
-    Op ContractCallOperation `json:"op"`
+    Op CallContractOperation `json:"op"`
 }
 
 // NewApplyExecuteContractOperationArgs factory
 func NewApplyExecuteContractOperationArgs() *ApplyExecuteContractOperationArgs {
 	o := ApplyExecuteContractOperationArgs{}
-	o.Op = *NewContractCallOperation()
+	o.Op = *NewCallContractOperation()
 	return &o
 }
 
@@ -3500,7 +3500,7 @@ func DeserializeApplyExecuteContractOperationArgs(vb *VariableBlob) (uint64,*App
 	s := ApplyExecuteContractOperationArgs{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
-	j,tOp,err := DeserializeContractCallOperation(&ovb); i+=j
+	j,tOp,err := DeserializeCallContractOperation(&ovb); i+=j
 	if err != nil {
 		return 0, &ApplyExecuteContractOperationArgs{}, err
 	}

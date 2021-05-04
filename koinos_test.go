@@ -430,16 +430,16 @@ func TestCreateSystemContractOperation(t *testing.T) {
 }
 
 // ----------------------------------------
-//  Struct: ContractCallOperation
+//  Struct: CallContractOperation
 // ----------------------------------------
 
-func TestContractCallOperation(t *testing.T) {
-	o := koinos.NewContractCallOperation()
+func TestCallContractOperation(t *testing.T) {
+	o := koinos.NewCallContractOperation()
 
 	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := koinos.DeserializeContractCallOperation(vb)
+	_, _, err := koinos.DeserializeCallContractOperation(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -447,7 +447,7 @@ func TestContractCallOperation(t *testing.T) {
 	var n uint64
 	// Test contract_id
 	vb = &koinos.VariableBlob{}
-	n, _, err = koinos.DeserializeContractCallOperation(vb)
+	n, _, err = koinos.DeserializeCallContractOperation(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -457,7 +457,7 @@ func TestContractCallOperation(t *testing.T) {
 
 	// Test entry_point
 	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = koinos.DeserializeContractCallOperation(vb)
+	n, _, err = koinos.DeserializeCallContractOperation(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -467,7 +467,7 @@ func TestContractCallOperation(t *testing.T) {
 
 	// Test args
 	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = koinos.DeserializeContractCallOperation(vb)
+	n, _, err = koinos.DeserializeCallContractOperation(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -480,7 +480,7 @@ func TestContractCallOperation(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := koinos.NewContractCallOperation()
+	jo := koinos.NewCallContractOperation()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -965,7 +965,7 @@ func TestOperation(t *testing.T) {
 	}
 	{
 		v := koinos.NewOperation()
-		v.Value = koinos.NewContractCallOperation()
+		v.Value = koinos.NewCallContractOperation()
 		exerciseOperationSerialization(v, t)
 
 		vb := koinos.VariableBlob{3}
