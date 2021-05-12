@@ -562,6 +562,7 @@ func TestThunkID(t *testing.T) {
 		koinos.ThunkIDDbGetNextObject,
 		koinos.ThunkIDDbGetPrevObject,
 		koinos.ThunkIDExecuteContract,
+		koinos.ThunkIDGetEntryPoint,
 		koinos.ThunkIDGetContractArgsSize,
 		koinos.ThunkIDGetContractArgs,
 		koinos.ThunkIDSetContractReturn,
@@ -3231,6 +3232,7 @@ func TestSystemCallID(t *testing.T) {
 		koinos.SystemCallIDDbGetNextObject,
 		koinos.SystemCallIDDbGetPrevObject,
 		koinos.SystemCallIDExecuteContract,
+		koinos.SystemCallIDGetEntryPoint,
 		koinos.SystemCallIDGetContractArgsSize,
 		koinos.SystemCallIDGetContractArgs,
 		koinos.SystemCallIDSetContractReturn,
@@ -4774,6 +4776,79 @@ func TestExecuteContractReturn(t *testing.T) {
 	}
 
 	jo := koinos.NewExecuteContractReturn()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
+//  Typedef: GetEntryPointArgs
+// ----------------------------------------
+
+func TestGetEntryPointArgs(t *testing.T) {
+	o := koinos.NewGetEntryPointArgs()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetEntryPointArgs(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetEntryPointArgs()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
+//  Typedef: GetEntryPointReturn
+// ----------------------------------------
+
+func TestGetEntryPointReturn(t *testing.T) {
+	o := koinos.NewGetEntryPointReturn()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetEntryPointReturn(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeGetEntryPointReturn(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if size != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetEntryPointReturn()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
