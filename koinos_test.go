@@ -1,3 +1,5 @@
+
+
 //   ____                           _           _   _____         _
 //  / ___| ___ _ __   ___ _ __ __ _| |_ ___  __| | |_   _|__  ___| |_ ___
 // | |  _ / _ \ '_ \ / _ \ '__/ _` | __/ _ \/ _` |   | |/ _ \/ __| __/ __|
@@ -8257,153 +8259,6 @@ func TestOpaqueActiveTransactionData(t *testing.T) {
 }
 
 // ----------------------------------------
-//  OpaqueBlock
-// ----------------------------------------
-
-func TestOpaqueBlock(t *testing.T) {
-	o := koinos.NewOpaqueBlock()
-
-	o.Box()
-	if !o.IsBoxed() {
-		t.Errorf("Opaque is unboxed but should not be.")
-	}
-
-	// Test getting native on Boxed
-	_, err := o.GetNative()
-	if err == nil {
-		t.Errorf("Getting native on boxed should fail.")
-	}
-
-	o.Box() // Call Box() on Boxed
-	if !o.IsBoxed() {
-		t.Errorf("Boxed -> Boxed failed.")
-	}
-
-	o.Unbox() // Call Unbox() on Boxed
-	if o.IsBoxed() {
-		t.Errorf("Boxed -> Uboxed failed.")
-	}
-
-	// Test getting native on Unboxed
-	_, err = o.GetNative()
-	if err != nil {
-		t.Errorf("Getting native on boxed should not fail.")
-	}
-
-	o.Unbox() // Call Unbox() on Unboxed
-	if o.IsBoxed() {
-		t.Errorf("Unboxed -> Unboxed failed.")
-	}
-
-	o.Box() // Call Box() on Unboxed
-	if !o.IsBoxed() {
-		t.Errorf("Unboxed -> Boxed failed.")
-	}
-
-	o.Unbox()
-	vb := o.GetBlob() // Implicit Box() on Unboxed
-	if !o.IsBoxed() {
-		t.Errorf("GetBlob did not cause boxing.")
-	}
-
-	o.Box()
-
-	// Test serialization
-
-	vb = koinos.NewVariableBlob()
-	vb = o.Serialize(vb)
-	b := o.GetBlob()
-
-	o.Box()
-	if !bytes.Equal(*b, (*vb)[1:]) {
-		t.Errorf("GetBlob and Serialization do not match")
-	}
-
-	o.Unbox()
-	b = o.GetBlob()
-	if !bytes.Equal(*b, (*vb)[1:]) {
-		t.Errorf("GetBlob and Serialization do not match")
-	}
-
-	_, _, err2 := koinos.DeserializeOpaqueBlock(vb)
-	if err2 != nil {
-		t.Error(err2)
-	}
-
-	v, jerr := json.Marshal(o)
-	if jerr != nil {
-		t.Error(jerr)
-	}
-
-	jo := koinos.NewOpaqueBlock()
-	jerr = json.Unmarshal(v, jo)
-	if jerr != nil {
-		t.Error(jerr)
-	}
-
-	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
-	if jerr == nil {
-		t.Errorf("Unmarshaling nonsense JSON did not give error.")
-	}
-
-	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"koinos::protocol::block\",\"value\":\"zt1Zv2yaZ\"}}"), jo)
-	if jerr != nil {
-		t.Error(jerr)
-	}
-
-	jo.Unbox()
-	if !jo.IsBoxed() {
-		t.Errorf("Unboxed incompatible serialization")
-	}
-
-	expected := []byte("{\"opaque\":{\"type\":\"koinos::protocol::block\",\"value\":\"zt1Zv2yaZ\"}}")
-	v, jerr = json.Marshal(jo)
-	if jerr != nil {
-		t.Error(jerr)
-	}
-	if !bytes.Equal(v, expected) {
-		t.Errorf("Marshal unknown data to json failed. Expected: %s, Was: %s", expected, v)
-	}
-
-	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"foobar\",\"value\":\"zt1Zv2yaZ\"}}"), jo)
-	if jerr == nil {
-		t.Errorf("jerr == nil")
-	}
-
-	jerr = json.Unmarshal([]byte("{\"opaque\":10}"), jo)
-	if jerr == nil {
-		t.Errorf("jerr == nil")
-	}
-
-	jerr = json.Unmarshal([]byte("{\"id\":[14314,123515,1341234],\"header\":[14314,123515,1341234],\"active_data\":[14314,123515,1341234],\"passive_data\":[14314,123515,1341234],\"signature_data\":[14314,123515,1341234],\"transactions\":[14314,123515,1341234]}"), jo)
-	if jerr == nil {
-		t.Errorf("jerr == nil")
-	}
-
-	// Test alternative constructors
-	vb = koinos.NewVariableBlob()
-	o = koinos.NewOpaqueBlockFromBlob(vb)
-
-	if !o.IsBoxed() || !bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
-		t.Errorf("Create opaque from blob failed.")
-	}
-
-	slice := append([]byte(*vb), 0)
-	vb = (*koinos.VariableBlob)(&slice)
-	if bytes.Equal([]byte(*vb), []byte(*o.GetBlob())) {
-		t.Errorf("Opaque blob pointer leaked")
-	}
-
-	n := koinos.NewBlock()
-	o = koinos.NewOpaqueBlockFromNative(*n)
-	nativePtr, _ := o.GetNative()
-
-	if o.IsBoxed() || nativePtr == n {
-		t.Errorf("Create opaque from native failed.")
-	}
-}
-
-// ----------------------------------------
 //  OpaqueBlockReceipt
 // ----------------------------------------
 
@@ -9100,6 +8955,151 @@ func TestVectorTransactionItem(t *testing.T) {
 	}
 	if n != 0 {
 		t.Errorf("Bytes were consumed on error")
+	}
+}
+
+
+// ----------------------------------------
+//  OptionalBlock
+// ----------------------------------------
+
+func TestOptionalBlock(t *testing.T) {
+	o := koinos.NewOptionalBlock()
+
+	if o.HasValue() {
+		t.Errorf("Newly created optional should not contain a value.")
+	}
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, no, err := koinos.DeserializeOptionalBlock(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if no.HasValue() {
+		t.Errorf("Deserialized optional should not contain a value.")
+	}
+
+	// Test json serialization with no value
+	j, err := json.Marshal(o)
+	if err != nil {
+		t.Error(err)
+	}
+
+	jv := koinos.NewOptionalBlock()
+	err = json.Unmarshal(j, &jv)
+	if err != nil {
+		t.Error(err)
+	}
+
+	o.Value = koinos.NewBlock()
+	if !o.HasValue() {
+		t.Errorf("Optional should contain a value but does not.")
+	}
+
+	vb = koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, no, err = koinos.DeserializeOptionalBlock(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !no.HasValue() {
+		t.Errorf("Deserialized optional should contain a value but does not.")
+	}
+
+	// Test json serialization with a value
+	j, err = json.Marshal(o)
+	if err != nil {
+		t.Error(err)
+	}
+
+	jv = koinos.NewOptionalBlock()
+	err = json.Unmarshal(j, &jv)
+	if err != nil {
+		t.Error(err)
+	}
+
+	// Test invalid header
+	nvb := koinos.VariableBlob([]byte{4, 5, 6})
+	_, _, err = koinos.DeserializeOptionalBlock(&nvb)
+	if err == nil {
+		t.Errorf("Invalid optional header byte did not return an error.")
+	}
+}
+
+// ----------------------------------------
+//  OptionalBlockReceipt
+// ----------------------------------------
+
+func TestOptionalBlockReceipt(t *testing.T) {
+	o := koinos.NewOptionalBlockReceipt()
+
+	if o.HasValue() {
+		t.Errorf("Newly created optional should not contain a value.")
+	}
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, no, err := koinos.DeserializeOptionalBlockReceipt(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if no.HasValue() {
+		t.Errorf("Deserialized optional should not contain a value.")
+	}
+
+	// Test json serialization with no value
+	j, err := json.Marshal(o)
+	if err != nil {
+		t.Error(err)
+	}
+
+	jv := koinos.NewOptionalBlockReceipt()
+	err = json.Unmarshal(j, &jv)
+	if err != nil {
+		t.Error(err)
+	}
+
+	o.Value = koinos.NewBlockReceipt()
+	if !o.HasValue() {
+		t.Errorf("Optional should contain a value but does not.")
+	}
+
+	vb = koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, no, err = koinos.DeserializeOptionalBlockReceipt(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if !no.HasValue() {
+		t.Errorf("Deserialized optional should contain a value but does not.")
+	}
+
+	// Test json serialization with a value
+	j, err = json.Marshal(o)
+	if err != nil {
+		t.Error(err)
+	}
+
+	jv = koinos.NewOptionalBlockReceipt()
+	err = json.Unmarshal(j, &jv)
+	if err != nil {
+		t.Error(err)
+	}
+
+	// Test invalid header
+	nvb := koinos.VariableBlob([]byte{4, 5, 6})
+	_, _, err = koinos.DeserializeOptionalBlockReceipt(&nvb)
+	if err == nil {
+		t.Errorf("Invalid optional header byte did not return an error.")
 	}
 }
 

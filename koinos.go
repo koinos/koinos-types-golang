@@ -1,3 +1,5 @@
+
+
 //   ____                           _           _    ____          _
 //  / ___| ___ _ __   ___ _ __ __ _| |_ ___  __| |  / ___|___   __| | ___
 // | |  _ / _ \ '_ \ / _ \ '__/ _` | __/ _ \/ _` | | |   / _ \ / _` |/ _ \
@@ -1218,8 +1220,8 @@ func DeserializeBlockReceipt(vb *VariableBlob) (uint64,*BlockReceipt,error) {
 type BlockItem struct {
     BlockID Multihash `json:"block_id"`
     BlockHeight BlockHeightType `json:"block_height"`
-    Block OpaqueBlock `json:"block"`
-    BlockReceipt OpaqueBlockReceipt `json:"block_receipt"`
+    Block OptionalBlock `json:"block"`
+    BlockReceipt OptionalBlockReceipt `json:"block_receipt"`
 }
 
 // NewBlockItem factory
@@ -1227,8 +1229,8 @@ func NewBlockItem() *BlockItem {
 	o := BlockItem{}
 	o.BlockID = *NewMultihash()
 	o.BlockHeight = *NewBlockHeightType()
-	o.Block = *NewOpaqueBlock()
-	o.BlockReceipt = *NewOpaqueBlockReceipt()
+	o.Block = *NewOptionalBlock()
+	o.BlockReceipt = *NewOptionalBlockReceipt()
 	return &o
 }
 
@@ -1259,13 +1261,13 @@ func DeserializeBlockItem(vb *VariableBlob) (uint64,*BlockItem,error) {
 	}
 	s.BlockHeight = *tBlockHeight
 	ovb = (*vb)[i:]
-	j,tBlock,err := DeserializeOpaqueBlock(&ovb); i+=j
+	j,tBlock,err := DeserializeOptionalBlock(&ovb); i+=j
 	if err != nil {
 		return 0, &BlockItem{}, err
 	}
 	s.Block = *tBlock
 	ovb = (*vb)[i:]
-	j,tBlockReceipt,err := DeserializeOpaqueBlockReceipt(&ovb); i+=j
+	j,tBlockReceipt,err := DeserializeOptionalBlockReceipt(&ovb); i+=j
 	if err != nil {
 		return 0, &BlockItem{}, err
 	}
@@ -7228,146 +7230,6 @@ func (n *OpaqueActiveTransactionData) UnmarshalJSON(data []byte) (error) {
 }
 
 // ----------------------------------------
-//  OpaqueBlock
-// ----------------------------------------
-
-// OpaqueBlock type
-type OpaqueBlock struct {
-	blob *VariableBlob
-	native *Block
-}
-
-// NewOpaqueBlock factory
-func NewOpaqueBlock() *OpaqueBlock {
-	o := OpaqueBlock{}
-	o.native = NewBlock()
-	return &o
-}
-
-// NewOpaqueBlockFromBlob factory
-func NewOpaqueBlockFromBlob(vb *VariableBlob) *OpaqueBlock {
-	o := OpaqueBlock{}
-	o.blob = vb
-	return &o
-}
-
-// NewOpaqueBlockFromNative factory
-func NewOpaqueBlockFromNative(n Block) *OpaqueBlock {
-	o := OpaqueBlock{}
-	o.native = &n
-	return &o
-}
-
-// GetBlob *OpaqueBlock
-func (n *OpaqueBlock) GetBlob() *VariableBlob {
-	if !n.IsBoxed() {
-		n.Box()
-	}
-
-	return n.blob
-}
-
-// GetNative *OpaqueBlock
-func (n *OpaqueBlock) GetNative() (*Block,error) {
-	if( n.native == nil ) {
-		return nil,errors.New("opaque type not unboxed")
-	}
-
-	return n.native,nil;
-}
-
-// Box *OpaqueBlock
-func (n *OpaqueBlock) Box() {
-	if (n.native != nil) {
-		n.serializeNative()
-		n.native = nil
-	}
-}
-
-// Unbox *OpaqueBlock
-func (n *OpaqueBlock) Unbox() {
-	if (n.native == nil && n.blob != nil) {
-		var err error
-		var b uint64
-		b,n.native,err = DeserializeBlock(n.blob)
-
-		if err != nil || b != uint64(len(*n.blob)) {
-			n.native = nil
-		}
-	}
-}
-
-// IsBoxed *OpaqueBlock
-func (n *OpaqueBlock) IsBoxed() bool {
-	return n.native == nil;
-}
-
-func (n *OpaqueBlock) serializeNative() {
-	vb := NewVariableBlob()
-	n.blob = n.native.Serialize(vb)
-}
-
-// Serialize OpaqueBlock
-func (n OpaqueBlock) Serialize(vb *VariableBlob) *VariableBlob {
-	n.Box()
-	return n.blob.Serialize(vb)
-}
-
-// DeserializeOpaqueBlock function
-func DeserializeOpaqueBlock(vb *VariableBlob) (uint64,*OpaqueBlock,error) {
-	size,nv,err := DeserializeVariableBlob(vb)
-	var o OpaqueBlock
-	if err != nil {
-		return 0, &o, err
-	}
-	o = OpaqueBlock{blob:nv, native:nil}
-	return size,&o,nil
-}
-
-// MarshalJSON OpaqueBlock
-func (n OpaqueBlock) MarshalJSON() ([]byte, error) {
-	n.Unbox()
-
-	if !n.IsBoxed() {
-		return json.Marshal(&n.native)
-	}
-
-	v := opaqueJSON{}
-	v.Opaque.Type = "koinos::protocol::block"
-	v.Opaque.Value = *n.blob
-
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *OpaqueBlock
-func (n *OpaqueBlock) UnmarshalJSON(data []byte) (error) {
-	var j map[string]interface{}
-	if err := json.Unmarshal(data, &j); err != nil {
-		return err
-	}
-	_, isOpaque := j["opaque"]
-
-	if isOpaque {
-		var obj opaqueJSON
-
-		if err := json.Unmarshal(data, &obj); err != nil {
-			return err
-		}
-		if strings.Compare(obj.Opaque.Type, "koinos::protocol::block") != 0 {
-			return errors.New("unexpected opaque type name")
-		}
-		n.blob = &obj.Opaque.Value
-		n.native = nil
-	} else {
-		if err := json.Unmarshal(data, &n.native); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-// ----------------------------------------
 //  OpaqueBlockReceipt
 // ----------------------------------------
 
@@ -8092,6 +7954,151 @@ func DeserializeVectorTransactionItem(vb *VariableBlob) (uint64,*VectorTransacti
 	}
 
 	return i, &result, nil
+}
+
+
+// ----------------------------------------
+//  OptionalBlock
+// ----------------------------------------
+
+// OptionalBlock type
+type OptionalBlock struct {
+	Value *Block
+}
+
+// NewOptionalBlock factory
+func NewOptionalBlock() *OptionalBlock {
+	o := OptionalBlock{}
+	return &o
+}
+
+// HasValue returns whether or not this optional contains a value
+func (n OptionalBlock) HasValue() bool {
+	return n.Value != nil
+}
+
+// Serialize OptionalBlock
+func (n OptionalBlock) Serialize(vb *VariableBlob) *VariableBlob {
+	if n.HasValue() {
+		ovb := append(*vb, 1)
+		vb = &ovb
+		vb = n.Value.Serialize(vb)
+	} else {
+		ovb := append(*vb, 0)
+		vb = &ovb
+	}
+
+	return vb
+}
+
+// DeserializeOptionalBlock function
+func DeserializeOptionalBlock(vb *VariableBlob) (uint64, *OptionalBlock, error) {
+	if len(*vb) == 0 {
+		return 0, nil, errors.New("could not parse OptionalBlock, not enough data")
+	}
+
+	o := OptionalBlock{}
+	if (*vb)[0] == 1 {
+		ovb := (*vb)[1:]
+		size, v, err := DeserializeBlock(&ovb)
+		o.Value = v
+		return size + 1, &o, err
+	} else if (*vb)[0] == 0 {
+		return 1, &o, nil
+	}
+
+	return 0, nil, errors.New("invalid header byte in optional")
+}
+
+// MarshalJSON OptionalBlock
+func (n OptionalBlock) MarshalJSON() ([]byte, error) {
+	return json.Marshal(n.Value)
+}
+
+// UnmarshalJSON OptionalBlock
+func (n *OptionalBlock) UnmarshalJSON(b []byte) error {
+	var v *Block
+	err := json.Unmarshal(b, &v)
+	if err != nil {
+		return err
+	}
+
+	no := NewOptionalBlock()
+	no.Value = v
+	*n = *no
+	return nil
+}
+
+// ----------------------------------------
+//  OptionalBlockReceipt
+// ----------------------------------------
+
+// OptionalBlockReceipt type
+type OptionalBlockReceipt struct {
+	Value *BlockReceipt
+}
+
+// NewOptionalBlockReceipt factory
+func NewOptionalBlockReceipt() *OptionalBlockReceipt {
+	o := OptionalBlockReceipt{}
+	return &o
+}
+
+// HasValue returns whether or not this optional contains a value
+func (n OptionalBlockReceipt) HasValue() bool {
+	return n.Value != nil
+}
+
+// Serialize OptionalBlockReceipt
+func (n OptionalBlockReceipt) Serialize(vb *VariableBlob) *VariableBlob {
+	if n.HasValue() {
+		ovb := append(*vb, 1)
+		vb = &ovb
+		vb = n.Value.Serialize(vb)
+	} else {
+		ovb := append(*vb, 0)
+		vb = &ovb
+	}
+
+	return vb
+}
+
+// DeserializeOptionalBlockReceipt function
+func DeserializeOptionalBlockReceipt(vb *VariableBlob) (uint64, *OptionalBlockReceipt, error) {
+	if len(*vb) == 0 {
+		return 0, nil, errors.New("could not parse OptionalBlockReceipt, not enough data")
+	}
+
+	o := OptionalBlockReceipt{}
+	if (*vb)[0] == 1 {
+		ovb := (*vb)[1:]
+		size, v, err := DeserializeBlockReceipt(&ovb)
+		o.Value = v
+		return size + 1, &o, err
+	} else if (*vb)[0] == 0 {
+		return 1, &o, nil
+	}
+
+	return 0, nil, errors.New("invalid header byte in optional")
+}
+
+// MarshalJSON OptionalBlockReceipt
+func (n OptionalBlockReceipt) MarshalJSON() ([]byte, error) {
+	return json.Marshal(n.Value)
+}
+
+// UnmarshalJSON OptionalBlockReceipt
+func (n *OptionalBlockReceipt) UnmarshalJSON(b []byte) error {
+	var v *BlockReceipt
+	err := json.Unmarshal(b, &v)
+	if err != nil {
+		return err
+	}
+
+	no := NewOptionalBlockReceipt()
+	no.Value = v
+	*n = *no
+	return nil
 }
 
 
