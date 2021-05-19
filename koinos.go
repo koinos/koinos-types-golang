@@ -2814,6 +2814,90 @@ func IsValidSystemCallID(v SystemCallID) bool {
 
 
 // ----------------------------------------
+//  Enum: Privilege
+// ----------------------------------------
+
+// {'name': 'privilege', 'entries': [{'name': 'kernel_mode', 'value': 0, 'doc': '', 'info': {'type': 'EnumEntry'}}, {'name': 'user_mode', 'value': 1, 'doc': '', 'info': {'type': 'EnumEntry'}}], 'tref': {'name': ['koinos', 'uint8'], 'targs': None, 'info': {'type': 'Typeref'}}, 'doc': '', 'info': {'type': 'EnumClass'}}
+
+// Privilege type
+type Privilege UInt8
+
+// NewPrivilege factory
+func NewPrivilege() *Privilege {
+	o := Privilege(0)
+	return &o
+}
+
+// Privilege values
+const (
+	PrivilegeKernelMode Privilege = 0
+	PrivilegeUserMode Privilege = 1
+)
+
+// Serialize Privilege
+func (n Privilege) Serialize(vb *VariableBlob) *VariableBlob {
+	if !IsValidPrivilege(n) {
+		panic("Attempting to serialize an invalid value")
+	}
+	x := UInt8(n)
+	return x.Serialize(vb)
+}
+
+// DeserializePrivilege function
+func DeserializePrivilege(vb *VariableBlob) (uint64,*Privilege,error) {
+	i,item,err := DeserializeUInt8(vb)
+	var x Privilege
+	if err != nil {
+		return 0,&x,err
+	}
+
+	x = Privilege(*item)
+	if !IsValidPrivilege(x) {
+		return i,&x,fmt.Errorf("invalid Privilege: %d", x)
+	}
+	return i,&x,nil
+}
+
+// MarshalJSON Privilege
+func (n Privilege) MarshalJSON() ([]byte, error) {
+	if !IsValidPrivilege(n) {
+		panic("Attempting to serialize an invalid value")
+	}
+
+	return json.Marshal(UInt8(n))
+}
+
+// UnmarshalJSON *Privilege
+func (n *Privilege) UnmarshalJSON(b []byte) error {
+	var o UInt8
+	if err := json.Unmarshal(b, &o); err != nil {
+		return err
+	}
+
+	ov := Privilege(o)
+
+	if !IsValidPrivilege(ov) {
+		return fmt.Errorf("invalid Privilege: %d", o)
+	}
+
+	*n = ov
+	return nil
+}
+
+// IsValidPrivilege validator
+func IsValidPrivilege(v Privilege) bool {
+	switch v {
+		case PrivilegeKernelMode:
+			return true
+		case PrivilegeUserMode:
+			return true
+		default:
+			return false
+	}
+}
+
+
+// ----------------------------------------
 //  Struct: HeadInfo
 // ----------------------------------------
 
@@ -5091,51 +5175,49 @@ func DeserializeGetCallerArgs(vb *VariableBlob) (uint64,*GetCallerArgs,error) {
 }
 
 // ----------------------------------------
-//  Typedef: GetCallerReturn
+//  Struct: GetCallerReturn
 // ----------------------------------------
 
 // GetCallerReturn type
-type GetCallerReturn AccountType
+type GetCallerReturn struct {
+    Caller AccountType `json:"caller"`
+    CallerPrivilege Privilege `json:"caller_privilege"`
+}
 
 // NewGetCallerReturn factory
 func NewGetCallerReturn() *GetCallerReturn {
-	o := GetCallerReturn(*NewAccountType())
+	o := GetCallerReturn{}
+	o.Caller = *NewAccountType()
+	o.CallerPrivilege = *NewPrivilege()
 	return &o
 }
 
 // Serialize GetCallerReturn
 func (n GetCallerReturn) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := AccountType(n)
-	return ox.Serialize(vb)
+	vb = n.Caller.Serialize(vb)
+	vb = n.CallerPrivilege.Serialize(vb)
+	return vb
 }
 
 // DeserializeGetCallerReturn function
 func DeserializeGetCallerReturn(vb *VariableBlob) (uint64,*GetCallerReturn,error) {
-	var ot GetCallerReturn
-	i,n,err := DeserializeAccountType(vb)
+	var i,j uint64 = 0,0
+	s := GetCallerReturn{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tCaller,err := DeserializeAccountType(&ovb); i+=j
 	if err != nil {
-		return 0,&ot,err
+		return 0, &GetCallerReturn{}, err
 	}
-	ot = GetCallerReturn(*n)
-	return i,&ot,nil}
-
-// MarshalJSON GetCallerReturn
-func (n GetCallerReturn) MarshalJSON() ([]byte, error) {
-	v := AccountType(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *GetCallerReturn
-func (n *GetCallerReturn) UnmarshalJSON(data []byte) error {
-	v := AccountType(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
+	s.Caller = *tCaller
+	ovb = (*vb)[i:]
+	j,tCallerPrivilege,err := DeserializePrivilege(&ovb); i+=j
+	if err != nil {
+		return 0, &GetCallerReturn{}, err
 	}
-
-	*n = GetCallerReturn(v)
-	return nil
+	s.CallerPrivilege = *tCallerPrivilege
+	return i, &s, nil
 }
-
 
 // ----------------------------------------
 //  Struct: RequireAuthorityArgs

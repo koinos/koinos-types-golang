@@ -3359,6 +3359,122 @@ func getInvalidSystemCallID() koinos.SystemCallID {
 	return w
 }
 // ----------------------------------------
+//  Enum: Privilege
+// ----------------------------------------
+
+func TestPrivilege(t *testing.T) {
+	vals := []koinos.Privilege{
+		koinos.PrivilegeKernelMode,
+		koinos.PrivilegeUserMode,
+	}
+
+	// Make sure all types properly serialize
+	for _, x := range vals {
+		vb := koinos.NewVariableBlob()
+		vb = x.Serialize(vb)
+
+		nvb := koinos.NewVariableBlob()
+		ox := koinos.UInt8(x)
+		nvb = ox.Serialize(nvb)
+
+		if !bytes.Equal(*vb, *nvb) {
+			t.Errorf("Serialized enum does match ideal serialization.")
+		}
+
+		_, y, err := koinos.DeserializePrivilege(vb)
+		if err != nil {
+			t.Error(err)
+		}
+
+		if x != *y {
+			t.Errorf("Deserialized enum does not match original.")
+		}
+
+		// Test JSON
+		jx, err := json.Marshal(x)
+		if err != nil {
+			t.Error(err)
+		}
+
+		jox, err := json.Marshal(ox)
+		if err != nil {
+			t.Error(err)
+		}
+
+		if !bytes.Equal(jx, jox) {
+			t.Error(err)
+		}
+
+		r := koinos.NewPrivilege()
+		if err = json.Unmarshal(jx, r); err != nil {
+			t.Error(err)
+		}
+	}
+
+	// Find a value that is NOT an enum value
+	w := getInvalidPrivilege()
+
+	tw := koinos.UInt8(w)
+	vb := koinos.NewVariableBlob()
+	n, _, err := koinos.DeserializePrivilege(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	vb = tw.Serialize(vb)
+
+	if _, _, err := koinos.DeserializePrivilege(vb); err == nil {
+		t.Errorf("Deserializing an invalid value did not return an error.")
+	}
+
+	je := koinos.NewPrivilege()
+	if err := json.Unmarshal([]byte(fmt.Sprint(tw)), &je); err == nil {
+		t.Errorf("Deserializing an invalid JSON value did not return an error.")
+	}
+
+	if err = json.Unmarshal([]byte("\"foobar\""), &je); err == nil {
+		t.Errorf("err == nil")
+	}
+}
+
+func TestPrivilegePanic(t *testing.T) {
+	// Find a value that is NOT an enum value
+	w := getInvalidPrivilege()
+
+	func() {
+		defer func() {
+			if r := recover(); r == nil {
+				t.Errorf("Serializing an invalid enum value did not panic.")
+			}
+		}()
+
+		vb := koinos.NewVariableBlob()
+		vb = w.Serialize(vb)
+	}()
+
+	func() {
+		defer func() {
+			if r := recover(); r == nil {
+				t.Errorf("Serializing an invalid enum value did not panic.")
+			}
+		}()
+
+		_, _ = json.Marshal(w)
+	}()
+}
+
+func getInvalidPrivilege() koinos.Privilege {
+	w := koinos.PrivilegeUserMode
+	for koinos.IsValidPrivilege(w) {
+		w++
+	}
+
+	return w
+}
+// ----------------------------------------
 //  Struct: HeadInfo
 // ----------------------------------------
 
@@ -5771,7 +5887,7 @@ func TestGetCallerArgs(t *testing.T) {
 }
 
 // ----------------------------------------
-//  Typedef: GetCallerReturn
+//  Struct: GetCallerReturn
 // ----------------------------------------
 
 func TestGetCallerReturn(t *testing.T) {
@@ -5785,12 +5901,24 @@ func TestGetCallerReturn(t *testing.T) {
 		t.Error(err)
 	}
 
-	vb = koinos.NewVariableBlob()
-	size, _, err := koinos.DeserializeGetCallerReturn(vb)
+	var n uint64
+	// Test caller
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeGetCallerReturn(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
-	if size != 0 {
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	// Test caller_privilege
+	vb = &koinos.VariableBlob{0x00}
+	n, _, err = koinos.DeserializeGetCallerReturn(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
 		t.Errorf("Bytes were consumed on error")
 	}
 
@@ -5806,6 +5934,16 @@ func TestGetCallerReturn(t *testing.T) {
 	}
 
 	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
 	if jerr == nil {
 		t.Errorf("Unmarshaling nonsense JSON did not give error.")
 	}
