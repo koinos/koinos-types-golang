@@ -7325,28 +7325,28 @@ type opaqueJSON struct {
 
 // OpaqueActiveBlockData type
 type OpaqueActiveBlockData struct {
-	blob *VariableBlob
-	native *ActiveBlockData
+	Blob *VariableBlob
+	Native *ActiveBlockData
 }
 
 // NewOpaqueActiveBlockData factory
 func NewOpaqueActiveBlockData() *OpaqueActiveBlockData {
 	o := OpaqueActiveBlockData{}
-	o.native = NewActiveBlockData()
+	o.Native = NewActiveBlockData()
 	return &o
 }
 
 // NewOpaqueActiveBlockDataFromBlob factory
 func NewOpaqueActiveBlockDataFromBlob(vb *VariableBlob) *OpaqueActiveBlockData {
 	o := OpaqueActiveBlockData{}
-	o.blob = vb
+	o.Blob = vb
 	return &o
 }
 
 // NewOpaqueActiveBlockDataFromNative factory
 func NewOpaqueActiveBlockDataFromNative(n ActiveBlockData) *OpaqueActiveBlockData {
 	o := OpaqueActiveBlockData{}
-	o.native = &n
+	o.Native = &n
 	return &o
 }
 
@@ -7356,53 +7356,53 @@ func (n *OpaqueActiveBlockData) GetBlob() *VariableBlob {
 		n.Box()
 	}
 
-	return n.blob
+	return n.Blob
 }
 
 // GetNative *OpaqueActiveBlockData
 func (n *OpaqueActiveBlockData) GetNative() (*ActiveBlockData,error) {
-	if( n.native == nil ) {
+	if( n.Native == nil ) {
 		return nil,errors.New("opaque type not unboxed")
 	}
 
-	return n.native,nil;
+	return n.Native,nil;
 }
 
 // Box *OpaqueActiveBlockData
 func (n *OpaqueActiveBlockData) Box() {
-	if (n.native != nil) {
+	if (n.Native != nil) {
 		n.serializeNative()
-		n.native = nil
+		n.Native = nil
 	}
 }
 
 // Unbox *OpaqueActiveBlockData
 func (n *OpaqueActiveBlockData) Unbox() {
-	if (n.native == nil && n.blob != nil) {
+	if (n.Native == nil && n.Blob != nil) {
 		var err error
 		var b uint64
-		b,n.native,err = DeserializeActiveBlockData(n.blob)
+		b,n.Native,err = DeserializeActiveBlockData(n.Blob)
 
-		if err != nil || b != uint64(len(*n.blob)) {
-			n.native = nil
+		if err != nil || b != uint64(len(*n.Blob)) {
+			n.Native = nil
 		}
 	}
 }
 
 // IsBoxed *OpaqueActiveBlockData
 func (n *OpaqueActiveBlockData) IsBoxed() bool {
-	return n.native == nil;
+	return n.Native == nil;
 }
 
 func (n *OpaqueActiveBlockData) serializeNative() {
 	vb := NewVariableBlob()
-	n.blob = n.native.Serialize(vb)
+	n.Blob = n.Native.Serialize(vb)
 }
 
 // Serialize OpaqueActiveBlockData
 func (n OpaqueActiveBlockData) Serialize(vb *VariableBlob) *VariableBlob {
 	n.Box()
-	return n.blob.Serialize(vb)
+	return n.Blob.Serialize(vb)
 }
 
 // DeserializeOpaqueActiveBlockData function
@@ -7412,7 +7412,7 @@ func DeserializeOpaqueActiveBlockData(vb *VariableBlob) (uint64,*OpaqueActiveBlo
 	if err != nil {
 		return 0, &o, err
 	}
-	o = OpaqueActiveBlockData{blob:nv, native:nil}
+	o = OpaqueActiveBlockData{Blob:nv, Native:nil}
 	return size,&o,nil
 }
 
@@ -7421,12 +7421,12 @@ func (n OpaqueActiveBlockData) MarshalJSON() ([]byte, error) {
 	n.Unbox()
 
 	if !n.IsBoxed() {
-		return json.Marshal(&n.native)
+		return json.Marshal(&n.Native)
 	}
 
 	v := opaqueJSON{}
 	v.Opaque.Type = "koinos::protocol::active_block_data"
-	v.Opaque.Value = *n.blob
+	v.Opaque.Value = *n.Blob
 
 	return json.Marshal(&v)
 }
@@ -7448,10 +7448,10 @@ func (n *OpaqueActiveBlockData) UnmarshalJSON(data []byte) (error) {
 		if strings.Compare(obj.Opaque.Type, "koinos::protocol::active_block_data") != 0 {
 			return errors.New("unexpected opaque type name")
 		}
-		n.blob = &obj.Opaque.Value
-		n.native = nil
+		n.Blob = &obj.Opaque.Value
+		n.Native = nil
 	} else {
-		if err := json.Unmarshal(data, &n.native); err != nil {
+		if err := json.Unmarshal(data, &n.Native); err != nil {
 			return err
 		}
 	}
@@ -7465,28 +7465,28 @@ func (n *OpaqueActiveBlockData) UnmarshalJSON(data []byte) (error) {
 
 // OpaqueActiveTransactionData type
 type OpaqueActiveTransactionData struct {
-	blob *VariableBlob
-	native *ActiveTransactionData
+	Blob *VariableBlob
+	Native *ActiveTransactionData
 }
 
 // NewOpaqueActiveTransactionData factory
 func NewOpaqueActiveTransactionData() *OpaqueActiveTransactionData {
 	o := OpaqueActiveTransactionData{}
-	o.native = NewActiveTransactionData()
+	o.Native = NewActiveTransactionData()
 	return &o
 }
 
 // NewOpaqueActiveTransactionDataFromBlob factory
 func NewOpaqueActiveTransactionDataFromBlob(vb *VariableBlob) *OpaqueActiveTransactionData {
 	o := OpaqueActiveTransactionData{}
-	o.blob = vb
+	o.Blob = vb
 	return &o
 }
 
 // NewOpaqueActiveTransactionDataFromNative factory
 func NewOpaqueActiveTransactionDataFromNative(n ActiveTransactionData) *OpaqueActiveTransactionData {
 	o := OpaqueActiveTransactionData{}
-	o.native = &n
+	o.Native = &n
 	return &o
 }
 
@@ -7496,53 +7496,53 @@ func (n *OpaqueActiveTransactionData) GetBlob() *VariableBlob {
 		n.Box()
 	}
 
-	return n.blob
+	return n.Blob
 }
 
 // GetNative *OpaqueActiveTransactionData
 func (n *OpaqueActiveTransactionData) GetNative() (*ActiveTransactionData,error) {
-	if( n.native == nil ) {
+	if( n.Native == nil ) {
 		return nil,errors.New("opaque type not unboxed")
 	}
 
-	return n.native,nil;
+	return n.Native,nil;
 }
 
 // Box *OpaqueActiveTransactionData
 func (n *OpaqueActiveTransactionData) Box() {
-	if (n.native != nil) {
+	if (n.Native != nil) {
 		n.serializeNative()
-		n.native = nil
+		n.Native = nil
 	}
 }
 
 // Unbox *OpaqueActiveTransactionData
 func (n *OpaqueActiveTransactionData) Unbox() {
-	if (n.native == nil && n.blob != nil) {
+	if (n.Native == nil && n.Blob != nil) {
 		var err error
 		var b uint64
-		b,n.native,err = DeserializeActiveTransactionData(n.blob)
+		b,n.Native,err = DeserializeActiveTransactionData(n.Blob)
 
-		if err != nil || b != uint64(len(*n.blob)) {
-			n.native = nil
+		if err != nil || b != uint64(len(*n.Blob)) {
+			n.Native = nil
 		}
 	}
 }
 
 // IsBoxed *OpaqueActiveTransactionData
 func (n *OpaqueActiveTransactionData) IsBoxed() bool {
-	return n.native == nil;
+	return n.Native == nil;
 }
 
 func (n *OpaqueActiveTransactionData) serializeNative() {
 	vb := NewVariableBlob()
-	n.blob = n.native.Serialize(vb)
+	n.Blob = n.Native.Serialize(vb)
 }
 
 // Serialize OpaqueActiveTransactionData
 func (n OpaqueActiveTransactionData) Serialize(vb *VariableBlob) *VariableBlob {
 	n.Box()
-	return n.blob.Serialize(vb)
+	return n.Blob.Serialize(vb)
 }
 
 // DeserializeOpaqueActiveTransactionData function
@@ -7552,7 +7552,7 @@ func DeserializeOpaqueActiveTransactionData(vb *VariableBlob) (uint64,*OpaqueAct
 	if err != nil {
 		return 0, &o, err
 	}
-	o = OpaqueActiveTransactionData{blob:nv, native:nil}
+	o = OpaqueActiveTransactionData{Blob:nv, Native:nil}
 	return size,&o,nil
 }
 
@@ -7561,12 +7561,12 @@ func (n OpaqueActiveTransactionData) MarshalJSON() ([]byte, error) {
 	n.Unbox()
 
 	if !n.IsBoxed() {
-		return json.Marshal(&n.native)
+		return json.Marshal(&n.Native)
 	}
 
 	v := opaqueJSON{}
 	v.Opaque.Type = "koinos::protocol::active_transaction_data"
-	v.Opaque.Value = *n.blob
+	v.Opaque.Value = *n.Blob
 
 	return json.Marshal(&v)
 }
@@ -7588,10 +7588,10 @@ func (n *OpaqueActiveTransactionData) UnmarshalJSON(data []byte) (error) {
 		if strings.Compare(obj.Opaque.Type, "koinos::protocol::active_transaction_data") != 0 {
 			return errors.New("unexpected opaque type name")
 		}
-		n.blob = &obj.Opaque.Value
-		n.native = nil
+		n.Blob = &obj.Opaque.Value
+		n.Native = nil
 	} else {
-		if err := json.Unmarshal(data, &n.native); err != nil {
+		if err := json.Unmarshal(data, &n.Native); err != nil {
 			return err
 		}
 	}
@@ -7605,28 +7605,28 @@ func (n *OpaqueActiveTransactionData) UnmarshalJSON(data []byte) (error) {
 
 // OpaqueBlockReceipt type
 type OpaqueBlockReceipt struct {
-	blob *VariableBlob
-	native *BlockReceipt
+	Blob *VariableBlob
+	Native *BlockReceipt
 }
 
 // NewOpaqueBlockReceipt factory
 func NewOpaqueBlockReceipt() *OpaqueBlockReceipt {
 	o := OpaqueBlockReceipt{}
-	o.native = NewBlockReceipt()
+	o.Native = NewBlockReceipt()
 	return &o
 }
 
 // NewOpaqueBlockReceiptFromBlob factory
 func NewOpaqueBlockReceiptFromBlob(vb *VariableBlob) *OpaqueBlockReceipt {
 	o := OpaqueBlockReceipt{}
-	o.blob = vb
+	o.Blob = vb
 	return &o
 }
 
 // NewOpaqueBlockReceiptFromNative factory
 func NewOpaqueBlockReceiptFromNative(n BlockReceipt) *OpaqueBlockReceipt {
 	o := OpaqueBlockReceipt{}
-	o.native = &n
+	o.Native = &n
 	return &o
 }
 
@@ -7636,53 +7636,53 @@ func (n *OpaqueBlockReceipt) GetBlob() *VariableBlob {
 		n.Box()
 	}
 
-	return n.blob
+	return n.Blob
 }
 
 // GetNative *OpaqueBlockReceipt
 func (n *OpaqueBlockReceipt) GetNative() (*BlockReceipt,error) {
-	if( n.native == nil ) {
+	if( n.Native == nil ) {
 		return nil,errors.New("opaque type not unboxed")
 	}
 
-	return n.native,nil;
+	return n.Native,nil;
 }
 
 // Box *OpaqueBlockReceipt
 func (n *OpaqueBlockReceipt) Box() {
-	if (n.native != nil) {
+	if (n.Native != nil) {
 		n.serializeNative()
-		n.native = nil
+		n.Native = nil
 	}
 }
 
 // Unbox *OpaqueBlockReceipt
 func (n *OpaqueBlockReceipt) Unbox() {
-	if (n.native == nil && n.blob != nil) {
+	if (n.Native == nil && n.Blob != nil) {
 		var err error
 		var b uint64
-		b,n.native,err = DeserializeBlockReceipt(n.blob)
+		b,n.Native,err = DeserializeBlockReceipt(n.Blob)
 
-		if err != nil || b != uint64(len(*n.blob)) {
-			n.native = nil
+		if err != nil || b != uint64(len(*n.Blob)) {
+			n.Native = nil
 		}
 	}
 }
 
 // IsBoxed *OpaqueBlockReceipt
 func (n *OpaqueBlockReceipt) IsBoxed() bool {
-	return n.native == nil;
+	return n.Native == nil;
 }
 
 func (n *OpaqueBlockReceipt) serializeNative() {
 	vb := NewVariableBlob()
-	n.blob = n.native.Serialize(vb)
+	n.Blob = n.Native.Serialize(vb)
 }
 
 // Serialize OpaqueBlockReceipt
 func (n OpaqueBlockReceipt) Serialize(vb *VariableBlob) *VariableBlob {
 	n.Box()
-	return n.blob.Serialize(vb)
+	return n.Blob.Serialize(vb)
 }
 
 // DeserializeOpaqueBlockReceipt function
@@ -7692,7 +7692,7 @@ func DeserializeOpaqueBlockReceipt(vb *VariableBlob) (uint64,*OpaqueBlockReceipt
 	if err != nil {
 		return 0, &o, err
 	}
-	o = OpaqueBlockReceipt{blob:nv, native:nil}
+	o = OpaqueBlockReceipt{Blob:nv, Native:nil}
 	return size,&o,nil
 }
 
@@ -7701,12 +7701,12 @@ func (n OpaqueBlockReceipt) MarshalJSON() ([]byte, error) {
 	n.Unbox()
 
 	if !n.IsBoxed() {
-		return json.Marshal(&n.native)
+		return json.Marshal(&n.Native)
 	}
 
 	v := opaqueJSON{}
 	v.Opaque.Type = "koinos::protocol::block_receipt"
-	v.Opaque.Value = *n.blob
+	v.Opaque.Value = *n.Blob
 
 	return json.Marshal(&v)
 }
@@ -7728,10 +7728,10 @@ func (n *OpaqueBlockReceipt) UnmarshalJSON(data []byte) (error) {
 		if strings.Compare(obj.Opaque.Type, "koinos::protocol::block_receipt") != 0 {
 			return errors.New("unexpected opaque type name")
 		}
-		n.blob = &obj.Opaque.Value
-		n.native = nil
+		n.Blob = &obj.Opaque.Value
+		n.Native = nil
 	} else {
-		if err := json.Unmarshal(data, &n.native); err != nil {
+		if err := json.Unmarshal(data, &n.Native); err != nil {
 			return err
 		}
 	}
@@ -7745,28 +7745,28 @@ func (n *OpaqueBlockReceipt) UnmarshalJSON(data []byte) (error) {
 
 // OpaquePassiveBlockData type
 type OpaquePassiveBlockData struct {
-	blob *VariableBlob
-	native *PassiveBlockData
+	Blob *VariableBlob
+	Native *PassiveBlockData
 }
 
 // NewOpaquePassiveBlockData factory
 func NewOpaquePassiveBlockData() *OpaquePassiveBlockData {
 	o := OpaquePassiveBlockData{}
-	o.native = NewPassiveBlockData()
+	o.Native = NewPassiveBlockData()
 	return &o
 }
 
 // NewOpaquePassiveBlockDataFromBlob factory
 func NewOpaquePassiveBlockDataFromBlob(vb *VariableBlob) *OpaquePassiveBlockData {
 	o := OpaquePassiveBlockData{}
-	o.blob = vb
+	o.Blob = vb
 	return &o
 }
 
 // NewOpaquePassiveBlockDataFromNative factory
 func NewOpaquePassiveBlockDataFromNative(n PassiveBlockData) *OpaquePassiveBlockData {
 	o := OpaquePassiveBlockData{}
-	o.native = &n
+	o.Native = &n
 	return &o
 }
 
@@ -7776,53 +7776,53 @@ func (n *OpaquePassiveBlockData) GetBlob() *VariableBlob {
 		n.Box()
 	}
 
-	return n.blob
+	return n.Blob
 }
 
 // GetNative *OpaquePassiveBlockData
 func (n *OpaquePassiveBlockData) GetNative() (*PassiveBlockData,error) {
-	if( n.native == nil ) {
+	if( n.Native == nil ) {
 		return nil,errors.New("opaque type not unboxed")
 	}
 
-	return n.native,nil;
+	return n.Native,nil;
 }
 
 // Box *OpaquePassiveBlockData
 func (n *OpaquePassiveBlockData) Box() {
-	if (n.native != nil) {
+	if (n.Native != nil) {
 		n.serializeNative()
-		n.native = nil
+		n.Native = nil
 	}
 }
 
 // Unbox *OpaquePassiveBlockData
 func (n *OpaquePassiveBlockData) Unbox() {
-	if (n.native == nil && n.blob != nil) {
+	if (n.Native == nil && n.Blob != nil) {
 		var err error
 		var b uint64
-		b,n.native,err = DeserializePassiveBlockData(n.blob)
+		b,n.Native,err = DeserializePassiveBlockData(n.Blob)
 
-		if err != nil || b != uint64(len(*n.blob)) {
-			n.native = nil
+		if err != nil || b != uint64(len(*n.Blob)) {
+			n.Native = nil
 		}
 	}
 }
 
 // IsBoxed *OpaquePassiveBlockData
 func (n *OpaquePassiveBlockData) IsBoxed() bool {
-	return n.native == nil;
+	return n.Native == nil;
 }
 
 func (n *OpaquePassiveBlockData) serializeNative() {
 	vb := NewVariableBlob()
-	n.blob = n.native.Serialize(vb)
+	n.Blob = n.Native.Serialize(vb)
 }
 
 // Serialize OpaquePassiveBlockData
 func (n OpaquePassiveBlockData) Serialize(vb *VariableBlob) *VariableBlob {
 	n.Box()
-	return n.blob.Serialize(vb)
+	return n.Blob.Serialize(vb)
 }
 
 // DeserializeOpaquePassiveBlockData function
@@ -7832,7 +7832,7 @@ func DeserializeOpaquePassiveBlockData(vb *VariableBlob) (uint64,*OpaquePassiveB
 	if err != nil {
 		return 0, &o, err
 	}
-	o = OpaquePassiveBlockData{blob:nv, native:nil}
+	o = OpaquePassiveBlockData{Blob:nv, Native:nil}
 	return size,&o,nil
 }
 
@@ -7841,12 +7841,12 @@ func (n OpaquePassiveBlockData) MarshalJSON() ([]byte, error) {
 	n.Unbox()
 
 	if !n.IsBoxed() {
-		return json.Marshal(&n.native)
+		return json.Marshal(&n.Native)
 	}
 
 	v := opaqueJSON{}
 	v.Opaque.Type = "koinos::protocol::passive_block_data"
-	v.Opaque.Value = *n.blob
+	v.Opaque.Value = *n.Blob
 
 	return json.Marshal(&v)
 }
@@ -7868,10 +7868,10 @@ func (n *OpaquePassiveBlockData) UnmarshalJSON(data []byte) (error) {
 		if strings.Compare(obj.Opaque.Type, "koinos::protocol::passive_block_data") != 0 {
 			return errors.New("unexpected opaque type name")
 		}
-		n.blob = &obj.Opaque.Value
-		n.native = nil
+		n.Blob = &obj.Opaque.Value
+		n.Native = nil
 	} else {
-		if err := json.Unmarshal(data, &n.native); err != nil {
+		if err := json.Unmarshal(data, &n.Native); err != nil {
 			return err
 		}
 	}
@@ -7885,28 +7885,28 @@ func (n *OpaquePassiveBlockData) UnmarshalJSON(data []byte) (error) {
 
 // OpaquePassiveTransactionData type
 type OpaquePassiveTransactionData struct {
-	blob *VariableBlob
-	native *PassiveTransactionData
+	Blob *VariableBlob
+	Native *PassiveTransactionData
 }
 
 // NewOpaquePassiveTransactionData factory
 func NewOpaquePassiveTransactionData() *OpaquePassiveTransactionData {
 	o := OpaquePassiveTransactionData{}
-	o.native = NewPassiveTransactionData()
+	o.Native = NewPassiveTransactionData()
 	return &o
 }
 
 // NewOpaquePassiveTransactionDataFromBlob factory
 func NewOpaquePassiveTransactionDataFromBlob(vb *VariableBlob) *OpaquePassiveTransactionData {
 	o := OpaquePassiveTransactionData{}
-	o.blob = vb
+	o.Blob = vb
 	return &o
 }
 
 // NewOpaquePassiveTransactionDataFromNative factory
 func NewOpaquePassiveTransactionDataFromNative(n PassiveTransactionData) *OpaquePassiveTransactionData {
 	o := OpaquePassiveTransactionData{}
-	o.native = &n
+	o.Native = &n
 	return &o
 }
 
@@ -7916,53 +7916,53 @@ func (n *OpaquePassiveTransactionData) GetBlob() *VariableBlob {
 		n.Box()
 	}
 
-	return n.blob
+	return n.Blob
 }
 
 // GetNative *OpaquePassiveTransactionData
 func (n *OpaquePassiveTransactionData) GetNative() (*PassiveTransactionData,error) {
-	if( n.native == nil ) {
+	if( n.Native == nil ) {
 		return nil,errors.New("opaque type not unboxed")
 	}
 
-	return n.native,nil;
+	return n.Native,nil;
 }
 
 // Box *OpaquePassiveTransactionData
 func (n *OpaquePassiveTransactionData) Box() {
-	if (n.native != nil) {
+	if (n.Native != nil) {
 		n.serializeNative()
-		n.native = nil
+		n.Native = nil
 	}
 }
 
 // Unbox *OpaquePassiveTransactionData
 func (n *OpaquePassiveTransactionData) Unbox() {
-	if (n.native == nil && n.blob != nil) {
+	if (n.Native == nil && n.Blob != nil) {
 		var err error
 		var b uint64
-		b,n.native,err = DeserializePassiveTransactionData(n.blob)
+		b,n.Native,err = DeserializePassiveTransactionData(n.Blob)
 
-		if err != nil || b != uint64(len(*n.blob)) {
-			n.native = nil
+		if err != nil || b != uint64(len(*n.Blob)) {
+			n.Native = nil
 		}
 	}
 }
 
 // IsBoxed *OpaquePassiveTransactionData
 func (n *OpaquePassiveTransactionData) IsBoxed() bool {
-	return n.native == nil;
+	return n.Native == nil;
 }
 
 func (n *OpaquePassiveTransactionData) serializeNative() {
 	vb := NewVariableBlob()
-	n.blob = n.native.Serialize(vb)
+	n.Blob = n.Native.Serialize(vb)
 }
 
 // Serialize OpaquePassiveTransactionData
 func (n OpaquePassiveTransactionData) Serialize(vb *VariableBlob) *VariableBlob {
 	n.Box()
-	return n.blob.Serialize(vb)
+	return n.Blob.Serialize(vb)
 }
 
 // DeserializeOpaquePassiveTransactionData function
@@ -7972,7 +7972,7 @@ func DeserializeOpaquePassiveTransactionData(vb *VariableBlob) (uint64,*OpaquePa
 	if err != nil {
 		return 0, &o, err
 	}
-	o = OpaquePassiveTransactionData{blob:nv, native:nil}
+	o = OpaquePassiveTransactionData{Blob:nv, Native:nil}
 	return size,&o,nil
 }
 
@@ -7981,12 +7981,12 @@ func (n OpaquePassiveTransactionData) MarshalJSON() ([]byte, error) {
 	n.Unbox()
 
 	if !n.IsBoxed() {
-		return json.Marshal(&n.native)
+		return json.Marshal(&n.Native)
 	}
 
 	v := opaqueJSON{}
 	v.Opaque.Type = "koinos::protocol::passive_transaction_data"
-	v.Opaque.Value = *n.blob
+	v.Opaque.Value = *n.Blob
 
 	return json.Marshal(&v)
 }
@@ -8008,10 +8008,10 @@ func (n *OpaquePassiveTransactionData) UnmarshalJSON(data []byte) (error) {
 		if strings.Compare(obj.Opaque.Type, "koinos::protocol::passive_transaction_data") != 0 {
 			return errors.New("unexpected opaque type name")
 		}
-		n.blob = &obj.Opaque.Value
-		n.native = nil
+		n.Blob = &obj.Opaque.Value
+		n.Native = nil
 	} else {
-		if err := json.Unmarshal(data, &n.native); err != nil {
+		if err := json.Unmarshal(data, &n.Native); err != nil {
 			return err
 		}
 	}
