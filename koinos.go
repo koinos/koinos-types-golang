@@ -72,6 +72,53 @@ func DeserializeBlockHeader(vb *VariableBlob) (uint64,*BlockHeader,error) {
 }
 
 // ----------------------------------------
+//  Typedef: AccountType
+// ----------------------------------------
+
+// AccountType type
+type AccountType VariableBlob
+
+// NewAccountType factory
+func NewAccountType() *AccountType {
+	o := AccountType(*NewVariableBlob())
+	return &o
+}
+
+// Serialize AccountType
+func (n AccountType) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := VariableBlob(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeAccountType function
+func DeserializeAccountType(vb *VariableBlob) (uint64,*AccountType,error) {
+	var ot AccountType
+	i,n,err := DeserializeVariableBlob(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = AccountType(*n)
+	return i,&ot,nil}
+
+// MarshalJSON AccountType
+func (n AccountType) MarshalJSON() ([]byte, error) {
+	v := VariableBlob(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *AccountType
+func (n *AccountType) UnmarshalJSON(data []byte) error {
+	v := VariableBlob(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = AccountType(v)
+	return nil
+}
+
+
+// ----------------------------------------
 //  Struct: ActiveBlockData
 // ----------------------------------------
 
@@ -79,7 +126,7 @@ func DeserializeBlockHeader(vb *VariableBlob) (uint64,*BlockHeader,error) {
 type ActiveBlockData struct {
     TransactionMerkleRoot Multihash `json:"transaction_merkle_root"`
     PassiveDataMerkleRoot Multihash `json:"passive_data_merkle_root"`
-    SignerAddress Multihash `json:"signer_address"`
+    Signer AccountType `json:"signer"`
 }
 
 // NewActiveBlockData factory
@@ -87,7 +134,7 @@ func NewActiveBlockData() *ActiveBlockData {
 	o := ActiveBlockData{}
 	o.TransactionMerkleRoot = *NewMultihash()
 	o.PassiveDataMerkleRoot = *NewMultihash()
-	o.SignerAddress = *NewMultihash()
+	o.Signer = *NewAccountType()
 	return &o
 }
 
@@ -95,7 +142,7 @@ func NewActiveBlockData() *ActiveBlockData {
 func (n ActiveBlockData) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.TransactionMerkleRoot.Serialize(vb)
 	vb = n.PassiveDataMerkleRoot.Serialize(vb)
-	vb = n.SignerAddress.Serialize(vb)
+	vb = n.Signer.Serialize(vb)
 	return vb
 }
 
@@ -117,11 +164,11 @@ func DeserializeActiveBlockData(vb *VariableBlob) (uint64,*ActiveBlockData,error
 	}
 	s.PassiveDataMerkleRoot = *tPassiveDataMerkleRoot
 	ovb = (*vb)[i:]
-	j,tSignerAddress,err := DeserializeMultihash(&ovb); i+=j
+	j,tSigner,err := DeserializeAccountType(&ovb); i+=j
 	if err != nil {
 		return 0, &ActiveBlockData{}, err
 	}
-	s.SignerAddress = *tSignerAddress
+	s.Signer = *tSigner
 	return i, &s, nil
 }
 
@@ -2425,53 +2472,6 @@ func (n *BlockStoreResponse) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
-//  Typedef: AccountType
-// ----------------------------------------
-
-// AccountType type
-type AccountType VariableBlob
-
-// NewAccountType factory
-func NewAccountType() *AccountType {
-	o := AccountType(*NewVariableBlob())
-	return &o
-}
-
-// Serialize AccountType
-func (n AccountType) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := VariableBlob(n)
-	return ox.Serialize(vb)
-}
-
-// DeserializeAccountType function
-func DeserializeAccountType(vb *VariableBlob) (uint64,*AccountType,error) {
-	var ot AccountType
-	i,n,err := DeserializeVariableBlob(vb)
-	if err != nil {
-		return 0,&ot,err
-	}
-	ot = AccountType(*n)
-	return i,&ot,nil}
-
-// MarshalJSON AccountType
-func (n AccountType) MarshalJSON() ([]byte, error) {
-	v := VariableBlob(n)
-	return json.Marshal(&v)
-}
-
-// UnmarshalJSON *AccountType
-func (n *AccountType) UnmarshalJSON(data []byte) error {
-	v := VariableBlob(*n);
-	if err := json.Unmarshal(data, &v); err != nil {
-		return err
-	}
-
-	*n = AccountType(v)
-	return nil
-}
-
-
-// ----------------------------------------
 //  Struct: TransactionAccepted
 // ----------------------------------------
 
@@ -3071,22 +3071,25 @@ func (n *PrintsReturn) UnmarshalJSON(data []byte) error {
 
 // VerifyBlockSignatureArgs type
 type VerifyBlockSignatureArgs struct {
-    SignatureData VariableBlob `json:"signature_data"`
     Digest Multihash `json:"digest"`
+    ActiveData OpaqueActiveBlockData `json:"active_data"`
+    SignatureData VariableBlob `json:"signature_data"`
 }
 
 // NewVerifyBlockSignatureArgs factory
 func NewVerifyBlockSignatureArgs() *VerifyBlockSignatureArgs {
 	o := VerifyBlockSignatureArgs{}
-	o.SignatureData = *NewVariableBlob()
 	o.Digest = *NewMultihash()
+	o.ActiveData = *NewOpaqueActiveBlockData()
+	o.SignatureData = *NewVariableBlob()
 	return &o
 }
 
 // Serialize VerifyBlockSignatureArgs
 func (n VerifyBlockSignatureArgs) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.SignatureData.Serialize(vb)
 	vb = n.Digest.Serialize(vb)
+	vb = n.ActiveData.Serialize(vb)
+	vb = n.SignatureData.Serialize(vb)
 	return vb
 }
 
@@ -3096,17 +3099,23 @@ func DeserializeVerifyBlockSignatureArgs(vb *VariableBlob) (uint64,*VerifyBlockS
 	s := VerifyBlockSignatureArgs{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
-	j,tSignatureData,err := DeserializeVariableBlob(&ovb); i+=j
-	if err != nil {
-		return 0, &VerifyBlockSignatureArgs{}, err
-	}
-	s.SignatureData = *tSignatureData
-	ovb = (*vb)[i:]
 	j,tDigest,err := DeserializeMultihash(&ovb); i+=j
 	if err != nil {
 		return 0, &VerifyBlockSignatureArgs{}, err
 	}
 	s.Digest = *tDigest
+	ovb = (*vb)[i:]
+	j,tActiveData,err := DeserializeOpaqueActiveBlockData(&ovb); i+=j
+	if err != nil {
+		return 0, &VerifyBlockSignatureArgs{}, err
+	}
+	s.ActiveData = *tActiveData
+	ovb = (*vb)[i:]
+	j,tSignatureData,err := DeserializeVariableBlob(&ovb); i+=j
+	if err != nil {
+		return 0, &VerifyBlockSignatureArgs{}, err
+	}
+	s.SignatureData = *tSignatureData
 	return i, &s, nil
 }
 

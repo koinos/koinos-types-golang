@@ -91,6 +91,47 @@ func TestBlockHeader(t *testing.T) {
 }
 
 // ----------------------------------------
+//  Typedef: AccountType
+// ----------------------------------------
+
+func TestAccountType(t *testing.T) {
+	o := koinos.NewAccountType()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeAccountType(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	vb = koinos.NewVariableBlob()
+	size, _, err := koinos.DeserializeAccountType(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if size != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewAccountType()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
 //  Struct: ActiveBlockData
 // ----------------------------------------
 
@@ -126,7 +167,7 @@ func TestActiveBlockData(t *testing.T) {
 		t.Errorf("Bytes were consumed on error")
 	}
 
-	// Test signer_address
+	// Test signer
 	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00}
 	n, _, err = koinos.DeserializeActiveBlockData(vb)
 	if err == nil {
@@ -2917,47 +2958,6 @@ func exerciseBlockStoreResponseSerialization(v *koinos.BlockStoreResponse, t *te
 }
 
 // ----------------------------------------
-//  Typedef: AccountType
-// ----------------------------------------
-
-func TestAccountType(t *testing.T) {
-	o := koinos.NewAccountType()
-
-	vb := koinos.NewVariableBlob()
-	vb = o.Serialize(vb)
-
-	_, _, err := koinos.DeserializeAccountType(vb)
-	if err != nil {
-		t.Error(err)
-	}
-
-	vb = koinos.NewVariableBlob()
-	size, _, err := koinos.DeserializeAccountType(vb)
-	if err == nil {
-		t.Errorf("err == nil")
-	}
-	if size != 0 {
-		t.Errorf("Bytes were consumed on error")
-	}
-
-	v, jerr := json.Marshal(o)
-	if jerr != nil {
-		t.Error(jerr)
-	}
-
-	jo := koinos.NewAccountType()
-	jerr = json.Unmarshal(v, jo)
-	if jerr != nil {
-		t.Error(jerr)
-	}
-
-	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
-	if jerr == nil {
-		t.Errorf("Unmarshaling nonsense JSON did not give error.")
-	}
-}
-
-// ----------------------------------------
 //  Struct: TransactionAccepted
 // ----------------------------------------
 
@@ -3685,7 +3685,7 @@ func TestVerifyBlockSignatureArgs(t *testing.T) {
 	}
 
 	var n uint64
-	// Test signature_data
+	// Test digest
 	vb = &koinos.VariableBlob{}
 	n, _, err = koinos.DeserializeVerifyBlockSignatureArgs(vb)
 	if err == nil {
@@ -3695,8 +3695,18 @@ func TestVerifyBlockSignatureArgs(t *testing.T) {
 		t.Errorf("Bytes were consumed on error")
 	}
 
-	// Test digest
-	vb = &koinos.VariableBlob{0x00}
+	// Test active_data
+	vb = &koinos.VariableBlob{0x00, 0x00}
+	n, _, err = koinos.DeserializeVerifyBlockSignatureArgs(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	// Test signature_data
+	vb = &koinos.VariableBlob{0x00, 0x00, 0x00}
 	n, _, err = koinos.DeserializeVerifyBlockSignatureArgs(vb)
 	if err == nil {
 		t.Errorf("err == nil")
@@ -8477,7 +8487,7 @@ func TestOpaqueActiveBlockData(t *testing.T) {
 		t.Errorf("jerr == nil")
 	}
 
-	jerr = json.Unmarshal([]byte("{\"transaction_merkle_root\":[14314,123515,1341234],\"passive_data_merkle_root\":[14314,123515,1341234],\"signer_address\":[14314,123515,1341234]}"), jo)
+	jerr = json.Unmarshal([]byte("{\"transaction_merkle_root\":[14314,123515,1341234],\"passive_data_merkle_root\":[14314,123515,1341234],\"signer\":[14314,123515,1341234]}"), jo)
 	if jerr == nil {
 		t.Errorf("jerr == nil")
 	}
