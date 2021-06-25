@@ -7414,7 +7414,10 @@ func DeserializeFixedBlob20(vb *VariableBlob) (uint64, *FixedBlob20,error) {
 func (n FixedBlob20) MarshalJSON() ([]byte, error) {
 	nfb := NewVariableBlob()
 	nfb = n.Serialize(nfb)
-	s := EncodeBytes(*nfb)
+	s, err := EncodeBytes(*nfb)
+	if err != nil {
+		return nil, err
+	}
 	return json.Marshal(s)
 }
 
@@ -7472,7 +7475,10 @@ func DeserializeFixedBlob65(vb *VariableBlob) (uint64, *FixedBlob65,error) {
 func (n FixedBlob65) MarshalJSON() ([]byte, error) {
 	nfb := NewVariableBlob()
 	nfb = n.Serialize(nfb)
-	s := EncodeBytes(*nfb)
+	s, err := EncodeBytes(*nfb)
+	if err != nil {
+		return nil, err
+	}
 	return json.Marshal(s)
 }
 

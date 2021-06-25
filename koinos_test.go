@@ -8505,7 +8505,10 @@ func TestFixedBlob20(t *testing.T) {
 	for i := 0; i < 20+1; i++ {
 		wfb[i] = byte((20 + i) % 256)
 	}
-	s := koinos.EncodeBytes(wfb)
+	s, err := koinos.EncodeBytes(wfb)
+	if err != nil {
+		t.Errorf("Encoding fixed blob unexpectedly failed: %s", err)
+	}
 	err = json.Unmarshal([]byte("\""+s+"\""), &jfb)
 	if err == nil {
 		t.Errorf("deserialized JSON from a string which was not the proper size.")
@@ -8516,7 +8519,10 @@ func TestFixedBlob20(t *testing.T) {
 	for i := 0; i < 20; i++ {
 		wfb[i] = byte((20 + i) % 256)
 	}
-	s = koinos.EncodeBytes(wfb)
+	s, err = koinos.EncodeBytes(wfb)
+	if err != nil {
+		t.Errorf("Encoding fixed blob unexpectedly failed: %s", err)
+	}
 	s = "0" + s[1:]
 	err = json.Unmarshal([]byte("\""+s+"\""), &jfb)
 	if err == nil {
@@ -8589,7 +8595,10 @@ func TestFixedBlob65(t *testing.T) {
 	for i := 0; i < 65+1; i++ {
 		wfb[i] = byte((65 + i) % 256)
 	}
-	s := koinos.EncodeBytes(wfb)
+	s, err := koinos.EncodeBytes(wfb)
+	if err != nil {
+		t.Errorf("Encoding fixed blob unexpectedly failed: %s", err)
+	}
 	err = json.Unmarshal([]byte("\""+s+"\""), &jfb)
 	if err == nil {
 		t.Errorf("deserialized JSON from a string which was not the proper size.")
@@ -8600,7 +8609,10 @@ func TestFixedBlob65(t *testing.T) {
 	for i := 0; i < 65; i++ {
 		wfb[i] = byte((65 + i) % 256)
 	}
-	s = koinos.EncodeBytes(wfb)
+	s, err = koinos.EncodeBytes(wfb)
+	if err != nil {
+		t.Errorf("Encoding fixed blob unexpectedly failed: %s", err)
+	}
 	s = "0" + s[1:]
 	err = json.Unmarshal([]byte("\""+s+"\""), &jfb)
 	if err == nil {
@@ -8700,7 +8712,7 @@ func TestOpaqueActiveBlockData(t *testing.T) {
 		t.Errorf("Unmarshaling nonsense JSON did not give error.")
 	}
 
-	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"koinos::protocol::active_block_data\",\"value\":\"zt1Zv2yaZ\"}}"), jo)
+	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"koinos::protocol::active_block_data\",\"value\":\"MZm9vYmFy\"}}"), jo)
 	if jerr != nil {
 		t.Error(jerr)
 	}
@@ -8710,7 +8722,7 @@ func TestOpaqueActiveBlockData(t *testing.T) {
 		t.Errorf("Unboxed incompatible serialization")
 	}
 
-	expected := []byte("{\"opaque\":{\"type\":\"koinos::protocol::active_block_data\",\"value\":\"zt1Zv2yaZ\"}}")
+	expected := []byte("{\"opaque\":{\"type\":\"koinos::protocol::active_block_data\",\"value\":\"MZm9vYmFy\"}}")
 	v, jerr = json.Marshal(jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -8719,7 +8731,7 @@ func TestOpaqueActiveBlockData(t *testing.T) {
 		t.Errorf("Marshal unknown data to json failed. Expected: %s, Was: %s", expected, v)
 	}
 
-	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"foobar\",\"value\":\"zt1Zv2yaZ\"}}"), jo)
+	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"foobar\",\"value\":\"MZm9vYmFy\"}}"), jo)
 	if jerr == nil {
 		t.Errorf("jerr == nil")
 	}
@@ -8847,7 +8859,7 @@ func TestOpaqueActiveTransactionData(t *testing.T) {
 		t.Errorf("Unmarshaling nonsense JSON did not give error.")
 	}
 
-	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"koinos::protocol::active_transaction_data\",\"value\":\"zt1Zv2yaZ\"}}"), jo)
+	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"koinos::protocol::active_transaction_data\",\"value\":\"MZm9vYmFy\"}}"), jo)
 	if jerr != nil {
 		t.Error(jerr)
 	}
@@ -8857,7 +8869,7 @@ func TestOpaqueActiveTransactionData(t *testing.T) {
 		t.Errorf("Unboxed incompatible serialization")
 	}
 
-	expected := []byte("{\"opaque\":{\"type\":\"koinos::protocol::active_transaction_data\",\"value\":\"zt1Zv2yaZ\"}}")
+	expected := []byte("{\"opaque\":{\"type\":\"koinos::protocol::active_transaction_data\",\"value\":\"MZm9vYmFy\"}}")
 	v, jerr = json.Marshal(jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -8866,7 +8878,7 @@ func TestOpaqueActiveTransactionData(t *testing.T) {
 		t.Errorf("Marshal unknown data to json failed. Expected: %s, Was: %s", expected, v)
 	}
 
-	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"foobar\",\"value\":\"zt1Zv2yaZ\"}}"), jo)
+	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"foobar\",\"value\":\"MZm9vYmFy\"}}"), jo)
 	if jerr == nil {
 		t.Errorf("jerr == nil")
 	}
@@ -8994,7 +9006,7 @@ func TestOpaqueBlockReceipt(t *testing.T) {
 		t.Errorf("Unmarshaling nonsense JSON did not give error.")
 	}
 
-	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"koinos::protocol::block_receipt\",\"value\":\"zt1Zv2yaZ\"}}"), jo)
+	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"koinos::protocol::block_receipt\",\"value\":\"MZm9vYmFy\"}}"), jo)
 	if jerr != nil {
 		t.Error(jerr)
 	}
@@ -9004,7 +9016,7 @@ func TestOpaqueBlockReceipt(t *testing.T) {
 		t.Errorf("Unboxed incompatible serialization")
 	}
 
-	expected := []byte("{\"opaque\":{\"type\":\"koinos::protocol::block_receipt\",\"value\":\"zt1Zv2yaZ\"}}")
+	expected := []byte("{\"opaque\":{\"type\":\"koinos::protocol::block_receipt\",\"value\":\"MZm9vYmFy\"}}")
 	v, jerr = json.Marshal(jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -9013,7 +9025,7 @@ func TestOpaqueBlockReceipt(t *testing.T) {
 		t.Errorf("Marshal unknown data to json failed. Expected: %s, Was: %s", expected, v)
 	}
 
-	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"foobar\",\"value\":\"zt1Zv2yaZ\"}}"), jo)
+	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"foobar\",\"value\":\"MZm9vYmFy\"}}"), jo)
 	if jerr == nil {
 		t.Errorf("jerr == nil")
 	}
@@ -9137,7 +9149,7 @@ func TestOpaquePassiveBlockData(t *testing.T) {
 		t.Errorf("Unmarshaling nonsense JSON did not give error.")
 	}
 
-	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"koinos::protocol::passive_block_data\",\"value\":\"zt1Zv2yaZ\"}}"), jo)
+	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"koinos::protocol::passive_block_data\",\"value\":\"MZm9vYmFy\"}}"), jo)
 	if jerr != nil {
 		t.Error(jerr)
 	}
@@ -9147,7 +9159,7 @@ func TestOpaquePassiveBlockData(t *testing.T) {
 		t.Errorf("Unboxed incompatible serialization")
 	}
 
-	expected := []byte("{\"opaque\":{\"type\":\"koinos::protocol::passive_block_data\",\"value\":\"zt1Zv2yaZ\"}}")
+	expected := []byte("{\"opaque\":{\"type\":\"koinos::protocol::passive_block_data\",\"value\":\"MZm9vYmFy\"}}")
 	v, jerr = json.Marshal(jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -9156,7 +9168,7 @@ func TestOpaquePassiveBlockData(t *testing.T) {
 		t.Errorf("Marshal unknown data to json failed. Expected: %s, Was: %s", expected, v)
 	}
 
-	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"foobar\",\"value\":\"zt1Zv2yaZ\"}}"), jo)
+	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"foobar\",\"value\":\"MZm9vYmFy\"}}"), jo)
 	if jerr == nil {
 		t.Errorf("jerr == nil")
 	}
@@ -9280,7 +9292,7 @@ func TestOpaquePassiveTransactionData(t *testing.T) {
 		t.Errorf("Unmarshaling nonsense JSON did not give error.")
 	}
 
-	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"koinos::protocol::passive_transaction_data\",\"value\":\"zt1Zv2yaZ\"}}"), jo)
+	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"koinos::protocol::passive_transaction_data\",\"value\":\"MZm9vYmFy\"}}"), jo)
 	if jerr != nil {
 		t.Error(jerr)
 	}
@@ -9290,7 +9302,7 @@ func TestOpaquePassiveTransactionData(t *testing.T) {
 		t.Errorf("Unboxed incompatible serialization")
 	}
 
-	expected := []byte("{\"opaque\":{\"type\":\"koinos::protocol::passive_transaction_data\",\"value\":\"zt1Zv2yaZ\"}}")
+	expected := []byte("{\"opaque\":{\"type\":\"koinos::protocol::passive_transaction_data\",\"value\":\"MZm9vYmFy\"}}")
 	v, jerr = json.Marshal(jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -9299,7 +9311,7 @@ func TestOpaquePassiveTransactionData(t *testing.T) {
 		t.Errorf("Marshal unknown data to json failed. Expected: %s, Was: %s", expected, v)
 	}
 
-	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"foobar\",\"value\":\"zt1Zv2yaZ\"}}"), jo)
+	jerr = json.Unmarshal([]byte("{\"opaque\":{\"type\":\"foobar\",\"value\":\"MZm9vYmFy\"}}"), jo)
 	if jerr == nil {
 		t.Errorf("jerr == nil")
 	}
