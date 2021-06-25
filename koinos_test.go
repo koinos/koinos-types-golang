@@ -624,6 +624,7 @@ func TestThunkID(t *testing.T) {
 		koinos.ThunkIDGetTransactionSignature,
 		koinos.ThunkIDGetContractID,
 		koinos.ThunkIDGetHeadBlockTime,
+		koinos.ThunkIDGetAccountNonce,
 	}
 
 	// Make sure all types properly serialize
@@ -725,7 +726,7 @@ func TestThunkIDPanic(t *testing.T) {
 }
 
 func getInvalidThunkID() koinos.ThunkID {
-	w := koinos.ThunkIDGetHeadBlockTime
+	w := koinos.ThunkIDGetAccountNonce
 	for koinos.IsValidThunkID(w) {
 		w++
 	}
@@ -3256,6 +3257,7 @@ func TestSystemCallID(t *testing.T) {
 		koinos.SystemCallIDGetTransactionSignature,
 		koinos.SystemCallIDGetContractID,
 		koinos.SystemCallIDGetHeadBlockTime,
+		koinos.SystemCallIDGetAccountNonce,
 	}
 
 	// Make sure all types properly serialize
@@ -3357,7 +3359,7 @@ func TestSystemCallIDPanic(t *testing.T) {
 }
 
 func getInvalidSystemCallID() koinos.SystemCallID {
-	w := koinos.SystemCallIDGetHeadBlockTime
+	w := koinos.SystemCallIDGetAccountNonce
 	for koinos.IsValidSystemCallID(w) {
 		w++
 	}
@@ -6383,6 +6385,112 @@ func TestGetHeadBlockTimeReturn(t *testing.T) {
 }
 
 // ----------------------------------------
+//  Struct: GetAccountNonceArgs
+// ----------------------------------------
+
+func TestGetAccountNonceArgs(t *testing.T) {
+	o := koinos.NewGetAccountNonceArgs()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetAccountNonceArgs(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	var n uint64
+	// Test account
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeGetAccountNonceArgs(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetAccountNonceArgs()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
+//  Struct: GetAccountNonceReturn
+// ----------------------------------------
+
+func TestGetAccountNonceReturn(t *testing.T) {
+	o := koinos.NewGetAccountNonceReturn()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetAccountNonceReturn(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	var n uint64
+	// Test nonce
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeGetAccountNonceReturn(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetAccountNonceReturn()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
 //  Struct: ChainReservedRequest
 // ----------------------------------------
 
@@ -6776,6 +6884,59 @@ func TestReadContractRequest(t *testing.T) {
 }
 
 // ----------------------------------------
+//  Struct: GetAccountNonceRequest
+// ----------------------------------------
+
+func TestGetAccountNonceRequest(t *testing.T) {
+	o := koinos.NewGetAccountNonceRequest()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetAccountNonceRequest(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	var n uint64
+	// Test account
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeGetAccountNonceRequest(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetAccountNonceRequest()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
 //  Variant: ChainRPCRequest
 // ----------------------------------------
 
@@ -6848,6 +7009,20 @@ func TestChainRPCRequest(t *testing.T) {
 			t.Errorf("Bytes were consumed on error")
 		}
 	}
+	{
+		v := koinos.NewChainRPCRequest()
+		v.Value = koinos.NewGetAccountNonceRequest()
+		exerciseChainRPCRequestSerialization(v, t)
+
+		vb := koinos.VariableBlob{7}
+		n, _, err := koinos.DeserializeChainRPCRequest(&vb)
+		if err == nil {
+			t.Errorf("err == nil")
+		}
+		if n != 0 {
+			t.Errorf("Bytes were consumed on error")
+		}
+	}
 
 	// Test bad variant tag
 	vb := koinos.VariableBlob{0x80}
@@ -6860,7 +7035,7 @@ func TestChainRPCRequest(t *testing.T) {
 	}
 
 	// Test unknown tag
-	vb = koinos.VariableBlob{7}
+	vb = koinos.VariableBlob{8}
 	n, _, err = koinos.DeserializeChainRPCRequest(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
@@ -7355,6 +7530,59 @@ func TestReadContractResponse(t *testing.T) {
 }
 
 // ----------------------------------------
+//  Struct: GetAccountNonceResponse
+// ----------------------------------------
+
+func TestGetAccountNonceResponse(t *testing.T) {
+	o := koinos.NewGetAccountNonceResponse()
+
+	vb := koinos.NewVariableBlob()
+	vb = o.Serialize(vb)
+
+	_, _, err := koinos.DeserializeGetAccountNonceResponse(vb)
+	if err != nil {
+		t.Error(err)
+	}
+
+	var n uint64
+	// Test nonce
+	vb = &koinos.VariableBlob{}
+	n, _, err = koinos.DeserializeGetAccountNonceResponse(vb)
+	if err == nil {
+		t.Errorf("err == nil")
+	}
+	if n != 0 {
+		t.Errorf("Bytes were consumed on error")
+	}
+
+	v, jerr := json.Marshal(o)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jo := koinos.NewGetAccountNonceResponse()
+	jerr = json.Unmarshal(v, jo)
+	if jerr != nil {
+		t.Error(jerr)
+	}
+
+	jerr = json.Unmarshal([]byte("\"!@#$%^&*\""), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("[1,2,3,4,5]"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+
+	jerr = json.Unmarshal([]byte("{1:2, 3:4}"), jo)
+	if jerr == nil {
+		t.Errorf("Unmarshaling nonsense JSON did not give error.")
+	}
+}
+
+// ----------------------------------------
 //  Variant: ChainRPCResponse
 // ----------------------------------------
 
@@ -7449,6 +7677,20 @@ func TestChainRPCResponse(t *testing.T) {
 			t.Errorf("Bytes were consumed on error")
 		}
 	}
+	{
+		v := koinos.NewChainRPCResponse()
+		v.Value = koinos.NewGetAccountNonceResponse()
+		exerciseChainRPCResponseSerialization(v, t)
+
+		vb := koinos.VariableBlob{8}
+		n, _, err := koinos.DeserializeChainRPCResponse(&vb)
+		if err == nil {
+			t.Errorf("err == nil")
+		}
+		if n != 0 {
+			t.Errorf("Bytes were consumed on error")
+		}
+	}
 
 	// Test bad variant tag
 	vb := koinos.VariableBlob{0x80}
@@ -7461,7 +7703,7 @@ func TestChainRPCResponse(t *testing.T) {
 	}
 
 	// Test unknown tag
-	vb = koinos.VariableBlob{8}
+	vb = koinos.VariableBlob{9}
 	n, _, err = koinos.DeserializeChainRPCResponse(&vb)
 	if err == nil {
 		t.Errorf("err == nil")
