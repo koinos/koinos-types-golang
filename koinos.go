@@ -334,48 +334,48 @@ func (n *ContractIDType) UnmarshalJSON(data []byte) error {
 
 
 // ----------------------------------------
-//  Struct: CreateSystemContractOperation
+//  Struct: UploadContractOperation
 // ----------------------------------------
 
-// CreateSystemContractOperation type
-type CreateSystemContractOperation struct {
+// UploadContractOperation type
+type UploadContractOperation struct {
     ContractID ContractIDType `json:"contract_id"`
     Bytecode VariableBlob `json:"bytecode"`
     Extensions UnusedExtensionsType `json:"extensions"`
 }
 
-// NewCreateSystemContractOperation factory
-func NewCreateSystemContractOperation() *CreateSystemContractOperation {
-	o := CreateSystemContractOperation{}
+// NewUploadContractOperation factory
+func NewUploadContractOperation() *UploadContractOperation {
+	o := UploadContractOperation{}
 	o.ContractID = *NewContractIDType()
 	o.Bytecode = *NewVariableBlob()
 	o.Extensions = *NewUnusedExtensionsType()
 	return &o
 }
 
-// Serialize CreateSystemContractOperation
-func (n CreateSystemContractOperation) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize UploadContractOperation
+func (n UploadContractOperation) Serialize(vb *VariableBlob) *VariableBlob {
 	vb = n.ContractID.Serialize(vb)
 	vb = n.Bytecode.Serialize(vb)
 	vb = n.Extensions.Serialize(vb)
 	return vb
 }
 
-// DeserializeCreateSystemContractOperation function
-func DeserializeCreateSystemContractOperation(vb *VariableBlob) (uint64,*CreateSystemContractOperation,error) {
+// DeserializeUploadContractOperation function
+func DeserializeUploadContractOperation(vb *VariableBlob) (uint64,*UploadContractOperation,error) {
 	var i,j uint64 = 0,0
-	s := CreateSystemContractOperation{}
+	s := UploadContractOperation{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
 	j,tContractID,err := DeserializeContractIDType(&ovb); i+=j
 	if err != nil {
-		return 0, &CreateSystemContractOperation{}, err
+		return 0, &UploadContractOperation{}, err
 	}
 	s.ContractID = *tContractID
 	ovb = (*vb)[i:]
 	j,tBytecode,err := DeserializeVariableBlob(&ovb); i+=j
 	if err != nil {
-		return 0, &CreateSystemContractOperation{}, err
+		return 0, &UploadContractOperation{}, err
 	}
 	s.Bytecode = *tBytecode
 	return i, &s, nil
@@ -888,7 +888,7 @@ func (n Operation) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 0
 		case *NopOperation:
 			i = 1
-		case *CreateSystemContractOperation:
+		case *UploadContractOperation:
 			i = 2
 		case *CallContractOperation:
 			i = 3
@@ -910,8 +910,8 @@ func (n Operation) TypeToName() (string) {
 			return "koinos::protocol::reserved_operation"
 		case *NopOperation:
 			return "koinos::protocol::nop_operation"
-		case *CreateSystemContractOperation:
-			return "koinos::protocol::create_system_contract_operation"
+		case *UploadContractOperation:
+			return "koinos::protocol::upload_contract_operation"
 		case *CallContractOperation:
 			return "koinos::protocol::call_contract_operation"
 		case *SetSystemCallOperation:
@@ -950,7 +950,7 @@ func DeserializeOperation(vb *VariableBlob) (uint64,*Operation,error) {
 			v.Value = NewNopOperation()
 		case 2:
 			ovb := (*vb)[i:]
-			k,x,err := DeserializeCreateSystemContractOperation(&ovb)
+			k,x,err := DeserializeUploadContractOperation(&ovb)
 			if err != nil {
 				return 0, &v, err
 			}
@@ -999,8 +999,8 @@ func (n *Operation) UnmarshalJSON(data []byte) error {
 			v := NewNopOperation()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
-		case "koinos::protocol::create_system_contract_operation":
-			v := NewCreateSystemContractOperation()
+		case "koinos::protocol::upload_contract_operation":
+			v := NewUploadContractOperation()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::protocol::call_contract_operation":
@@ -3453,13 +3453,13 @@ func (n *ApplyTransactionReturn) UnmarshalJSON(data []byte) error {
 
 // ApplyUploadContractOperationArgs type
 type ApplyUploadContractOperationArgs struct {
-    Op CreateSystemContractOperation `json:"op"`
+    Op UploadContractOperation `json:"op"`
 }
 
 // NewApplyUploadContractOperationArgs factory
 func NewApplyUploadContractOperationArgs() *ApplyUploadContractOperationArgs {
 	o := ApplyUploadContractOperationArgs{}
-	o.Op = *NewCreateSystemContractOperation()
+	o.Op = *NewUploadContractOperation()
 	return &o
 }
 
@@ -3475,7 +3475,7 @@ func DeserializeApplyUploadContractOperationArgs(vb *VariableBlob) (uint64,*Appl
 	s := ApplyUploadContractOperationArgs{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
-	j,tOp,err := DeserializeCreateSystemContractOperation(&ovb); i+=j
+	j,tOp,err := DeserializeUploadContractOperation(&ovb); i+=j
 	if err != nil {
 		return 0, &ApplyUploadContractOperationArgs{}, err
 	}

@@ -410,16 +410,16 @@ func TestContractIDType(t *testing.T) {
 }
 
 // ----------------------------------------
-//  Struct: CreateSystemContractOperation
+//  Struct: UploadContractOperation
 // ----------------------------------------
 
-func TestCreateSystemContractOperation(t *testing.T) {
-	o := koinos.NewCreateSystemContractOperation()
+func TestUploadContractOperation(t *testing.T) {
+	o := koinos.NewUploadContractOperation()
 
 	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := koinos.DeserializeCreateSystemContractOperation(vb)
+	_, _, err := koinos.DeserializeUploadContractOperation(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -427,7 +427,7 @@ func TestCreateSystemContractOperation(t *testing.T) {
 	var n uint64
 	// Test contract_id
 	vb = &koinos.VariableBlob{}
-	n, _, err = koinos.DeserializeCreateSystemContractOperation(vb)
+	n, _, err = koinos.DeserializeUploadContractOperation(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -437,7 +437,7 @@ func TestCreateSystemContractOperation(t *testing.T) {
 
 	// Test bytecode
 	vb = &koinos.VariableBlob{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
-	n, _, err = koinos.DeserializeCreateSystemContractOperation(vb)
+	n, _, err = koinos.DeserializeUploadContractOperation(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -450,7 +450,7 @@ func TestCreateSystemContractOperation(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := koinos.NewCreateSystemContractOperation()
+	jo := koinos.NewUploadContractOperation()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -999,7 +999,7 @@ func TestOperation(t *testing.T) {
 	}
 	{
 		v := koinos.NewOperation()
-		v.Value = koinos.NewCreateSystemContractOperation()
+		v.Value = koinos.NewUploadContractOperation()
 		exerciseOperationSerialization(v, t)
 
 		vb := koinos.VariableBlob{2}
