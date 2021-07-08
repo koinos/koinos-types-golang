@@ -1407,78 +1407,6 @@ func DeserializeBlockRecord(vb *VariableBlob) (uint64,*BlockRecord,error) {
 }
 
 // ----------------------------------------
-//  Struct: TransactionItem
-// ----------------------------------------
-
-// TransactionItem type
-type TransactionItem struct {
-    Transaction Transaction `json:"transaction"`
-}
-
-// NewTransactionItem factory
-func NewTransactionItem() *TransactionItem {
-	o := TransactionItem{}
-	o.Transaction = *NewTransaction()
-	return &o
-}
-
-// Serialize TransactionItem
-func (n TransactionItem) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Transaction.Serialize(vb)
-	return vb
-}
-
-// DeserializeTransactionItem function
-func DeserializeTransactionItem(vb *VariableBlob) (uint64,*TransactionItem,error) {
-	var i,j uint64 = 0,0
-	s := TransactionItem{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tTransaction,err := DeserializeTransaction(&ovb); i+=j
-	if err != nil {
-		return 0, &TransactionItem{}, err
-	}
-	s.Transaction = *tTransaction
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: TransactionRecord
-// ----------------------------------------
-
-// TransactionRecord type
-type TransactionRecord struct {
-    Transaction Transaction `json:"transaction"`
-}
-
-// NewTransactionRecord factory
-func NewTransactionRecord() *TransactionRecord {
-	o := TransactionRecord{}
-	o.Transaction = *NewTransaction()
-	return &o
-}
-
-// Serialize TransactionRecord
-func (n TransactionRecord) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Transaction.Serialize(vb)
-	return vb
-}
-
-// DeserializeTransactionRecord function
-func DeserializeTransactionRecord(vb *VariableBlob) (uint64,*TransactionRecord,error) {
-	var i,j uint64 = 0,0
-	s := TransactionRecord{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tTransaction,err := DeserializeTransaction(&ovb); i+=j
-	if err != nil {
-		return 0, &TransactionRecord{}, err
-	}
-	s.Transaction = *tTransaction
-	return i, &s, nil
-}
-
-// ----------------------------------------
 //  Struct: BlockStoreReservedRequest
 // ----------------------------------------
 
@@ -1794,141 +1722,6 @@ func DeserializeAddBlockResponse(vb *VariableBlob) (uint64,*AddBlockResponse,err
 }
 
 // ----------------------------------------
-//  Struct: AddTransactionRequest
-// ----------------------------------------
-
-// AddTransactionRequest type
-type AddTransactionRequest struct {
-    Transaction Transaction `json:"transaction"`
-}
-
-// NewAddTransactionRequest factory
-func NewAddTransactionRequest() *AddTransactionRequest {
-	o := AddTransactionRequest{}
-	o.Transaction = *NewTransaction()
-	return &o
-}
-
-// Serialize AddTransactionRequest
-func (n AddTransactionRequest) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.Transaction.Serialize(vb)
-	return vb
-}
-
-// DeserializeAddTransactionRequest function
-func DeserializeAddTransactionRequest(vb *VariableBlob) (uint64,*AddTransactionRequest,error) {
-	var i,j uint64 = 0,0
-	s := AddTransactionRequest{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tTransaction,err := DeserializeTransaction(&ovb); i+=j
-	if err != nil {
-		return 0, &AddTransactionRequest{}, err
-	}
-	s.Transaction = *tTransaction
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: AddTransactionResponse
-// ----------------------------------------
-
-// AddTransactionResponse type
-type AddTransactionResponse struct {
-}
-
-// NewAddTransactionResponse factory
-func NewAddTransactionResponse() *AddTransactionResponse {
-	o := AddTransactionResponse{}
-	return &o
-}
-
-// Serialize AddTransactionResponse
-func (n AddTransactionResponse) Serialize(vb *VariableBlob) *VariableBlob {
-	return vb
-}
-
-// DeserializeAddTransactionResponse function
-func DeserializeAddTransactionResponse(vb *VariableBlob) (uint64,*AddTransactionResponse,error) {
-	var i uint64 = 0
-	s := AddTransactionResponse{}
-	
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: GetTransactionsByIDRequest
-// ----------------------------------------
-
-// GetTransactionsByIDRequest type
-type GetTransactionsByIDRequest struct {
-    TransactionIds VectorMultihash `json:"transaction_ids"`
-}
-
-// NewGetTransactionsByIDRequest factory
-func NewGetTransactionsByIDRequest() *GetTransactionsByIDRequest {
-	o := GetTransactionsByIDRequest{}
-	o.TransactionIds = *NewVectorMultihash()
-	return &o
-}
-
-// Serialize GetTransactionsByIDRequest
-func (n GetTransactionsByIDRequest) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.TransactionIds.Serialize(vb)
-	return vb
-}
-
-// DeserializeGetTransactionsByIDRequest function
-func DeserializeGetTransactionsByIDRequest(vb *VariableBlob) (uint64,*GetTransactionsByIDRequest,error) {
-	var i,j uint64 = 0,0
-	s := GetTransactionsByIDRequest{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tTransactionIds,err := DeserializeVectorMultihash(&ovb); i+=j
-	if err != nil {
-		return 0, &GetTransactionsByIDRequest{}, err
-	}
-	s.TransactionIds = *tTransactionIds
-	return i, &s, nil
-}
-
-// ----------------------------------------
-//  Struct: GetTransactionsByIDResponse
-// ----------------------------------------
-
-// GetTransactionsByIDResponse type
-type GetTransactionsByIDResponse struct {
-    TransactionItems VectorTransactionItem `json:"transaction_items"`
-}
-
-// NewGetTransactionsByIDResponse factory
-func NewGetTransactionsByIDResponse() *GetTransactionsByIDResponse {
-	o := GetTransactionsByIDResponse{}
-	o.TransactionItems = *NewVectorTransactionItem()
-	return &o
-}
-
-// Serialize GetTransactionsByIDResponse
-func (n GetTransactionsByIDResponse) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.TransactionItems.Serialize(vb)
-	return vb
-}
-
-// DeserializeGetTransactionsByIDResponse function
-func DeserializeGetTransactionsByIDResponse(vb *VariableBlob) (uint64,*GetTransactionsByIDResponse,error) {
-	var i,j uint64 = 0,0
-	s := GetTransactionsByIDResponse{}
-	var ovb VariableBlob
-	ovb = (*vb)[i:]
-	j,tTransactionItems,err := DeserializeVectorTransactionItem(&ovb); i+=j
-	if err != nil {
-		return 0, &GetTransactionsByIDResponse{}, err
-	}
-	s.TransactionItems = *tTransactionItems
-	return i, &s, nil
-}
-
-// ----------------------------------------
 //  Struct: GetHighestBlockRequest
 // ----------------------------------------
 
@@ -2118,12 +1911,8 @@ func (n BlockStoreRequest) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 2
 		case *AddBlockRequest:
 			i = 3
-		case *AddTransactionRequest:
-			i = 4
-		case *GetTransactionsByIDRequest:
-			i = 5
 		case *GetHighestBlockRequest:
-			i = 6
+			i = 4
 		default:
 			panic("Unknown variant type")
 	}
@@ -2144,10 +1933,6 @@ func (n BlockStoreRequest) TypeToName() (string) {
 			return "koinos::rpc::block_store::get_blocks_by_height_request"
 		case *AddBlockRequest:
 			return "koinos::rpc::block_store::add_block_request"
-		case *AddTransactionRequest:
-			return "koinos::rpc::block_store::add_transaction_request"
-		case *GetTransactionsByIDRequest:
-			return "koinos::rpc::block_store::get_transactions_by_id_request"
 		case *GetHighestBlockRequest:
 			return "koinos::rpc::block_store::get_highest_block_request"
 		default:
@@ -2205,22 +1990,6 @@ func DeserializeBlockStoreRequest(vb *VariableBlob) (uint64,*BlockStoreRequest,e
 			j = k
 			v.Value = x
 		case 4:
-			ovb := (*vb)[i:]
-			k,x,err := DeserializeAddTransactionRequest(&ovb)
-			if err != nil {
-				return 0, &v, err
-			}
-			j = k
-			v.Value = x
-		case 5:
-			ovb := (*vb)[i:]
-			k,x,err := DeserializeGetTransactionsByIDRequest(&ovb)
-			if err != nil {
-				return 0, &v, err
-			}
-			j = k
-			v.Value = x
-		case 6:
 			v.Value = NewGetHighestBlockRequest()
 		default:
 			return 0, &v, errors.New("unknown variant tag")
@@ -2255,14 +2024,6 @@ func (n *BlockStoreRequest) UnmarshalJSON(data []byte) error {
 			n.Value = v
 		case "koinos::rpc::block_store::add_block_request":
 			v := NewAddBlockRequest()
-			json.Unmarshal(variant.Value, &v)
-			n.Value = v
-		case "koinos::rpc::block_store::add_transaction_request":
-			v := NewAddTransactionRequest()
-			json.Unmarshal(variant.Value, &v)
-			n.Value = v
-		case "koinos::rpc::block_store::get_transactions_by_id_request":
-			v := NewGetTransactionsByIDRequest()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::rpc::block_store::get_highest_block_request":
@@ -2307,12 +2068,8 @@ func (n BlockStoreResponse) Serialize(vb *VariableBlob) *VariableBlob {
 			i = 3
 		case *AddBlockResponse:
 			i = 4
-		case *AddTransactionResponse:
-			i = 5
-		case *GetTransactionsByIDResponse:
-			i = 6
 		case *GetHighestBlockResponse:
-			i = 7
+			i = 5
 		default:
 			panic("Unknown variant type")
 	}
@@ -2335,10 +2092,6 @@ func (n BlockStoreResponse) TypeToName() (string) {
 			return "koinos::rpc::block_store::get_blocks_by_height_response"
 		case *AddBlockResponse:
 			return "koinos::rpc::block_store::add_block_response"
-		case *AddTransactionResponse:
-			return "koinos::rpc::block_store::add_transaction_response"
-		case *GetTransactionsByIDResponse:
-			return "koinos::rpc::block_store::get_transactions_by_id_response"
 		case *GetHighestBlockResponse:
 			return "koinos::rpc::block_store::get_highest_block_response"
 		default:
@@ -2398,16 +2151,6 @@ func DeserializeBlockStoreResponse(vb *VariableBlob) (uint64,*BlockStoreResponse
 		case 4:
 			v.Value = NewAddBlockResponse()
 		case 5:
-			v.Value = NewAddTransactionResponse()
-		case 6:
-			ovb := (*vb)[i:]
-			k,x,err := DeserializeGetTransactionsByIDResponse(&ovb)
-			if err != nil {
-				return 0, &v, err
-			}
-			j = k
-			v.Value = x
-		case 7:
 			ovb := (*vb)[i:]
 			k,x,err := DeserializeGetHighestBlockResponse(&ovb)
 			if err != nil {
@@ -2452,14 +2195,6 @@ func (n *BlockStoreResponse) UnmarshalJSON(data []byte) error {
 			n.Value = v
 		case "koinos::rpc::block_store::add_block_response":
 			v := NewAddBlockResponse()
-			json.Unmarshal(variant.Value, &v)
-			n.Value = v
-		case "koinos::rpc::block_store::add_transaction_response":
-			v := NewAddTransactionResponse()
-			json.Unmarshal(variant.Value, &v)
-			n.Value = v
-		case "koinos::rpc::block_store::get_transactions_by_id_response":
-			v := NewGetTransactionsByIDResponse()
 			json.Unmarshal(variant.Value, &v)
 			n.Value = v
 		case "koinos::rpc::block_store::get_highest_block_response":
@@ -7380,6 +7115,511 @@ func (n *MempoolRPCResponse) UnmarshalJSON(data []byte) error {
 }
 
 
+// ----------------------------------------
+//  Struct: TransactionRecord
+// ----------------------------------------
+
+// TransactionRecord type
+type TransactionRecord struct {
+    Transaction Transaction `json:"transaction"`
+    ContainingBlocks VectorMultihash `json:"containing_blocks"`
+}
+
+// NewTransactionRecord factory
+func NewTransactionRecord() *TransactionRecord {
+	o := TransactionRecord{}
+	o.Transaction = *NewTransaction()
+	o.ContainingBlocks = *NewVectorMultihash()
+	return &o
+}
+
+// Serialize TransactionRecord
+func (n TransactionRecord) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.Transaction.Serialize(vb)
+	vb = n.ContainingBlocks.Serialize(vb)
+	return vb
+}
+
+// DeserializeTransactionRecord function
+func DeserializeTransactionRecord(vb *VariableBlob) (uint64,*TransactionRecord,error) {
+	var i,j uint64 = 0,0
+	s := TransactionRecord{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tTransaction,err := DeserializeTransaction(&ovb); i+=j
+	if err != nil {
+		return 0, &TransactionRecord{}, err
+	}
+	s.Transaction = *tTransaction
+	ovb = (*vb)[i:]
+	j,tContainingBlocks,err := DeserializeVectorMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &TransactionRecord{}, err
+	}
+	s.ContainingBlocks = *tContainingBlocks
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: TransactionStoreReservedRequest
+// ----------------------------------------
+
+// TransactionStoreReservedRequest type
+type TransactionStoreReservedRequest struct {
+}
+
+// NewTransactionStoreReservedRequest factory
+func NewTransactionStoreReservedRequest() *TransactionStoreReservedRequest {
+	o := TransactionStoreReservedRequest{}
+	return &o
+}
+
+// Serialize TransactionStoreReservedRequest
+func (n TransactionStoreReservedRequest) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeTransactionStoreReservedRequest function
+func DeserializeTransactionStoreReservedRequest(vb *VariableBlob) (uint64,*TransactionStoreReservedRequest,error) {
+	var i uint64 = 0
+	s := TransactionStoreReservedRequest{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: TransactionStoreReservedResponse
+// ----------------------------------------
+
+// TransactionStoreReservedResponse type
+type TransactionStoreReservedResponse struct {
+}
+
+// NewTransactionStoreReservedResponse factory
+func NewTransactionStoreReservedResponse() *TransactionStoreReservedResponse {
+	o := TransactionStoreReservedResponse{}
+	return &o
+}
+
+// Serialize TransactionStoreReservedResponse
+func (n TransactionStoreReservedResponse) Serialize(vb *VariableBlob) *VariableBlob {
+	return vb
+}
+
+// DeserializeTransactionStoreReservedResponse function
+func DeserializeTransactionStoreReservedResponse(vb *VariableBlob) (uint64,*TransactionStoreReservedResponse,error) {
+	var i uint64 = 0
+	s := TransactionStoreReservedResponse{}
+	
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: GetTransactionsByIDRequest
+// ----------------------------------------
+
+// GetTransactionsByIDRequest type
+type GetTransactionsByIDRequest struct {
+    TransactionIds VectorMultihash `json:"transaction_ids"`
+}
+
+// NewGetTransactionsByIDRequest factory
+func NewGetTransactionsByIDRequest() *GetTransactionsByIDRequest {
+	o := GetTransactionsByIDRequest{}
+	o.TransactionIds = *NewVectorMultihash()
+	return &o
+}
+
+// Serialize GetTransactionsByIDRequest
+func (n GetTransactionsByIDRequest) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.TransactionIds.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetTransactionsByIDRequest function
+func DeserializeGetTransactionsByIDRequest(vb *VariableBlob) (uint64,*GetTransactionsByIDRequest,error) {
+	var i,j uint64 = 0,0
+	s := GetTransactionsByIDRequest{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tTransactionIds,err := DeserializeVectorMultihash(&ovb); i+=j
+	if err != nil {
+		return 0, &GetTransactionsByIDRequest{}, err
+	}
+	s.TransactionIds = *tTransactionIds
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Typedef: OptTransaction
+// ----------------------------------------
+
+// OptTransaction type
+type OptTransaction OptionalTransaction
+
+// NewOptTransaction factory
+func NewOptTransaction() *OptTransaction {
+	o := OptTransaction(*NewOptionalTransaction())
+	return &o
+}
+
+// Serialize OptTransaction
+func (n OptTransaction) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := OptionalTransaction(n)
+	return ox.Serialize(vb)
+}
+
+// DeserializeOptTransaction function
+func DeserializeOptTransaction(vb *VariableBlob) (uint64,*OptTransaction,error) {
+	var ot OptTransaction
+	i,n,err := DeserializeOptionalTransaction(vb)
+	if err != nil {
+		return 0,&ot,err
+	}
+	ot = OptTransaction(*n)
+	return i,&ot,nil}
+
+// MarshalJSON OptTransaction
+func (n OptTransaction) MarshalJSON() ([]byte, error) {
+	v := OptionalTransaction(n)
+	return json.Marshal(&v)
+}
+
+// UnmarshalJSON *OptTransaction
+func (n *OptTransaction) UnmarshalJSON(data []byte) error {
+	v := OptionalTransaction(*n);
+	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	*n = OptTransaction(v)
+	return nil
+}
+
+
+// ----------------------------------------
+//  Struct: GetTransactionsByIDResponse
+// ----------------------------------------
+
+// GetTransactionsByIDResponse type
+type GetTransactionsByIDResponse struct {
+    TransactionItems VectorOptTransaction `json:"transaction_items"`
+}
+
+// NewGetTransactionsByIDResponse factory
+func NewGetTransactionsByIDResponse() *GetTransactionsByIDResponse {
+	o := GetTransactionsByIDResponse{}
+	o.TransactionItems = *NewVectorOptTransaction()
+	return &o
+}
+
+// Serialize GetTransactionsByIDResponse
+func (n GetTransactionsByIDResponse) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.TransactionItems.Serialize(vb)
+	return vb
+}
+
+// DeserializeGetTransactionsByIDResponse function
+func DeserializeGetTransactionsByIDResponse(vb *VariableBlob) (uint64,*GetTransactionsByIDResponse,error) {
+	var i,j uint64 = 0,0
+	s := GetTransactionsByIDResponse{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tTransactionItems,err := DeserializeVectorOptTransaction(&ovb); i+=j
+	if err != nil {
+		return 0, &GetTransactionsByIDResponse{}, err
+	}
+	s.TransactionItems = *tTransactionItems
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Struct: TransactionStoreErrorResponse
+// ----------------------------------------
+
+// TransactionStoreErrorResponse type
+type TransactionStoreErrorResponse struct {
+    ErrorText String `json:"error_text"`
+    ErrorData String `json:"error_data"`
+}
+
+// NewTransactionStoreErrorResponse factory
+func NewTransactionStoreErrorResponse() *TransactionStoreErrorResponse {
+	o := TransactionStoreErrorResponse{}
+	o.ErrorText = *NewString()
+	o.ErrorData = *NewString()
+	return &o
+}
+
+// Serialize TransactionStoreErrorResponse
+func (n TransactionStoreErrorResponse) Serialize(vb *VariableBlob) *VariableBlob {
+	vb = n.ErrorText.Serialize(vb)
+	vb = n.ErrorData.Serialize(vb)
+	return vb
+}
+
+// DeserializeTransactionStoreErrorResponse function
+func DeserializeTransactionStoreErrorResponse(vb *VariableBlob) (uint64,*TransactionStoreErrorResponse,error) {
+	var i,j uint64 = 0,0
+	s := TransactionStoreErrorResponse{}
+	var ovb VariableBlob
+	ovb = (*vb)[i:]
+	j,tErrorText,err := DeserializeString(&ovb); i+=j
+	if err != nil {
+		return 0, &TransactionStoreErrorResponse{}, err
+	}
+	s.ErrorText = *tErrorText
+	ovb = (*vb)[i:]
+	j,tErrorData,err := DeserializeString(&ovb); i+=j
+	if err != nil {
+		return 0, &TransactionStoreErrorResponse{}, err
+	}
+	s.ErrorData = *tErrorData
+	return i, &s, nil
+}
+
+// ----------------------------------------
+//  Variant: TransactionStoreRequest
+// ----------------------------------------
+
+// TransactionStoreRequest type
+type TransactionStoreRequest struct {
+	Value interface{}
+}
+
+// NewTransactionStoreRequest factory
+func NewTransactionStoreRequest() *TransactionStoreRequest {
+	v := TransactionStoreRequest{}
+	v.Value = NewTransactionStoreReservedRequest()
+	return &v
+}
+
+// Serialize TransactionStoreRequest
+func (n TransactionStoreRequest) Serialize(vb *VariableBlob) *VariableBlob {
+	var i uint64
+	switch n.Value.(type) {
+		case *TransactionStoreReservedRequest:
+			i = 0
+		case *GetTransactionsByIDRequest:
+			i = 1
+		default:
+			panic("Unknown variant type")
+	}
+
+	vb = EncodeVarint(vb, i)
+	ser,_ := n.Value.(Serializeable)
+	return ser.Serialize(vb)
+}
+
+// TypeToName TransactionStoreRequest
+func (n TransactionStoreRequest) TypeToName() (string) {
+	switch n.Value.(type) {
+		case *TransactionStoreReservedRequest:
+			return "koinos::rpc::transaction_store::transaction_store_reserved_request"
+		case *GetTransactionsByIDRequest:
+			return "koinos::rpc::transaction_store::get_transactions_by_id_request"
+		default:
+			panic("Variant type is not serializeable.")
+	}
+}
+
+// MarshalJSON TransactionStoreRequest
+func (n TransactionStoreRequest) MarshalJSON() ([]byte, error) {
+	variant := struct {
+		Type string `json:"type"`
+		Value *interface{} `json:"value"`
+	}{
+		n.TypeToName(),
+		&n.Value,
+	}
+
+	return json.Marshal(&variant)
+}
+
+// DeserializeTransactionStoreRequest function
+func DeserializeTransactionStoreRequest(vb *VariableBlob) (uint64,*TransactionStoreRequest,error) {
+	var v TransactionStoreRequest
+	typeID,i := binary.Uvarint(*vb)
+	if i <= 0 {
+		return 0, &v, errors.New("could not deserialize variant tag")
+	}
+	var j uint64
+
+	switch( typeID ) {
+		case 0:
+			v.Value = NewTransactionStoreReservedRequest()
+		case 1:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetTransactionsByIDRequest(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		default:
+			return 0, &v, errors.New("unknown variant tag")
+	}
+	return uint64(i)+j,&v,nil
+}
+
+// UnmarshalJSON *TransactionStoreRequest
+func (n *TransactionStoreRequest) UnmarshalJSON(data []byte) error {
+	variant := struct {
+		Type  string          `json:"type"`
+		Value json.RawMessage `json:"value"`
+	}{}
+
+	err := json.Unmarshal(data, &variant)
+	if err != nil {
+		return err
+	}
+
+	switch variant.Type {
+		case "koinos::rpc::transaction_store::transaction_store_reserved_request":
+			v := NewTransactionStoreReservedRequest()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::transaction_store::get_transactions_by_id_request":
+			v := NewGetTransactionsByIDRequest()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		default:
+			return errors.New("unknown variant type: " + variant.Type)
+	}
+
+	return nil
+}
+
+
+// ----------------------------------------
+//  Variant: TransactionStoreResponse
+// ----------------------------------------
+
+// TransactionStoreResponse type
+type TransactionStoreResponse struct {
+	Value interface{}
+}
+
+// NewTransactionStoreResponse factory
+func NewTransactionStoreResponse() *TransactionStoreResponse {
+	v := TransactionStoreResponse{}
+	v.Value = NewTransactionStoreReservedResponse()
+	return &v
+}
+
+// Serialize TransactionStoreResponse
+func (n TransactionStoreResponse) Serialize(vb *VariableBlob) *VariableBlob {
+	var i uint64
+	switch n.Value.(type) {
+		case *TransactionStoreReservedResponse:
+			i = 0
+		case *TransactionStoreErrorResponse:
+			i = 1
+		case *GetTransactionsByIDResponse:
+			i = 2
+		default:
+			panic("Unknown variant type")
+	}
+
+	vb = EncodeVarint(vb, i)
+	ser,_ := n.Value.(Serializeable)
+	return ser.Serialize(vb)
+}
+
+// TypeToName TransactionStoreResponse
+func (n TransactionStoreResponse) TypeToName() (string) {
+	switch n.Value.(type) {
+		case *TransactionStoreReservedResponse:
+			return "koinos::rpc::transaction_store::transaction_store_reserved_response"
+		case *TransactionStoreErrorResponse:
+			return "koinos::rpc::transaction_store::transaction_store_error_response"
+		case *GetTransactionsByIDResponse:
+			return "koinos::rpc::transaction_store::get_transactions_by_id_response"
+		default:
+			panic("Variant type is not serializeable.")
+	}
+}
+
+// MarshalJSON TransactionStoreResponse
+func (n TransactionStoreResponse) MarshalJSON() ([]byte, error) {
+	variant := struct {
+		Type string `json:"type"`
+		Value *interface{} `json:"value"`
+	}{
+		n.TypeToName(),
+		&n.Value,
+	}
+
+	return json.Marshal(&variant)
+}
+
+// DeserializeTransactionStoreResponse function
+func DeserializeTransactionStoreResponse(vb *VariableBlob) (uint64,*TransactionStoreResponse,error) {
+	var v TransactionStoreResponse
+	typeID,i := binary.Uvarint(*vb)
+	if i <= 0 {
+		return 0, &v, errors.New("could not deserialize variant tag")
+	}
+	var j uint64
+
+	switch( typeID ) {
+		case 0:
+			v.Value = NewTransactionStoreReservedResponse()
+		case 1:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeTransactionStoreErrorResponse(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		case 2:
+			ovb := (*vb)[i:]
+			k,x,err := DeserializeGetTransactionsByIDResponse(&ovb)
+			if err != nil {
+				return 0, &v, err
+			}
+			j = k
+			v.Value = x
+		default:
+			return 0, &v, errors.New("unknown variant tag")
+	}
+	return uint64(i)+j,&v,nil
+}
+
+// UnmarshalJSON *TransactionStoreResponse
+func (n *TransactionStoreResponse) UnmarshalJSON(data []byte) error {
+	variant := struct {
+		Type  string          `json:"type"`
+		Value json.RawMessage `json:"value"`
+	}{}
+
+	err := json.Unmarshal(data, &variant)
+	if err != nil {
+		return err
+	}
+
+	switch variant.Type {
+		case "koinos::rpc::transaction_store::transaction_store_reserved_response":
+			v := NewTransactionStoreReservedResponse()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::transaction_store::transaction_store_error_response":
+			v := NewTransactionStoreErrorResponse()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		case "koinos::rpc::transaction_store::get_transactions_by_id_response":
+			v := NewGetTransactionsByIDResponse()
+			json.Unmarshal(variant.Value, &v)
+			n.Value = v
+		default:
+			return errors.New("unknown variant type: " + variant.Type)
+	}
+
+	return nil
+}
+
+
 
 // ----------------------------------------
 //  FixedBlob20
@@ -8422,6 +8662,57 @@ func DeserializeVectorOperation(vb *VariableBlob) (uint64,*VectorOperation,error
 }
 
 // ----------------------------------------
+//  VectorOptTransaction
+// ----------------------------------------
+
+// VectorOptTransaction type
+type VectorOptTransaction []OptTransaction
+
+// NewVectorOptTransaction factory
+func NewVectorOptTransaction() *VectorOptTransaction {
+	o := VectorOptTransaction(make([]OptTransaction, 0))
+	return &o
+}
+
+// Serialize VectorOptTransaction
+func (n VectorOptTransaction) Serialize(vb *VariableBlob) *VariableBlob {
+	header := make([]byte, binary.MaxVarintLen64)
+	bytes := binary.PutUvarint(header, uint64(len(n)))
+	ovb := append(*vb, header[:bytes]...)
+	vb = &ovb
+	for _, item := range n {
+		vb = item.Serialize(vb)
+	}
+
+	return vb
+}
+// DeserializeVectorOptTransaction function
+func DeserializeVectorOptTransaction(vb *VariableBlob) (uint64,*VectorOptTransaction,error) {
+	var result VectorOptTransaction
+	size,bytes := binary.Uvarint(*vb)
+	if bytes <= 0 {
+		return 0, &result, errors.New("could not deserialize multihash id")
+	}
+	result = VectorOptTransaction(make([]OptTransaction, 0, size))
+	i := uint64(bytes)
+	var j uint64
+	var item *OptTransaction
+	var err error
+	for num := uint64(0); num < size; num++ {
+		ovb := (*vb)[i:]
+		j,item,err = DeserializeOptTransaction(&ovb)
+		if nil != err {
+			var v VectorOptTransaction
+			return 0,&v,err
+		}
+		i += j
+		result = append(result, *item)
+	}
+
+	return i, &result, nil
+}
+
+// ----------------------------------------
 //  VectorTransaction
 // ----------------------------------------
 
@@ -8463,57 +8754,6 @@ func DeserializeVectorTransaction(vb *VariableBlob) (uint64,*VectorTransaction,e
 		j,item,err = DeserializeTransaction(&ovb)
 		if nil != err {
 			var v VectorTransaction
-			return 0,&v,err
-		}
-		i += j
-		result = append(result, *item)
-	}
-
-	return i, &result, nil
-}
-
-// ----------------------------------------
-//  VectorTransactionItem
-// ----------------------------------------
-
-// VectorTransactionItem type
-type VectorTransactionItem []TransactionItem
-
-// NewVectorTransactionItem factory
-func NewVectorTransactionItem() *VectorTransactionItem {
-	o := VectorTransactionItem(make([]TransactionItem, 0))
-	return &o
-}
-
-// Serialize VectorTransactionItem
-func (n VectorTransactionItem) Serialize(vb *VariableBlob) *VariableBlob {
-	header := make([]byte, binary.MaxVarintLen64)
-	bytes := binary.PutUvarint(header, uint64(len(n)))
-	ovb := append(*vb, header[:bytes]...)
-	vb = &ovb
-	for _, item := range n {
-		vb = item.Serialize(vb)
-	}
-
-	return vb
-}
-// DeserializeVectorTransactionItem function
-func DeserializeVectorTransactionItem(vb *VariableBlob) (uint64,*VectorTransactionItem,error) {
-	var result VectorTransactionItem
-	size,bytes := binary.Uvarint(*vb)
-	if bytes <= 0 {
-		return 0, &result, errors.New("could not deserialize multihash id")
-	}
-	result = VectorTransactionItem(make([]TransactionItem, 0, size))
-	i := uint64(bytes)
-	var j uint64
-	var item *TransactionItem
-	var err error
-	for num := uint64(0); num < size; num++ {
-		ovb := (*vb)[i:]
-		j,item,err = DeserializeTransactionItem(&ovb)
-		if nil != err {
-			var v VectorTransactionItem
 			return 0,&v,err
 		}
 		i += j
@@ -8663,6 +8903,78 @@ func (n *OptionalBlockReceipt) UnmarshalJSON(b []byte) error {
 	}
 
 	no := NewOptionalBlockReceipt()
+	no.Value = v
+	*n = *no
+	return nil
+}
+
+// ----------------------------------------
+//  OptionalTransaction
+// ----------------------------------------
+
+// OptionalTransaction type
+type OptionalTransaction struct {
+	Value *Transaction
+}
+
+// NewOptionalTransaction factory
+func NewOptionalTransaction() *OptionalTransaction {
+	o := OptionalTransaction{}
+	return &o
+}
+
+// HasValue returns whether or not this optional contains a value
+func (n OptionalTransaction) HasValue() bool {
+	return n.Value != nil
+}
+
+// Serialize OptionalTransaction
+func (n OptionalTransaction) Serialize(vb *VariableBlob) *VariableBlob {
+	if n.HasValue() {
+		ovb := append(*vb, 1)
+		vb = &ovb
+		vb = n.Value.Serialize(vb)
+	} else {
+		ovb := append(*vb, 0)
+		vb = &ovb
+	}
+
+	return vb
+}
+
+// DeserializeOptionalTransaction function
+func DeserializeOptionalTransaction(vb *VariableBlob) (uint64, *OptionalTransaction, error) {
+	if len(*vb) == 0 {
+		return 0, nil, errors.New("could not parse OptionalTransaction, not enough data")
+	}
+
+	o := OptionalTransaction{}
+	if (*vb)[0] == 1 {
+		ovb := (*vb)[1:]
+		size, v, err := DeserializeTransaction(&ovb)
+		o.Value = v
+		return size + 1, &o, err
+	} else if (*vb)[0] == 0 {
+		return 1, &o, nil
+	}
+
+	return 0, nil, errors.New("invalid header byte in optional")
+}
+
+// MarshalJSON OptionalTransaction
+func (n OptionalTransaction) MarshalJSON() ([]byte, error) {
+	return json.Marshal(n.Value)
+}
+
+// UnmarshalJSON OptionalTransaction
+func (n *OptionalTransaction) UnmarshalJSON(b []byte) error {
+	var v *Transaction
+	err := json.Unmarshal(b, &v)
+	if err != nil {
+		return err
+	}
+
+	no := NewOptionalTransaction()
 	no.Value = v
 	*n = *no
 	return nil
