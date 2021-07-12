@@ -8284,22 +8284,22 @@ func TestGetTransactionsByIDRequest(t *testing.T) {
 }
 
 // ----------------------------------------
-//  Typedef: OptTransaction
+//  Typedef: OptTransactionRecord
 // ----------------------------------------
 
-func TestOptTransaction(t *testing.T) {
-	o := koinos.NewOptTransaction()
+func TestOptTransactionRecord(t *testing.T) {
+	o := koinos.NewOptTransactionRecord()
 
 	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, _, err := koinos.DeserializeOptTransaction(vb)
+	_, _, err := koinos.DeserializeOptTransactionRecord(vb)
 	if err != nil {
 		t.Error(err)
 	}
 
 	vb = koinos.NewVariableBlob()
-	size, _, err := koinos.DeserializeOptTransaction(vb)
+	size, _, err := koinos.DeserializeOptTransactionRecord(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -8312,7 +8312,7 @@ func TestOptTransaction(t *testing.T) {
 		t.Error(jerr)
 	}
 
-	jo := koinos.NewOptTransaction()
+	jo := koinos.NewOptTransactionRecord()
 	jerr = json.Unmarshal(v, jo)
 	if jerr != nil {
 		t.Error(jerr)
@@ -8340,7 +8340,7 @@ func TestGetTransactionsByIDResponse(t *testing.T) {
 	}
 
 	var n uint64
-	// Test transaction_items
+	// Test transactions
 	vb = &koinos.VariableBlob{}
 	n, _, err = koinos.DeserializeGetTransactionsByIDResponse(vb)
 	if err == nil {
@@ -9752,20 +9752,20 @@ func TestVectorOperation(t *testing.T) {
 }
 
 // ----------------------------------------
-//  VectorOptTransaction
+//  VectorOptTransactionRecord
 // ----------------------------------------
 
-func TestVectorOptTransaction(t *testing.T) {
-	v := koinos.NewVectorOptTransaction()
+func TestVectorOptTransactionRecord(t *testing.T) {
+	v := koinos.NewVectorOptTransactionRecord()
 	for i := 0; i < 16; i++ {
-		no := koinos.NewOptTransaction()
+		no := koinos.NewOptTransactionRecord()
 		*v = append(*v, *no)
 	}
 
 	vb := koinos.NewVariableBlob()
 	vb = v.Serialize(vb)
 
-	_, nv, err := koinos.DeserializeVectorOptTransaction(vb)
+	_, nv, err := koinos.DeserializeVectorOptTransactionRecord(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -9779,7 +9779,7 @@ func TestVectorOptTransaction(t *testing.T) {
 		t.Error(err)
 	}
 
-	jv := koinos.NewVectorOptTransaction()
+	jv := koinos.NewVectorOptTransactionRecord()
 	err = json.Unmarshal(j, &jv)
 	if err != nil {
 		t.Error(err)
@@ -9787,7 +9787,7 @@ func TestVectorOptTransaction(t *testing.T) {
 
 	// Test no data in the vector
 	vb = &koinos.VariableBlob{0x01}
-	n, _, err := koinos.DeserializeVectorOptTransaction(vb)
+	n, _, err := koinos.DeserializeVectorOptTransactionRecord(vb)
 	if err == nil {
 		t.Errorf("err == nil")
 	}
@@ -9987,11 +9987,11 @@ func TestOptionalBlockReceipt(t *testing.T) {
 }
 
 // ----------------------------------------
-//  OptionalTransaction
+//  OptionalTransactionRecord
 // ----------------------------------------
 
-func TestOptionalTransaction(t *testing.T) {
-	o := koinos.NewOptionalTransaction()
+func TestOptionalTransactionRecord(t *testing.T) {
+	o := koinos.NewOptionalTransactionRecord()
 
 	if o.HasValue() {
 		t.Errorf("Newly created optional should not contain a value.")
@@ -10000,7 +10000,7 @@ func TestOptionalTransaction(t *testing.T) {
 	vb := koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, no, err := koinos.DeserializeOptionalTransaction(vb)
+	_, no, err := koinos.DeserializeOptionalTransactionRecord(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -10015,13 +10015,13 @@ func TestOptionalTransaction(t *testing.T) {
 		t.Error(err)
 	}
 
-	jv := koinos.NewOptionalTransaction()
+	jv := koinos.NewOptionalTransactionRecord()
 	err = json.Unmarshal(j, &jv)
 	if err != nil {
 		t.Error(err)
 	}
 
-	o.Value = koinos.NewTransaction()
+	o.Value = koinos.NewTransactionRecord()
 	if !o.HasValue() {
 		t.Errorf("Optional should contain a value but does not.")
 	}
@@ -10029,7 +10029,7 @@ func TestOptionalTransaction(t *testing.T) {
 	vb = koinos.NewVariableBlob()
 	vb = o.Serialize(vb)
 
-	_, no, err = koinos.DeserializeOptionalTransaction(vb)
+	_, no, err = koinos.DeserializeOptionalTransactionRecord(vb)
 	if err != nil {
 		t.Error(err)
 	}
@@ -10044,7 +10044,7 @@ func TestOptionalTransaction(t *testing.T) {
 		t.Error(err)
 	}
 
-	jv = koinos.NewOptionalTransaction()
+	jv = koinos.NewOptionalTransactionRecord()
 	err = json.Unmarshal(j, &jv)
 	if err != nil {
 		t.Error(err)
@@ -10052,7 +10052,7 @@ func TestOptionalTransaction(t *testing.T) {
 
 	// Test invalid header
 	nvb := koinos.VariableBlob([]byte{4, 5, 6})
-	_, _, err = koinos.DeserializeOptionalTransaction(&nvb)
+	_, _, err = koinos.DeserializeOptionalTransactionRecord(&nvb)
 	if err == nil {
 		t.Errorf("Invalid optional header byte did not return an error.")
 	}

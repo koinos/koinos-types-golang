@@ -7251,48 +7251,48 @@ func DeserializeGetTransactionsByIDRequest(vb *VariableBlob) (uint64,*GetTransac
 }
 
 // ----------------------------------------
-//  Typedef: OptTransaction
+//  Typedef: OptTransactionRecord
 // ----------------------------------------
 
-// OptTransaction type
-type OptTransaction OptionalTransaction
+// OptTransactionRecord type
+type OptTransactionRecord OptionalTransactionRecord
 
-// NewOptTransaction factory
-func NewOptTransaction() *OptTransaction {
-	o := OptTransaction(*NewOptionalTransaction())
+// NewOptTransactionRecord factory
+func NewOptTransactionRecord() *OptTransactionRecord {
+	o := OptTransactionRecord(*NewOptionalTransactionRecord())
 	return &o
 }
 
-// Serialize OptTransaction
-func (n OptTransaction) Serialize(vb *VariableBlob) *VariableBlob {
-	ox := OptionalTransaction(n)
+// Serialize OptTransactionRecord
+func (n OptTransactionRecord) Serialize(vb *VariableBlob) *VariableBlob {
+	ox := OptionalTransactionRecord(n)
 	return ox.Serialize(vb)
 }
 
-// DeserializeOptTransaction function
-func DeserializeOptTransaction(vb *VariableBlob) (uint64,*OptTransaction,error) {
-	var ot OptTransaction
-	i,n,err := DeserializeOptionalTransaction(vb)
+// DeserializeOptTransactionRecord function
+func DeserializeOptTransactionRecord(vb *VariableBlob) (uint64,*OptTransactionRecord,error) {
+	var ot OptTransactionRecord
+	i,n,err := DeserializeOptionalTransactionRecord(vb)
 	if err != nil {
 		return 0,&ot,err
 	}
-	ot = OptTransaction(*n)
+	ot = OptTransactionRecord(*n)
 	return i,&ot,nil}
 
-// MarshalJSON OptTransaction
-func (n OptTransaction) MarshalJSON() ([]byte, error) {
-	v := OptionalTransaction(n)
+// MarshalJSON OptTransactionRecord
+func (n OptTransactionRecord) MarshalJSON() ([]byte, error) {
+	v := OptionalTransactionRecord(n)
 	return json.Marshal(&v)
 }
 
-// UnmarshalJSON *OptTransaction
-func (n *OptTransaction) UnmarshalJSON(data []byte) error {
-	v := OptionalTransaction(*n);
+// UnmarshalJSON *OptTransactionRecord
+func (n *OptTransactionRecord) UnmarshalJSON(data []byte) error {
+	v := OptionalTransactionRecord(*n);
 	if err := json.Unmarshal(data, &v); err != nil {
 		return err
 	}
 
-	*n = OptTransaction(v)
+	*n = OptTransactionRecord(v)
 	return nil
 }
 
@@ -7303,19 +7303,19 @@ func (n *OptTransaction) UnmarshalJSON(data []byte) error {
 
 // GetTransactionsByIDResponse type
 type GetTransactionsByIDResponse struct {
-    TransactionItems VectorOptTransaction `json:"transaction_items"`
+    Transactions VectorOptTransactionRecord `json:"transactions"`
 }
 
 // NewGetTransactionsByIDResponse factory
 func NewGetTransactionsByIDResponse() *GetTransactionsByIDResponse {
 	o := GetTransactionsByIDResponse{}
-	o.TransactionItems = *NewVectorOptTransaction()
+	o.Transactions = *NewVectorOptTransactionRecord()
 	return &o
 }
 
 // Serialize GetTransactionsByIDResponse
 func (n GetTransactionsByIDResponse) Serialize(vb *VariableBlob) *VariableBlob {
-	vb = n.TransactionItems.Serialize(vb)
+	vb = n.Transactions.Serialize(vb)
 	return vb
 }
 
@@ -7325,11 +7325,11 @@ func DeserializeGetTransactionsByIDResponse(vb *VariableBlob) (uint64,*GetTransa
 	s := GetTransactionsByIDResponse{}
 	var ovb VariableBlob
 	ovb = (*vb)[i:]
-	j,tTransactionItems,err := DeserializeVectorOptTransaction(&ovb); i+=j
+	j,tTransactions,err := DeserializeVectorOptTransactionRecord(&ovb); i+=j
 	if err != nil {
 		return 0, &GetTransactionsByIDResponse{}, err
 	}
-	s.TransactionItems = *tTransactionItems
+	s.Transactions = *tTransactions
 	return i, &s, nil
 }
 
@@ -8662,20 +8662,20 @@ func DeserializeVectorOperation(vb *VariableBlob) (uint64,*VectorOperation,error
 }
 
 // ----------------------------------------
-//  VectorOptTransaction
+//  VectorOptTransactionRecord
 // ----------------------------------------
 
-// VectorOptTransaction type
-type VectorOptTransaction []OptTransaction
+// VectorOptTransactionRecord type
+type VectorOptTransactionRecord []OptTransactionRecord
 
-// NewVectorOptTransaction factory
-func NewVectorOptTransaction() *VectorOptTransaction {
-	o := VectorOptTransaction(make([]OptTransaction, 0))
+// NewVectorOptTransactionRecord factory
+func NewVectorOptTransactionRecord() *VectorOptTransactionRecord {
+	o := VectorOptTransactionRecord(make([]OptTransactionRecord, 0))
 	return &o
 }
 
-// Serialize VectorOptTransaction
-func (n VectorOptTransaction) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize VectorOptTransactionRecord
+func (n VectorOptTransactionRecord) Serialize(vb *VariableBlob) *VariableBlob {
 	header := make([]byte, binary.MaxVarintLen64)
 	bytes := binary.PutUvarint(header, uint64(len(n)))
 	ovb := append(*vb, header[:bytes]...)
@@ -8686,23 +8686,23 @@ func (n VectorOptTransaction) Serialize(vb *VariableBlob) *VariableBlob {
 
 	return vb
 }
-// DeserializeVectorOptTransaction function
-func DeserializeVectorOptTransaction(vb *VariableBlob) (uint64,*VectorOptTransaction,error) {
-	var result VectorOptTransaction
+// DeserializeVectorOptTransactionRecord function
+func DeserializeVectorOptTransactionRecord(vb *VariableBlob) (uint64,*VectorOptTransactionRecord,error) {
+	var result VectorOptTransactionRecord
 	size,bytes := binary.Uvarint(*vb)
 	if bytes <= 0 {
 		return 0, &result, errors.New("could not deserialize multihash id")
 	}
-	result = VectorOptTransaction(make([]OptTransaction, 0, size))
+	result = VectorOptTransactionRecord(make([]OptTransactionRecord, 0, size))
 	i := uint64(bytes)
 	var j uint64
-	var item *OptTransaction
+	var item *OptTransactionRecord
 	var err error
 	for num := uint64(0); num < size; num++ {
 		ovb := (*vb)[i:]
-		j,item,err = DeserializeOptTransaction(&ovb)
+		j,item,err = DeserializeOptTransactionRecord(&ovb)
 		if nil != err {
-			var v VectorOptTransaction
+			var v VectorOptTransactionRecord
 			return 0,&v,err
 		}
 		i += j
@@ -8909,27 +8909,27 @@ func (n *OptionalBlockReceipt) UnmarshalJSON(b []byte) error {
 }
 
 // ----------------------------------------
-//  OptionalTransaction
+//  OptionalTransactionRecord
 // ----------------------------------------
 
-// OptionalTransaction type
-type OptionalTransaction struct {
-	Value *Transaction
+// OptionalTransactionRecord type
+type OptionalTransactionRecord struct {
+	Value *TransactionRecord
 }
 
-// NewOptionalTransaction factory
-func NewOptionalTransaction() *OptionalTransaction {
-	o := OptionalTransaction{}
+// NewOptionalTransactionRecord factory
+func NewOptionalTransactionRecord() *OptionalTransactionRecord {
+	o := OptionalTransactionRecord{}
 	return &o
 }
 
 // HasValue returns whether or not this optional contains a value
-func (n OptionalTransaction) HasValue() bool {
+func (n OptionalTransactionRecord) HasValue() bool {
 	return n.Value != nil
 }
 
-// Serialize OptionalTransaction
-func (n OptionalTransaction) Serialize(vb *VariableBlob) *VariableBlob {
+// Serialize OptionalTransactionRecord
+func (n OptionalTransactionRecord) Serialize(vb *VariableBlob) *VariableBlob {
 	if n.HasValue() {
 		ovb := append(*vb, 1)
 		vb = &ovb
@@ -8942,16 +8942,16 @@ func (n OptionalTransaction) Serialize(vb *VariableBlob) *VariableBlob {
 	return vb
 }
 
-// DeserializeOptionalTransaction function
-func DeserializeOptionalTransaction(vb *VariableBlob) (uint64, *OptionalTransaction, error) {
+// DeserializeOptionalTransactionRecord function
+func DeserializeOptionalTransactionRecord(vb *VariableBlob) (uint64, *OptionalTransactionRecord, error) {
 	if len(*vb) == 0 {
-		return 0, nil, errors.New("could not parse OptionalTransaction, not enough data")
+		return 0, nil, errors.New("could not parse OptionalTransactionRecord, not enough data")
 	}
 
-	o := OptionalTransaction{}
+	o := OptionalTransactionRecord{}
 	if (*vb)[0] == 1 {
 		ovb := (*vb)[1:]
-		size, v, err := DeserializeTransaction(&ovb)
+		size, v, err := DeserializeTransactionRecord(&ovb)
 		o.Value = v
 		return size + 1, &o, err
 	} else if (*vb)[0] == 0 {
@@ -8961,20 +8961,20 @@ func DeserializeOptionalTransaction(vb *VariableBlob) (uint64, *OptionalTransact
 	return 0, nil, errors.New("invalid header byte in optional")
 }
 
-// MarshalJSON OptionalTransaction
-func (n OptionalTransaction) MarshalJSON() ([]byte, error) {
+// MarshalJSON OptionalTransactionRecord
+func (n OptionalTransactionRecord) MarshalJSON() ([]byte, error) {
 	return json.Marshal(n.Value)
 }
 
-// UnmarshalJSON OptionalTransaction
-func (n *OptionalTransaction) UnmarshalJSON(b []byte) error {
-	var v *Transaction
+// UnmarshalJSON OptionalTransactionRecord
+func (n *OptionalTransactionRecord) UnmarshalJSON(b []byte) error {
+	var v *TransactionRecord
 	err := json.Unmarshal(b, &v)
 	if err != nil {
 		return err
 	}
 
-	no := NewOptionalTransaction()
+	no := NewOptionalTransactionRecord()
 	no.Value = v
 	*n = *no
 	return nil
